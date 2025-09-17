@@ -1,0 +1,1 @@
+export const OVERHEAD_IMG = 'https://crmsystem-production-0232.up.railway.app/files/overhead_files/'

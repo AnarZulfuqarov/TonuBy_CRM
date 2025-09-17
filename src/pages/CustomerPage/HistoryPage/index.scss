@@ -1,0 +1,359 @@
+/* ============== Wrapper ============== */
+.order-history-cust-main {
+  position: relative;
+}
+
+.order-history-cust {
+  padding: 20px;
+  max-width: 100%;
+  margin: 0 auto;
+  background: #fff;
+  min-height: calc(100vh - 129px);
+  position: relative;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: #3f3f3f;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+}
+
+/* ============== Common ============== */
+@mixin card {
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  border-radius: 10px;
+}
+
+/* ============== Dropdown BASE ============== */
+.filter-dd {
+  position: relative;
+
+  .dd-btn {
+    @include card;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    background: #fff;
+    cursor: pointer;
+    height: 36px;
+
+    span {
+      white-space: nowrap;
+      color: #9a9a9a;
+    }
+
+    &.filled span {
+      font-weight: 500;
+      color: #0c0c0c;
+    }
+  }
+
+  .dd-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0 !important;
+    width: 260px;
+    transform-origin: top left;
+    @include card;
+    display: none;
+    z-index: 12;
+    background: #fff;
+
+    .dd-search {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+
+      input {
+        width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 8px;
+        outline: none;
+        font-size: 14px;
+      }
+    }
+
+    .dd-list {
+      max-height: 220px;
+      overflow: auto;
+      padding: 6px;
+
+      .dd-item {
+        padding: 8px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        color: #0c0c0c;
+
+        &:hover {
+          background: #f5f6fa;
+        }
+
+        &.active {
+          background: #eef2ff;
+          color: #1c2c57;
+          font-weight: 500;
+        }
+      }
+
+      .dd-empty {
+        font-size: 13px;
+        color: #6c6c6c;
+        padding: 8px 10px;
+      }
+    }
+  }
+
+  &.open .dd-panel {
+    display: block;
+  }
+}
+
+/* ============== Top filter bar ============== */
+.filterbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  width: 95%;
+
+  .searchbox {
+    @include card;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+
+    input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      background: transparent;
+    }
+  }
+
+  .filter-dd {
+    min-width: 200px;
+    height: 36px;
+  }
+}
+
+/* ============== SECOND FILTER ROW ============== */
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 6px;
+  margin-bottom: 18px;
+
+  .range-dd {
+    @include card;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    height: 36px;
+
+    .range-label {
+      font-size: 13px;
+      color: #9a9a9a;
+      white-space: nowrap;
+    }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      input {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 6px 8px;
+        outline: none;
+        font-size: 14px;
+        height: 28px;
+      }
+
+      span {
+        color: #999;
+      }
+    }
+  }
+}
+
+/* ============== Table wrapper + scrollbar ============== */
+.order-history-cust__table-wrap {
+  @include card;
+  max-height: 480px;
+  overflow: auto;
+  padding: 0;
+  border-color: #e6e8eb;
+
+  &::-webkit-scrollbar {
+    width: 3px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #007aff;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+}
+
+/* ============== Table grid ============== */
+.ohc-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #fff;
+    font-weight: 500;
+    font-size: 14px;
+    color: #0c0c0c;
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid #e6e8eb;
+    white-space: nowrap;
+  }
+
+  tbody td {
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #6c6c6c;
+    border-bottom: 1px solid #f3f3f3;
+    background: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.center {
+      text-align: center;
+    }
+  }
+
+  thead th, tbody td {
+    border-right: 1px solid #e6e8eb;
+  }
+
+  thead th {
+    border-top: 1px solid #e6e8eb;
+  }
+
+  thead th:first-child, tbody td:first-child {
+    border-left: 1px solid #e6e8eb;
+  }
+
+  tbody tr:hover td {
+    background: #f9f9f9;
+    cursor: pointer;
+  }
+
+  .muted {
+    color: #9a9a9a;
+  }
+
+  .sticky-col {
+    position: sticky;
+    right: 0;
+    z-index: 3;
+    background: #fff;
+    box-shadow: -6px 0 10px rgba(0, 0, 0, 0.04);
+    text-align: center;
+  }
+}
+
+/* ============== Status pill ============== */
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 9999px;
+  line-height: 1;
+  border: 1px solid #e5e5e5;
+  white-space: nowrap;
+  background: #fff;
+
+  &.pending {
+    background: #fdedc8;
+    border-color: #ffc31c;
+    color: #6b5e05;
+  }
+
+  &.completed {
+    background: #e7ffe5;
+    border-color: #2fc25b;
+    color: #1e7c1c;
+  }
+
+  &.not-completed {
+    background: #fff5f5;
+    border-color: #fbb;
+    color: #8a1e1e;
+  }
+
+  &.incomplete {
+    background: rgba(225, 255, 0, 0.20);
+    border-color: #e1ff00;
+    color: #495007;
+  }
+}
+
+/* ============== Buttons & empty state ============== */
+.detail-btn {
+  background: transparent;
+  border: none;
+  color: #6c6c6c;
+  font-size: 13px;
+  border-radius: 6px;
+  width: 100%;
+  text-align: center;
+  transition: 0.2s ease;
+
+  &:after {
+    content: "→";
+    margin-left: 6px;
+  }
+}
+
+.ohc-empty {
+  padding: 24px 8px;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* ============== Responsive ============== */
+@media (max-width: 992px) {
+  .filterbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .filter-row {
+    gap: 8px;
+  }
+  .order-history-cust {
+    padding: 16px;
+  }
+}
