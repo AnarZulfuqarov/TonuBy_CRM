@@ -58,9 +58,9 @@ body > div {
 }
 
 
-@for $i from 1 through 12 {
+@for $i from 1 through 60 {
   .col-#{$i} {
-    width: calc(100% / 12 * #{$i});
+    width: calc(100% / 60 * #{$i});
     padding: 16px;
   }
 }

@@ -3,54 +3,34 @@ import Cookies from 'js-cookie';
 import './index.scss';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
-import { useLoginUserMutation} from "../../services/adminApi.jsx";
 import {usePopup} from "../../components/Popup/PopupContext.jsx";
-import logo from "/src/assets/Mask group.png"
+import tor from '/src/assets/LoginTor.png'
+import logo from "/src/assets/TonyByLogo.png"
+import {useLoginSuperAdminMutation} from "../../services/adminApi.jsx";
 function Login() {
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const showPopup = usePopup();
-
-    const [loginUser, { isLoading, error }] = useLoginUserMutation();
-
+    const [loginSuperAdmin, { isLoading, error }] = useLoginSuperAdminMutation();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // 🔴 1. Eski cookie'leri temizle
-        Cookies.remove('role');
-        Cookies.remove('supplierToken');
-        Cookies.remove('ordererToken');
-        Cookies.remove('accountToken');
-        Cookies.remove('superAdminToken');
 
         try {
-            const response = await loginUser({ phoneNumber, password });
+            const response = await loginSuperAdmin({ email , password });
 
             if ('data' in response) {
-                const { token, role } = response.data.data;
+                const { token } = response.data.data;
 
-                // ✅ 2. Yeni verileri set et
-                Cookies.set('role', role);
+                Cookies.set('superAdminToken', token);
 
-                if (role === 'Fighter') {
-                    Cookies.set('supplierToken', token);
-                    showPopup('Giriş uğurludur', 'Sistemə daxil oldunuz', 'success');
-                    navigate('/choose-company-fighter');
-                } else if (role === 'Customer') {
-                    Cookies.set('ordererToken', token);
-                    showPopup('Giriş uğurludur', 'Sistemə daxil oldunuz', 'success');
-                    navigate('/choose-company');
-                } else if (role === 'Accountant') {
-                    Cookies.set('accountToken', token);
-                    showPopup('Giriş uğurludur', 'Sistemə daxil oldunuz', 'success');
-                    navigate('/accounter/borc');
-                } else {
-                    showPopup('Naməlum rol', 'Təyin olunmamış rol: ' + role, 'warning');
-                }
-                localStorage.setItem('auth-change', Date.now());
+                showPopup('Giriş uğurludur', 'Sistemə daxil oldunuz', 'success');
+                setEmail('')
+                setPassword('')
+                navigate('/admin/companies');
             } else {
                 showPopup('Giriş uğursuz oldu', 'Məlumatları yoxlayın.', 'error');
             }
@@ -60,31 +40,29 @@ function Login() {
         }
     };
 
-
-
     return (
         <div id="login">
+            <img src={tor} alt="Tor" className={"tor"}/>
+            <div className={'logo'}>
+                <img src={logo} alt="Logo" className={"logo"}/>
+            </div>
             <div className="login-panel">
                 <div>
-                    <div className="header">
-                        <img src={logo} className="logo" alt="logo" />
-                    </div>
                     <div className="login-form">
                         <div className="title">
                             <h1>Sistemə daxil olun</h1>
                             <p>
-                                Sistemdəki funksiyalara və məlumatlara çıxış əldə etmək üçün aşağıdakı formanı istifadə edərək hesabınıza daxil olun.
-                            </p>
+                                Sistemdəki məlumatlara çıxış üçün hesabınıza daxil olun.                            </p>
                         </div>
 
                         <form className="form" onSubmit={handleSubmit}>
                             <div className="form-group">
-                                <label>Telefon nömrəsi</label>
+                                <label>Email</label>
                                 <input
                                     type="text"
-                                    placeholder="Telefon nömrənizi daxil edin"
-                                    value={phoneNumber}
-                                    onChange={(e) => setPhoneNumber(e.target.value)}
+                                    placeholder="Emailinizi daxil edin"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     required
                                 />
                             </div>
@@ -94,7 +72,7 @@ function Login() {
                                 <div className="password-wrapper">
                                     <input
                                         type={showPassword ? 'text' : 'password'}
-                                        placeholder="Şifrənizi daxil edin"
+                                        placeholder="********"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
@@ -115,10 +93,7 @@ function Login() {
                             </button>
 
 
-                            <div className="problem">
-                                Problemlə üzləşdiniz?
-                                <a href="mailto:admin@example.com"> Sistem administratoru ilə əlaqə saxlayın</a>
-                            </div>
+
                         </form>
                     </div>
                 </div>

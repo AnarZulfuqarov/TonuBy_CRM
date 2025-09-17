@@ -1,55 +1,80 @@
 #login {
-  padding: 85px 100px 50px;
+  padding: 50px 100px 50px;
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+
+  .tor {
+    position: absolute;
+    top: 0;
+    z-index: -1;
+  }
+  .logo{
+    width:  154px;
+    aspect-ratio: 16/9;
+  }
 
   .login-panel {
+    width: 480px;
     position: relative;
     display: flex;
     justify-content: center;
-    margin-bottom: 50px; // Reduced for mobile
+    border-radius: 10px;
+    border: 1px solid #F2F2F2;
+    background: #FFF;
+    box-shadow: 1px 1px 4px 0 rgba(228, 228, 228, 0.25);
+    padding: 61px 38px 60px 38px;
 
     .header {
       text-align: center;
       margin-bottom: 60px;
-     visibility: hidden;
-      img{
+      visibility: hidden;
+
+      img {
         height: 80px;
       }
 
       h2 {
+        color: #000;
+        text-align: center;
         font-size: 24px;
+        font-style: normal;
         font-weight: 600;
+        line-height: normal;
       }
     }
 
     .login-form {
       background-color: #fff;
       border-radius: 8px;
-      width: 580px;
       max-width: 100%;
 
       .title {
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 16px;
 
         h1 {
           color: #000;
-          font-size: 32px;
+          text-align: center;
+          font-size: 24px;
+          font-style: normal;
           font-weight: 600;
           line-height: normal;
-          margin-bottom: 16px;
+          margin-bottom: 8px;
         }
 
         p {
-          color: #7d7d7d;
-          font-size: 18px;
+          margin: 0 auto;
+          width: 90%;
+          color: #7D7D7D;
+          text-align: center;
+          font-size: 16px;
+          font-style: normal;
           font-weight: 400;
-          line-height: 24px;
-          margin-bottom: 32px;
+          line-height: 24px; /* 150% */
         }
       }
 
@@ -61,21 +86,21 @@
         margin: 0 auto;
 
         .form-group {
-          margin-bottom: 1rem;
+          margin-bottom: 24px;
 
           label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 6px;
             color: #222;
             font-size: 16px;
-            line-height: 20px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 20px; /* 125% */
+            margin-bottom: 6px;
           }
 
           input {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #ccc;
+            border: 1px solid #D5D7DA;
             border-radius: 6px;
             font-size: 1rem;
             transition: border-color 0.2s;
@@ -96,14 +121,12 @@
           padding: 14px 22px;
           justify-content: center;
           border-radius: 8px;
-          background: #384871;
+          background: #333333;
           color: #fff;
           border: none;
           font-size: 1rem;
           cursor: pointer;
-          margin-top: 1rem;
           transition: background-color 0.3s ease;
-          margin-bottom: 32px;
 
           &:disabled {
             opacity: 0.6;
@@ -176,7 +199,7 @@
         font-size: 16px;
         font-weight: 500;
         line-height: 24px;
-        margin: 0 ;
+        margin: 0;
       }
     }
   }
@@ -259,6 +282,7 @@
     }
   }
 }
+
 // Mevcut media sorgusunun altında güncellemeler:
 @media (max-width: 576px) {
   #login {

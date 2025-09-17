@@ -4,88 +4,89 @@ import {useGetAdminNotificationsSuperAdminQuery, useMarkAsReadMutation} from "..
 import {useNavigate} from "react-router-dom";
 
 const SuperAdminNotification = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filter, setFilter] = useState('all');
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 6; // Number of orders per page
-    const {data:getAdminNotificationsSuperAdmin,refetch} = useGetAdminNotificationsSuperAdminQuery()
-    const notification = getAdminNotificationsSuperAdmin?.data
-    const [markAsRead] = useMarkAsReadMutation()
+    const arr =[]
+    // const [searchTerm, setSearchTerm] = useState('');
+    // const [filter, setFilter] = useState('all');
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const itemsPerPage = 6; // Number of orders per page
+    // const {data:getAdminNotificationsSuperAdmin,refetch} = useGetAdminNotificationsSuperAdminQuery()
+    // const notification = getAdminNotificationsSuperAdmin?.data
+    // const [markAsRead] = useMarkAsReadMutation()
     // Pagination logic
-
-    const filteredNotifications = notification?.filter((n) => {
-        const matchesSearch = n.type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (n.productId === null ? "kateqoriya" : "məhsul").includes(searchTerm.toLowerCase());
-
-        const matchesFilter =
-            filter === "all" ? true :
-                filter === "read" ? n.isRead :
-                    filter === "unread" ? !n.isRead :
-                        true;
-
-        return matchesSearch && matchesFilter;
-    }) || [];
-    const totalPages = Math.ceil(filteredNotifications?.length / itemsPerPage);
-
-    const paginatedNotifications = filteredNotifications?.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
-
-    // Generate page numbers with ellipsis
-    const getPageNumbers = () => {
-        const pageNumbers = [];
-        const maxVisiblePages = 6; // Show up to 5 page numbers at a time
-        let startPage = Math.max(1, currentPage - 2);
-        let endPage = Math.min(totalPages, currentPage + 2);
-
-        if (endPage - startPage < maxVisiblePages - 1) {
-            if (startPage === 1) endPage = Math.min(maxVisiblePages, totalPages);
-            else if (endPage === totalPages) startPage = Math.max(1, totalPages - maxVisiblePages + 1);
-        }
-
-        for (let i = startPage; i <= endPage; i++) {
-            pageNumbers.push(i);
-        }
-
-        if (startPage > 2) pageNumbers.unshift('...');
-        if (startPage > 1) pageNumbers.unshift(1);
-        if (endPage < totalPages - 1) pageNumbers.push('...');
-        if (endPage < totalPages) pageNumbers.push(totalPages);
-
-        return pageNumbers;
-    };
-    const navigate = useNavigate()
-
-    const handlePageChange = (page) => {
-        if (typeof page === 'number' && page >= 1 && page <= totalPages) {
-            setCurrentPage(page);
-        }
-    };
-    const handleMarkAsRead = async (n) => {
-        try {
-            await markAsRead(n.id);
-            refetch();
-
-            if (n.productId !== null) {
-                navigate("/superAdmin/products/products", {
-                    state: {
-                        type: n.type, // create, update, delete
-                        id: n.productId
-                    }
-                });
-            } else if (n.categoryId !== null) {
-                navigate("/superAdmin/products/categories", {
-                    state: {
-                        type: n.type,
-                        id: n.categoryId
-                    }
-                });
-            }
-        } catch (error) {
-            console.error("Bildiriş oxunarkən xəta baş verdi:", error);
-        }
-    };
+    //
+    // const filteredNotifications = notification?.filter((n) => {
+    //     const matchesSearch = n.type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         (n.productId === null ? "kateqoriya" : "məhsul").includes(searchTerm.toLowerCase());
+    //
+    //     const matchesFilter =
+    //         filter === "all" ? true :
+    //             filter === "read" ? n.isRead :
+    //                 filter === "unread" ? !n.isRead :
+    //                     true;
+    //
+    //     return matchesSearch && matchesFilter;
+    // }) || [];
+    // const totalPages = Math.ceil(filteredNotifications?.length / itemsPerPage);
+    //
+    // const paginatedNotifications = filteredNotifications?.slice(
+    //     (currentPage - 1) * itemsPerPage,
+    //     currentPage * itemsPerPage
+    // );
+    //
+    // // Generate page numbers with ellipsis
+    // const getPageNumbers = () => {
+    //     const pageNumbers = [];
+    //     const maxVisiblePages = 6; // Show up to 5 page numbers at a time
+    //     let startPage = Math.max(1, currentPage - 2);
+    //     let endPage = Math.min(totalPages, currentPage + 2);
+    //
+    //     if (endPage - startPage < maxVisiblePages - 1) {
+    //         if (startPage === 1) endPage = Math.min(maxVisiblePages, totalPages);
+    //         else if (endPage === totalPages) startPage = Math.max(1, totalPages - maxVisiblePages + 1);
+    //     }
+    //
+    //     for (let i = startPage; i <= endPage; i++) {
+    //         pageNumbers.push(i);
+    //     }
+    //
+    //     if (startPage > 2) pageNumbers.unshift('...');
+    //     if (startPage > 1) pageNumbers.unshift(1);
+    //     if (endPage < totalPages - 1) pageNumbers.push('...');
+    //     if (endPage < totalPages) pageNumbers.push(totalPages);
+    //
+    //     return pageNumbers;
+    // };
+    // const navigate = useNavigate()
+    //
+    // const handlePageChange = (page) => {
+    //     if (typeof page === 'number' && page >= 1 && page <= totalPages) {
+    //         setCurrentPage(page);
+    //     }
+    // };
+    // const handleMarkAsRead = async (n) => {
+    //     try {
+    //         await markAsRead(n.id);
+    //         refetch();
+    //
+    //         if (n.productId !== null) {
+    //             navigate("/superAdmin/products/products", {
+    //                 state: {
+    //                     type: n.type, // create, update, delete
+    //                     id: n.productId
+    //                 }
+    //             });
+    //         } else if (n.categoryId !== null) {
+    //             navigate("/superAdmin/products/categories", {
+    //                 state: {
+    //                     type: n.type,
+    //                     id: n.categoryId
+    //                 }
+    //             });
+    //         }
+    //     } catch (error) {
+    //         console.error("Bildiriş oxunarkən xəta baş verdi:", error);
+    //     }
+    // };
 
 
     return (
@@ -97,10 +98,10 @@ const SuperAdminNotification = () => {
                     <input
                         type="text"
                         placeholder="Axtarış edin"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        // value={searchTerm}
+                        // onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+                    <select value={"filter"} onChange={(e) => (e.target.value)}>
                         <option value="all">Hamısı</option>
                         <option value="unread">Oxunmamış</option>
                         <option value="read">Oxunmuş</option>
@@ -109,7 +110,7 @@ const SuperAdminNotification = () => {
                 </div>
                 <div className="notification-table-wrapper">
                     <div className="notification-table">
-                        {paginatedNotifications?.map((n, index) => {
+                        {"paginatedNotifications"?.map((n, index) => {
                             const iconColor = n.role === "fighter" ? "red" : n.role === "customer" ? "blue" : "red";
                             return (
                             <div className={`notification-row ${n.isRead ? 'read' : 'unread'}`} key={n.id} onClick={() => handleMarkAsRead(n)}>
@@ -167,24 +168,24 @@ const SuperAdminNotification = () => {
                 </div>
                 <div className="super-admin-notification__pagination">
                     <button
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
+                        // onClick={() => handlePageChange(currentPage - 1)}
+                        // disabled={currentPage === 1}
                     >
                         &lt;
                     </button>
-                    {getPageNumbers().map((page, index) => (
+                    {arr.map((page, index) => (
                         <button
                             key={index}
-                            onClick={() => handlePageChange(page)}
+                            // onClick={() => handlePageChange(page)}
                             disabled={page === '...'}
-                            className={currentPage === page ? 'active' : ''}
+                            // className={currentPage === page ? 'active' : ''}
                         >
                             {page}
                         </button>
                     ))}
                     <button
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages || totalPages === 0}
+                        // onClick={() => handlePageChange(currentPage + 1)}
+                        // disabled={currentPage === totalPages || totalPages === 0}
                     >
                         &gt;
                     </button>

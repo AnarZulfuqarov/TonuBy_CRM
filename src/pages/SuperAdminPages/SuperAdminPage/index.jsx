@@ -6,12 +6,14 @@ import SuperAdminLeftBar from "../SuperAdminLeftBar/index.jsx";
 function SuperAdminPage() {
     return (
         <div id="superAdmin">
-            <SuperAdminNavbar/>
             <div className={"row"}>
-                <div className={"col-2"}>
+                <SuperAdminNavbar/>
+            </div>
+            <div className={"row"}>
+                <div className={"col-12"}>
                         <SuperAdminLeftBar/>
                 </div>
-                <div className={"col-10"} style={{
+                <div className={"col-48"} style={{
                     padding: "16px 16px 16px 0"
                 }}>
                        <Outlet/>
