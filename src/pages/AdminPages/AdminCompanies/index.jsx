@@ -5,7 +5,7 @@ import { FaTimes } from "react-icons/fa";
 
 import {usePopup} from "../../../components/Popup/PopupContext.jsx";
 
-const SuperAdminCompanies = () => {
+const AdminCompanies = () => {
     const navigate = useNavigate();
     const [modalVisible, setModalVisible] = useState(false);
     const [deleteCompanyId, setDeleteCompanyId] = useState(null);
@@ -13,6 +13,21 @@ const SuperAdminCompanies = () => {
     const [activeSearch, setActiveSearch] = useState(null);
     const [editCompanyData, setEditCompanyData] = useState({ id: '', name: '' });
     const showPopup = usePopup()
+    const [createModalVisible, setCreateModalVisible] = useState(false);
+    const [createName, setCreateName] = useState('');
+
+    useEffect(() => {
+        const onEsc = (e) => {
+            if (e.key === 'Escape') {
+                setModalVisible(false);
+                setCreateModalVisible(false);
+                setDeleteCompanyId(null);
+            }
+        };
+        window.addEventListener('keydown', onEsc);
+        return () => window.removeEventListener('keydown', onEsc);
+    }, []);
+
     // const { data: getAllCompanies,refetch  } = useGetAllCompaniesQuery();
     // const data = getAllCompanies?.data || [];
     // const [edit] = useEditCompanyMutation()
@@ -36,20 +51,20 @@ const companies = [
     {}
 ]
     return (
-        <div className="super-admin-companies-main">
-            <div className="super-admin-companies">
+        <div className="admin-companies-main">
+            <div className="admin-companies">
                 <div className="headerr">
                     <div className="head">
                         <h2>Şirkətlər</h2>
-                        <p>Şirkət siyahısına baxın, dəyişikliklər edin və yeni şirkət əlavə edin</p>
+                        <p>Şirkətləri izləyin, idarə edin və fəaliyyətlərini yoxlayın</p>
                     </div>
-                    <button onClick={() => navigate("/superAdmin/companies/companyAdd")}>
+                    <button onClick={() => setCreateModalVisible(true)}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
                             <path d="M12 23C6.21 23 1.5 18.29 1.5 12.5C1.5 6.71 6.21 2 12 2C17.79 2 22.5 6.71 22.5 12.5C22.5 18.29 17.79 23 12 23ZM12 3.5C7.035 3.5 3 7.535 3 12.5C3 17.465 7.035 21.5 12 21.5C16.965 21.5 21 17.465 21 12.5C21 7.535 16.965 3.5 12 3.5Z" fill="white" />
                             <path d="M12 17.75C11.58 17.75 11.25 17.42 11.25 17V8C11.25 7.58 11.58 7.25 12 7.25C12.42 7.25 12.75 7.58 12.75 8V17C12.75 17.42 12.42 17.75 12 17.75Z" fill="white" />
                             <path d="M16.5 13.25H7.5C7.08 13.25 6.75 12.92 6.75 12.5C6.75 12.08 7.08 11.75 7.5 11.75H16.5C16.92 11.75 17.25 12.08 17.25 12.5C17.25 12.92 16.92 13.25 16.5 13.25Z" fill="white" />
                         </svg>
-                        Şirkət əlavə et
+                        Şirkət yarat
                     </button>
                 </div>
 
@@ -77,7 +92,7 @@ const companies = [
                                     </div>
                                 )}
                             </th>
-                            <th>Şöbə sayı</th>
+                            <th>Kateqoriya sayı</th>
                             <th>Fəaliyyətlər</th>
                         </tr>
                         </thead>
@@ -88,7 +103,7 @@ const companies = [
                                 <td>{company.departmentCount}</td>
                                 <td>
                                     <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
-                                        <svg style={{cursor:"pointer"}} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <svg onClick={()=>navigate('/admin/companies/:id')} style={{cursor:"pointer"}} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                             <path d="M12.5 10C12.5 10.663 12.2366 11.2989 11.7678 11.7678C11.2989 12.2366 10.663 12.5 10 12.5C9.33696 12.5 8.70107 12.2366 8.23223 11.7678C7.76339 11.2989 7.5 10.663 7.5 10C7.5 9.33696 7.76339 8.70107 8.23223 8.23223C8.70107 7.76339 9.33696 7.5 10 7.5C10.663 7.5 11.2989 7.76339 11.7678 8.23223C12.2366 8.70107 12.5 9.33696 12.5 10Z" stroke="#606060" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                             <path d="M1.6665 9.99999C2.99984 6.58582 6.11317 4.16666 9.99984 4.16666C13.8865 4.16666 16.9998 6.58582 18.3332 9.99999C16.9998 13.4142 13.8865 15.8333 9.99984 15.8333C6.11317 15.8333 2.99984 13.4142 1.6665 9.99999Z" stroke="#606060" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
@@ -116,15 +131,54 @@ const companies = [
                 </div>
 
             </div>
+            {createModalVisible && (
+                <div className="vendor-edit-modal-overlay" onClick={() => setCreateModalVisible(false)}>
+                    <div className="create-company-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className={"modalHead"}>
+                            <button className="modal-close-btn" onClick={() => setCreateModalVisible(false)}><svg xmlns="http://www.w3.org/2000/svg" width="11" height="10" viewBox="0 0 11 10" fill="none">
+                                <path d="M9.31884 1L1 9M1 1L9.31884 9" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg></button>
+                            <h3>Yeni şirkət əlavə et</h3>
+                        </div>
 
+                        <div className="modal-fields">
+                            <label>Yeni şirkət adı</label>
+                            <input
+                                type="text"
+                                placeholder="Şirkət adı daxil et"
+                                value={createName}
+                                onChange={(e) => setCreateName(e.target.value)}
+                            />
+                            <button
+                                className="save-btn save-btn--dark"
+                                onClick={() => {
+                                    // Burada backend-ə qoşacaqsan: createCompany({ name: createName })
+                                    if (!createName.trim()) return;
+                                    setCreateModalVisible(false);
+                                    setCreateName('');
+                                    if (showPopup) showPopup("Yeni şirkət yaradıldı", "Məlumat uğurla əlavə olundu", "success");
+                                }}
+                            >
+                                Yadda saxla
+                            </button>
+                        </div>
+
+
+                    </div>
+                </div>
+            )}
             {/* Modal for edit */}
             {modalVisible && (
                 <div className="vendor-edit-modal-overlay" onClick={() => setModalVisible(false)}>
                     <div className="vendor-edit-modal" onClick={(e) => e.stopPropagation()}>
-                        <button className="modal-close-btn" onClick={() => setModalVisible(false)}>
-                            ✕
-                        </button>
-                        <h3>Dəyişiklik et</h3>
+                        <div className={"modalHead"}>
+                            <button className="modal-close-btn" onClick={() => setModalVisible(false)}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                    <path d="M8.47116 1L0.876953 9M0.876953 1L8.47116 9" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <h3>Düzəliş et</h3>
+                        </div>
                         <div className="modal-fields">
                             <label>Şirkət adı</label>
                             <input
@@ -135,30 +189,31 @@ const companies = [
                                     setEditCompanyData((prev) => ({ ...prev, name: e.target.value }))
                                 }
                             />
+                            <button
+                                className="save-btn"
+                                onClick={async () => {
+                                    try {
+                                        if (!editCompanyData.name.trim()) return;
+
+                                        await edit({
+                                            id: editCompanyData.id,
+                                            name: editCompanyData.name,
+                                        });
+
+                                        setModalVisible(false);
+                                        setEditCompanyData({ id: '', name: '' });
+                                        refetch();
+                                        showPopup("Şirkətə uğurla düzəliş etdiniz","Dəyişikliklər yadda saxlanıldı","success")
+                                    } catch  {
+                                        showPopup("Sistem xətası","Əməliyyat tamamlanmadı. Təkrar cəhd edin və ya dəstəyə müraciət edin.","error")
+
+                                    }
+                                }}
+                            >
+                                Yadda saxla
+                            </button>
                         </div>
-                        <button
-                            className="save-btn"
-                            onClick={async () => {
-                                try {
-                                    if (!editCompanyData.name.trim()) return;
 
-                                    await edit({
-                                        id: editCompanyData.id,
-                                        name: editCompanyData.name,
-                                    });
-
-                                    setModalVisible(false);
-                                    setEditCompanyData({ id: '', name: '' });
-                                    refetch();
-                                    showPopup("Şirkətə uğurla düzəliş etdiniz","Dəyişikliklər yadda saxlanıldı","success")
-                                } catch  {
-                                    showPopup("Sistem xətası","Əməliyyat tamamlanmadı. Təkrar cəhd edin və ya dəstəyə müraciət edin.","error")
-
-                                }
-                            }}
-                        >
-                            Yadda saxla
-                        </button>
 
                     </div>
                 </div>
@@ -167,7 +222,17 @@ const companies = [
             {/* Modal for delete */}
             {deleteCompanyId  !== null && (
                 <div className="modal-overlay" onClick={() => setDeleteCompanyId(null)}>
+
                     <div className="delete-modal-box" onClick={(e) => e.stopPropagation()}>
+                        <div className="delete-icon-wrapper">
+                            <div className={"delete-icon-circle-one"}>
+                                <div className="delete-icon-circle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="45" height="44" viewBox="0 0 45 44" fill="none">
+                                        <path d="M22.5008 24.566L27.8175 29.8827C28.1536 30.2188 28.5814 30.3869 29.1009 30.3869C29.6203 30.3869 30.0481 30.2188 30.3842 29.8827C30.7203 29.5466 30.8884 29.1188 30.8884 28.5994C30.8884 28.0799 30.7203 27.6522 30.3842 27.3161L25.0675 21.9994L30.3842 16.6827C30.7203 16.3466 30.8884 15.9188 30.8884 15.3994C30.8884 14.8799 30.7203 14.4521 30.3842 14.116C30.0481 13.7799 29.6203 13.6119 29.1009 13.6119C28.5814 13.6119 28.1536 13.7799 27.8175 14.116L22.5008 19.4327L17.1842 14.116C16.8481 13.7799 16.4203 13.6119 15.9008 13.6119C15.3814 13.6119 14.9536 13.7799 14.6175 14.116C14.2814 14.4521 14.1133 14.8799 14.1133 15.3994C14.1133 15.9188 14.2814 16.3466 14.6175 16.6827L19.9342 21.9994L14.6175 27.3161C14.2814 27.6522 14.1133 28.0799 14.1133 28.5994C14.1133 29.1188 14.2814 29.5466 14.6175 29.8827C14.9536 30.2188 15.3814 30.3869 15.9008 30.3869C16.4203 30.3869 16.8481 30.2188 17.1842 29.8827L22.5008 24.566ZM22.5008 40.3327C19.9647 40.3327 17.5814 39.8512 15.3508 38.8881C13.1203 37.925 11.18 36.619 9.52999 34.9702C7.87999 33.3215 6.57404 31.3812 5.61215 29.1494C4.65026 26.9176 4.16871 24.5343 4.16748 21.9994C4.16626 19.4645 4.64782 17.0811 5.61215 14.8494C6.57649 12.6176 7.88243 10.6773 9.52999 9.02852C11.1775 7.37974 13.1178 6.0738 15.3508 5.11068C17.5838 4.14757 19.9672 3.66602 22.5008 3.66602C25.0345 3.66602 27.4179 4.14757 29.6509 5.11068C31.8839 6.0738 33.8241 7.37974 35.4717 9.02852C37.1193 10.6773 38.4258 12.6176 39.3914 14.8494C40.3569 17.0811 40.8379 19.4645 40.8342 21.9994C40.8305 24.5343 40.349 26.9176 39.3895 29.1494C38.4301 31.3812 37.1241 33.3215 35.4717 34.9702C33.8193 36.619 31.879 37.9256 29.6509 38.8899C27.4227 39.8542 25.0394 40.3352 22.5008 40.3327Z" fill="#E60D0D"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
                         <p className="delete-message">Şirkəti silmək istədiyinizə əminsiz?</p>
                         <div className="delete-modal-actions">
                             <button className="cancel-btn" onClick={() => setDeleteCompanyId(null)}>Ləğv et</button>
@@ -195,4 +260,4 @@ const companies = [
     );
 };
 
-export default SuperAdminCompanies;
+export default AdminCompanies;

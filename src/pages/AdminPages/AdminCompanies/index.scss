@@ -1,4 +1,4 @@
-.super-admin-companies-main {
+.admin-companies-main {
   position: relative;
 
   .xett {
@@ -8,16 +8,99 @@
     position: absolute;
     bottom: 100px;
   }
-  .hrXett{
+
+  .hrXett {
     width: 1px;
     height: 20px;
     background: #C3C3C3;
   }
+
+  .create-company-modal {
+    background: #fff;
+
+    border-radius: 12px; /* şəkildəki kimi daha yumru */
+    width: 320px; /* screenshot ölçüsünə yaxın */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .1);
+    position: relative;
+    overflow: hidden;
+
+    h3 {
+      margin: 0 0 4px 0;
+      font-size: 16px; /* başlıq sətir hündürlüyünə uyğun */
+      font-weight: 500;
+      color: #1d1d1f;
+      text-align: center; /* şəkildə soldan idi */
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .modal-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 24px;
+
+      label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #1d1d1f;
+      }
+
+      input {
+        padding: 10px 12px;
+        font-size: 14px;
+        border: 1px solid #D9D9D9;
+        border-radius: 6px;
+        outline: none;
+
+        &::placeholder {
+          color: #9c9c9c;
+        }
+
+        &:focus {
+          border-color: #717171;
+        }
+      }
+    }
+
+    .save-btn--dark {
+      margin-top: 6px;
+      background: #333333; /* tünd düymə */
+      color: #fff;
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #464646;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+
+      &:hover {
+        background: #2b2b2b;
+      }
+
+      &:active {
+        transform: translateY(1px);
+      }
+    }
+  }
+
   .delete-modal-box {
     background: #fff;
-    padding:32px 48px;
+    padding: 32px 32px;
     border-radius: 12px;
-    width: 320px;
+    width: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -30,7 +113,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      .delete-icon-circle-one{
+
+      .delete-icon-circle-one {
         width: 120px;
         height: 120px;
         background-color: #F68D802B;
@@ -39,6 +123,7 @@
         align-items: center;
         border-radius: 50%;
       }
+
       .delete-icon-circle {
         width: 72px;
         height: 72px;
@@ -68,6 +153,7 @@
       gap: 16px;
       margin-top: 20px;
       width: 100%;
+
       button {
         padding: 10px 24px;
         border-radius: 8px;
@@ -107,6 +193,7 @@
     justify-content: center;
     z-index: 999;
   }
+
   .vendor-edit-modal-overlay {
     position: fixed;
     top: 0;
@@ -120,14 +207,24 @@
     z-index: 999;
   }
 
+  .modalHead {
+    width: 100%;
+    height: 60px;
+    border-radius: 0 0 10px 10px;
+    border: 1px solid #DCDCDC;
+    background: #F8F8F8;
+    padding: 20px 0;
+  }
+
   .vendor-edit-modal {
     background: #fff;
-    padding: 32px 24px;
-    border-radius: 6px;
+
+    border-radius: 12px;
+    overflow: hidden;
     width: 300px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 0;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     position: relative;
 
@@ -152,11 +249,12 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      padding: 20px 28px 32px;
 
       label {
         font-size: 14px;
         font-weight: 500;
-        color: #384871;
+        color: #000;
       }
 
       input {
@@ -173,24 +271,21 @@
     }
 
     .save-btn {
-      background: #384871;
       color: white;
       padding: 10px;
-      border-radius: 6px;
       border: none;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
+      border-radius: 11px;
+      background: #333;
 
-      &:hover {
-        background: #2f3a5a;
-      }
     }
   }
 
 }
 
-.super-admin-companies {
+.admin-companies {
   padding: 32px;
   max-width: 100%;
   margin: 0 auto;
@@ -198,115 +293,166 @@
   min-height: calc(100vh - 129px);
   position: relative;
 
- .headerr{
-   display: flex;
-   justify-content: space-between;
-   margin-bottom: 48px;
-   .head{
-     h2 {
-       font-size: 24px;
-       font-weight:500;
-       color: #333;
-       margin-bottom: 10px;
-     }
+  .headerr {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 32px;
 
-     p {
-       margin-bottom:0;
-     }
-   }
-   button{
-     display: flex;
-     height: 40px;
-     padding: 10px 17px;
-     justify-content: center;
-     align-items: center;
-     gap: 10px;
-     border-radius: 7px;
-     border: 1px solid #464646;
-     background: #384871;
-     color: #FFF;
-     font-size: 14px;
-     font-style: normal;
-     font-weight: 400;
-     line-height: normal;
-   }
- }
+    .head {
+      h2 {
+        font-size: 24px;
+        font-weight: 500;
+        color: #333;
+      }
+
+      p {
+        margin-bottom: 0;
+      }
+    }
+
+    button {
+      display: flex;
+      height: 40px;
+      padding: 10px 17px;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      border-radius: 7px;
+      border: 1px solid #464646;
+      background: #333333;
+      color: #FFF;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
+  }
 
   .order-table-wrapper {
     display: flex;
     background: #fff;
-    width: 40%;
+    width: 50%;
     max-height: 600px; // Yüksəklik istəyə uyğun dəyişdirilə bilər
     overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
 
 
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      /* === Fəaliyyətlər sütunu: sticky + soldan shadow === */
+      thead th:last-child,
+      tbody td:last-child {
+        position: sticky;
+        right: 0; /* sağda yapışdır */
+        background: #fff; /* üst-üstə gələndə ağ qalsın */
+        z-index: 10; /* digər hüceyrələrdən yuxarı */
+      }
 
-      table {
-        border-collapse: collapse;
-        width: 100%;
+      /* Soldan yumşaq kölgə */
+      thead th:last-child::before,
+      tbody td:last-child::before {
+        content: "";
+        position: absolute;
+        left: -12px;
+        top: 0;
+        bottom: 0;
+        width: 12px;
+        pointer-events: none;
+        /* soldan içəri fade shadow */
+        background: linear-gradient(270deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+      }
 
-        thead {
-          background: #f9f9f9;
+      thead {
+        background: #f9f9f9;
 
-          th {
-            padding: 8px 16px;
-            border: 1px solid #e0e0e0; // border for th
-            white-space: nowrap;
-            text-align: center;
-            font-weight: 500;
-            font-size: 14px;
-          }
-          .th-label{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            svg{
-              cursor: pointer;
-            }
-          }
+        th {
+          padding: 8px 16px;
+          border: 1px solid #e0e0e0; // border for th
+          white-space: nowrap;
+          text-align: center;
+          font-weight: 400;
+          font-size: 14px;
+          border-top: none;
+          border-right: none;
         }
 
-        tbody {
-          tr {
-            text-align: center;
+        th:first-child {
+          border-left: none;
+        }
 
-            &:nth-child(odd) {
-              background-color: #ffffff;
-            }
+        th:last-child {
+          text-align: left;
+        }
 
-            &:nth-child(even) {
-              background-color: #f9f9f9;
-            }
-          }
+        .th-label {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
 
-          td {
-            padding: 8px 16px;
-            font-size: 14px;
-            border: 1px solid #e0e0e0; // border for td
-            white-space: nowrap;
-            vertical-align: middle;
-            text-align: left;
-            button{
-              display: flex;
-              width: 86px;
-              height: 28px;
-              justify-content: center;
-              align-items: center;
-              border-radius: 9.739px;
-              border: 1px solid #384871;
-              background: #F0F7FF;
-              color: #384871;
-              font-size: 14px;
-              font-style: normal;
-              font-weight: 400;
-              line-height: normal;
-              letter-spacing: 0.056px;
-              margin: 0 auto;
-            }
+          svg {
+            cursor: pointer;
           }
         }
       }
 
+      tbody {
+        tr {
+          text-align: center;
+
+          &:nth-child(odd) {
+            background-color: #ffffff;
+          }
+
+          &:nth-child(even) {
+            background-color: #ffffff;
+          }
+        }
+
+        tr:last-child {
+          td {
+            border-bottom: none;
+          }
+        }
+
+        td:first-child {
+          border-left: none;
+        }
+
+        td:last-child {
+          width: 150px;
+        }
+
+        td {
+          padding: 8px 16px;
+          font-size: 14px;
+          border: 1px solid #e0e0e0; // border for td
+          white-space: nowrap;
+          vertical-align: middle;
+          text-align: left;
+          border-right: none;
+
+          button {
+            display: flex;
+            width: 86px;
+            height: 28px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 9.739px;
+            border: 1px solid #384871;
+            background: #F0F7FF;
+            color: #384871;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            letter-spacing: 0.056px;
+            margin: 0 auto;
+          }
+        }
+      }
+    }
 
 
     .fixed-column {
