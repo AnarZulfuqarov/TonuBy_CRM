@@ -55,8 +55,7 @@ const SuperAdminNavbar = () => {
                             <img src={profileIcon} alt="Profile" className="iconZakir"/>
                         </div>
                         <div>
-                            <span className="navbar__profile-name">Tonubygroup</span>
-                            <br/>
+                            <p className="navbar__profile-name">Tonubygroup</p>
                             <span className='navbar__profile-namee'>Admin</span>
                         </div>
                     </div>

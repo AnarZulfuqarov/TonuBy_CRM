@@ -1,0 +1,476 @@
+@mixin card {
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  border-radius: 10px;
+}
+
+.admin-kassa-e-main {
+  position: relative;
+
+  .delete-modal-box {
+    background: #fff;
+    padding: 32px 32px;
+    border-radius: 12px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+
+    .delete-icon-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .delete-icon-circle-one {
+        width: 120px;
+        height: 120px;
+        background-color: #F68D802B;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+      }
+
+      .delete-icon-circle {
+        width: 72px;
+        height: 72px;
+        background: #FC3A2C36;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .delete-message {
+      color: #1D1D1F;
+      font-weight: 500;
+      font-size: 16px;
+      margin: 8px 0 0 0;
+    }
+
+    .delete-sub {
+      font-size: 14px;
+      color: #6c6c6c;
+      margin: 0;
+    }
+
+    .delete-modal-actions {
+      display: flex;
+      gap: 16px;
+      margin-top: 20px;
+      width: 100%;
+
+      button {
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        width: 50%;
+      }
+
+      .cancel-btn {
+        background: #fff;
+        border: 1px solid #d0d5dd;
+        color: #1d1d1f;
+      }
+
+      .confirm-btn {
+        background: #f04438;
+        color: white;
+        border: none;
+
+        &:hover {
+          background: #d1372e;
+        }
+      }
+    }
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+}
+
+.admin-kassa-e {
+  padding: 32px;
+  max-width: 100%;
+  margin: 0 auto;
+  background: #fff;
+  max-height: calc(100vh - 129px);
+  position: relative;
+  overflow: auto;
+
+  .hrXett {
+    width: 1px;
+    height: 20px;
+    background: #C3C3C3;
+  }
+
+  .headerr {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .head {
+      h2 {
+        color: #000;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        margin-bottom: 0;
+      }
+
+      p {
+        color: #3F3F3F;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin: 0;
+      }
+    }
+
+    button {
+      height: 40px;
+      display: flex;
+      padding: 10px 21px;
+      justify-content: center;
+      align-items: center;
+      align-self: stretch;
+      border-radius: 7px;
+      background: #384871;
+      border: none;
+      color: #FFF;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      gap: 8px;
+
+    }
+  }
+
+  .root {
+    h2 {
+      font-size: 14px;
+      margin-bottom: 24px;
+
+      .link {
+        color: #5b5b5b;
+        text-decoration: none;
+      }
+    }
+  }
+
+  .admin-kassa-e-table-wrapper {
+    display: flex;
+    background: #fff;
+    width: 100%;
+    max-height: 150px; // Yüksəklik istəyə uyğun dəyişdirilə bilər
+    overflow: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      /* === Fəaliyyətlər sütunu: sticky + soldan shadow === */
+      thead th:last-child,
+      tbody td:last-child {
+        position: sticky;
+        right: 0; /* sağda yapışdır */
+        background: #fff; /* üst-üstə gələndə ağ qalsın */
+        z-index: 10; /* digər hüceyrələrdən yuxarı */
+      }
+
+      /* Soldan yumşaq kölgə */
+      thead th:last-child::before,
+      tbody td:last-child::before {
+        content: "";
+        position: absolute;
+        left: -12px;
+        top: 0;
+        bottom: 0;
+        width: 12px;
+        pointer-events: none;
+        /* soldan içəri fade shadow */
+        background: linear-gradient(270deg, rgba(0, 0, 0, 0.09), rgba(0, 0, 0, 0));
+      }
+
+      thead {
+        background: #f9f9f9;
+
+        th {
+          padding: 8px 16px;
+          border: 1px solid #e0e0e0; // border for th
+          white-space: nowrap;
+          text-align: left;
+          font-weight: 400;
+          font-size: 14px;
+          border-top: none;
+          border-right: none;
+        }
+
+        th:last-child {
+          text-align: left;
+          border-left: none;
+          background: #f9f9f9;
+        }
+
+
+        th:first-child {
+          border-left: none;
+        }
+
+        .th-label {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          svg {
+            cursor: pointer;
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          text-align: center;
+
+          &:nth-child(odd) {
+            background-color: #ffffff;
+          }
+
+          &:nth-child(even) {
+            background-color: #ffffff;
+          }
+        }
+
+        td:last-child {
+          width: 50px;
+        }
+        td:last-child{
+          border-left: none;
+        }
+        tr:last-child {
+          td {
+            border-bottom: none;
+          }
+        }
+
+        td:first-child {
+          border-left: none;
+        }
+
+        td {
+          padding: 8px 16px;
+          font-size: 14px;
+          border: 1px solid #e0e0e0; // border for td
+          white-space: nowrap;
+          vertical-align: middle;
+          text-align: left;
+          border-right: none;
+
+          button {
+            display: flex;
+            width: 86px;
+            height: 28px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 9.739px;
+            border: 1px solid #384871;
+            background: #F0F7FF;
+            color: #384871;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            letter-spacing: 0.056px;
+            margin: 0 auto;
+          }
+        }
+      }
+    }
+
+
+    .fixed-column {
+      width: 150px;
+      flex-shrink: 0;
+      background: #fff;
+
+      position: sticky;
+      right: 0;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      border-left: none;
+      .header {
+        font-weight: bold;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+        text-align: center;
+        background: #f9f9f9;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .cell {
+        height: 60px;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        button {
+          padding: 6px 12px;
+          cursor: pointer;
+          border-radius: 9.739px;
+          border: 1px solid #384871;
+          background: #F0F7FF;
+          color: #384871;
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          letter-spacing: 0.056px;
+        }
+      }
+    }
+  }
+
+  .kecid {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    align-items: center;
+    position: absolute;
+    bottom: 25px;
+
+    p {
+      color: #272727;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
+
+    button {
+      border-radius: 8px;
+      background: #333;
+      display: flex;
+      width: 169px;
+      height: 41px;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      color: #FFF;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
+  }
+
+  .table-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 12px 0;
+
+    .filters {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+  }
+
+  /* ▼ Görseldeki gibi içte label/placeholder ve gri stil */
+  .select2 {
+    height: 36px;
+    border: 1px solid #E5E5E5;
+    border-radius: 8px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    position: relative;
+    box-sizing: border-box;
+
+    &:hover {
+      border-color: #D9D9D9;
+    }
+
+    &:focus-within {
+      border-color: #D0D6E7;
+      box-shadow: 0 0 0 3px rgba(56, 72, 113, 0.12);
+    }
+
+    select {
+      flex: 1;
+      height: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+      color: #2B2B2B;
+      padding-right: 18px; /* chevron boşluğu */
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+
+    &.is-placeholder select {
+      color: #AFAFAF;
+    }
+
+    /* gri placeholder */
+
+    .chev {
+      position: absolute;
+      right: 10px;
+      pointer-events: none;
+    }
+  }
+
+  /* sağdaki buton */
+  .create-op {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 8px;
+    border: none;
+    background: #333333;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+
+}

@@ -52,7 +52,7 @@ const SuperAdminLeftBar = () => {
                 <li>
                     <div className={`sidebar__menu-item sidebar__dropdown
             ${productsOpen ? "open" : ""}
-            ${location.pathname.startsWith("/superAdmin/products") ? "active" : ""}
+            ${location.pathname.startsWith("/admin/emeliyyat") ? "active" : ""}
           `}
                          onClick={toggleProducts}
                          ref={dropdownRef}>
@@ -94,7 +94,7 @@ const SuperAdminLeftBar = () => {
                         <ul className="sidebar__submenu">
                             <li>
                                 <NavLink
-                                    to="/superAdmin/products/products"
+                                    to="/admin/emeliyyat/kassa-e"
                                     className={({isActive}) =>
                                         isActive ? "sidebar__submenu-item active" : "sidebar__submenu-item"
                                     }

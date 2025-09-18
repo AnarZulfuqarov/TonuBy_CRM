@@ -2,41 +2,45 @@ import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import "./index.scss";
-import { useGetOrderStatusPercantageStatikQuery } from "../../../services/adminApi";
-import { skipToken } from "@reduxjs/toolkit/query";
+// API: açık bırakıyorum, useMock=false olunca çalışır
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 const DoughnutChartCard = ({
-                               title = "Ümumi sifarişlər",
-                               labels = ["Tamamlanmış", "Ləğv edilmiş", "Gözləyən"],
-                               colors = ["#7ED957", "#EB5757", "#F2C94C"],
+                               title = "Balans",
+                               labels = ["Ümumi mədaxil", "Ümumi məxaric", "Toplam balans"],
+                               colors = ["#45DD42", "#FF2D2D", "#FFD256"],
                                legendColors = ["#45DD42", "#FF2D2D", "#FFD256"],
+                               useMock = true, // 🔶 ŞİMDİLİK MOCK
                            }) => {
+    // 🔸 MOCK veriler (toplam 100 olacak şekilde)
+    const mock = { completedPercent: 62, deletedPercent: 8, waitingPercent: 30 };
+
     const companyId = localStorage.getItem("selectedCompanyId");
     const isValidId = companyId && companyId.length === 36;
 
-    const { data, isLoading, isError } = useGetOrderStatusPercantageStatikQuery(
-        isValidId ? companyId : skipToken
-    );
 
-    if (!isValidId) return <div>Zəhmət olmasa şirkət seçin</div>;
-    if (isLoading) return <div>Yüklənir...</div>;
-    if (isError) return <div>Xəta baş verdi</div>;
+    // kaynaktan değerleri belirle
+    const dataSrc = useMock
+        ? mock
+        : {
+            completedPercent: api.data?.completedPercent ?? 0,
+            deletedPercent: api.data?.deletedPercent ?? 0,
+            waitingPercent: api.data?.waitingPercent ?? 0,
+        };
+
+    // erken dönüşler (sadece gerçek API modunda)
+    if (!useMock && !isValidId) return <div>Zəhmət olmasa şirkət seçin</div>;
+    if (!useMock && api.isLoading) return <div>Yüklənir...</div>;
+    if (!useMock && api.isError) return <div>Xəta baş verdi</div>;
 
     const chartValues = [
-        data?.completedPercent ?? 0,
-        data?.deletedPercent ?? 0,
-        data?.waitingPercent ?? 0,
+        dataSrc.completedPercent,
+        dataSrc.deletedPercent,
+        dataSrc.waitingPercent,
     ];
 
-    const centerText =
-        chartValues[0] >= chartValues[1] && chartValues[0] >= chartValues[2]
-            ? "Tamamlanmış"
-            : chartValues[1] >= chartValues[2]
-                ? "Ləğv edilmiş"
-                : "Gözləyən";
-
+    const centerText = "Balans"
     const doughnutData = {
         labels,
         datasets: [
@@ -54,16 +58,10 @@ const DoughnutChartCard = ({
             tooltip: {
                 enabled: true,
                 callbacks: {
-                    label: function (context) {
-                        const label = context.label || "";
-                        const value = context.raw || 0;
-                        return `${label}: ${value}%`;
-                    },
+                    label: (ctx) => `${ctx.label || ""}: ${ctx.raw || 0}%`,
                 },
             },
-            datalabels: {
-                display: false,
-            },
+            datalabels: { display: false },
         },
         cutout: "70%",
     };
@@ -77,15 +75,15 @@ const DoughnutChartCard = ({
                         <ul className="legend-list">
                             {labels.map((label, i) => (
                                 <li key={i}>
-                                    <span className={`dot`} style={{ background: legendColors[i] }}></span>
-                                    <strong>{chartValues[i]}%</strong> {label} sifarişlər
+                                    <span className="dot" style={{ background: legendColors[i] }} />
+                                    <strong>{chartValues[i]}%</strong> {label}
                                 </li>
                             ))}
                         </ul>
                     </div>
                 </div>
                 <div className="chart-right">
-                    <div style={{ width: "160px", height: "160px", position: "relative" }}>
+                    <div style={{ width: 160, height: 160, position: "relative" }}>
                         <Doughnut data={doughnutData} options={doughnutOptions} />
                         <div className="chart-center-label">{centerText}</div>
                     </div>
