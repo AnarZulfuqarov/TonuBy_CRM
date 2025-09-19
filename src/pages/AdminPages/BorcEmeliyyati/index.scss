@@ -1,100 +1,11 @@
-.admin-products-main {
+@mixin card {
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  border-radius: 10px;
+}
+
+.admin-borc-e-main {
   position: relative;
-
-  .xett {
-    width: 100%;
-    height: 4px;
-    background: #f6f6f6;
-    position: absolute;
-    bottom: 100px;
-  }
-
-  .hrXett {
-    width: 1px;
-    height: 20px;
-    background: #C3C3C3;
-  }
-
-  .create-company-modal {
-    background: #fff;
-
-    border-radius: 12px; /* şəkildəki kimi daha yumru */
-    width: 320px; /* screenshot ölçüsünə yaxın */
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, .1);
-    position: relative;
-    overflow: hidden;
-
-    h3 {
-      margin: 0 0 4px 0;
-      font-size: 16px; /* başlıq sətir hündürlüyünə uyğun */
-      font-weight: 500;
-      color: #1d1d1f;
-      text-align: center; /* şəkildə soldan idi */
-    }
-
-    .modal-close-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-      line-height: 1;
-    }
-
-    .modal-fields {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding: 24px;
-
-      label {
-        font-size: 14px;
-        font-weight: 500;
-        color: #1d1d1f;
-      }
-
-      input {
-        padding: 10px 12px;
-        font-size: 14px;
-        border: 1px solid #D9D9D9;
-        border-radius: 6px;
-        outline: none;
-
-        &::placeholder {
-          color: #9c9c9c;
-        }
-
-        &:focus {
-          border-color: #717171;
-        }
-      }
-    }
-
-    .save-btn--dark {
-      margin-top: 6px;
-      background: #333333; /* tünd düymə */
-      color: #fff;
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #464646;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-
-      &:hover {
-        background: #2b2b2b;
-      }
-
-      &:active {
-        transform: translateY(1px);
-      }
-    }
-  }
 
   .delete-modal-box {
     background: #fff;
@@ -194,137 +105,226 @@
     z-index: 999;
   }
 
-  .vendor-edit-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-  }
-
-  .modalHead {
-    width: 100%;
-    height: 60px;
-    border-radius: 0 0 10px 10px;
-    border: 1px solid #DCDCDC;
-    background: #F8F8F8;
-    padding: 20px 0;
-  }
-
-  .vendor-edit-modal {
-    background: #fff;
+  .payment-modal-box {
+    @include card;
+    width: 360px;
 
     border-radius: 12px;
     overflow: hidden;
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    position: relative;
 
-    h3 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 600;
-      color: #333;
+    .modalHead {
+      width: 100%;
+      height: 60px;
+      border-radius: 0 0 10px 10px;
+      background: #F8F8F8;
+      align-content: center;
       text-align: center;
+      position: relative;
+
+      h3 {
+        margin: 0;
+        color: #1C1C1C;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+      }
     }
 
-    .modal-close-btn {
+    .pm-close {
       position: absolute;
-      top: 16px;
-      right: 16px;
-      background: transparent;
-      border: none;
+      top: 15px;
+      right: 15px;
       cursor: pointer;
     }
 
-    .modal-fields {
+
+    .pm-body {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      padding: 20px 28px 32px;
+      padding: 14px 16px 18px;
 
-      label {
+      .pm-label {
         font-size: 14px;
-        font-weight: 500;
-        color: #000;
+        color: #1d1d1f;
       }
 
-      input {
+      .pm-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .pm-input {
+        input {
+          height: 34px;
+          min-width: 150px;
+          border: 1px solid #E5E5E5;
+          border-radius: 10px;
+          padding: 0 12px;
+          font-size: 14px;
+          color: #2B2B2B;
+          outline: none;
+          background: #fff;
+
+          &::placeholder {
+            color: #AFAFAF;
+          }
+
+          &:focus {
+            border-color: #D0D6E7;
+            box-shadow: 0 0 0 3px rgba(56, 72, 113, .12);
+          }
+        }
+      }
+
+      /* Məbləğ üçün sağdakı pill — şəkilə bənzər */
+      .pm-amount-pill {
+        min-width: 64px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #E5E5E5;
+        border-radius: 10px;
+        padding: 0 10px;
+        font-size: 13px;
+        color: #2B2B2B;
+        background: #fff;
+      }
+      .pm-date-visible input {
+        width: 140px;
+        text-align: left;
+      }
+      /* Tarix üçün ayrıca ikon düyməsi */
+      .pm-icon-btn {
+        width: 34px;
+        height: 34px;
+        border: 1px solid #E5E5E5;
+        background: #fff;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        &:hover {
+          background: #fafafa;
+        }
+      }.pm-native-date {
+         position: absolute;
+         opacity: 0;
+         pointer-events: none;
+         width: 0; height: 0;
+       }
+
+      .pm-textarea textarea {
+        width: 100%;
+        height: 96px;
+        border: 1px solid #E5E5E5;
+        border-radius: 12px;
         padding: 10px 12px;
         font-size: 14px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
+        resize: none;
         outline: none;
 
-        &:focus {
-          border-color: #384871;
+        &::placeholder {
+          color: #AFAFAF;
         }
       }
     }
 
-    .save-btn {
-      color: white;
-      padding: 10px;
-      border: none;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      border-radius: 11px;
-      background: #333;
+    .pm-actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 12px;
 
+      .pm-cancel {
+        width: 45%;
+        height: 38px;
+        border-radius: 14px;
+        border: 1px solid #E5E5E5;
+        background: #F5F5F5;
+        color: #A8A8A8;
+      }
+
+      .pm-confirm {
+        width: 55%;
+        height: 38px;
+        border-radius: 14px;
+        background: #2B2B2B;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+          opacity: .95;
+        }
+      }
     }
   }
-
 }
 
-.admin-products {
+.admin-borc-e {
   padding: 32px;
   max-width: 100%;
   margin: 0 auto;
   background: #fff;
-  min-height: calc(100vh - 129px);
+  max-height: calc(100vh - 129px);
   position: relative;
+  overflow: auto;
+
+  .hrXett {
+    width: 1px;
+    height: 20px;
+    background: #C3C3C3;
+  }
 
   .headerr {
+    width: 100%;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 24px;
+    align-items: center;
+    margin-bottom: 16px;
 
     .head {
       h2 {
+        color: #000;
         font-size: 24px;
+        font-style: normal;
         font-weight: 500;
-        color: #333;
+        line-height: normal;
+        margin-bottom: 0;
       }
 
       p {
-        margin-bottom: 0;
+        color: #3F3F3F;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin: 0;
       }
     }
 
     button {
-      display: flex;
       height: 40px;
-      padding: 10px 17px;
+      display: flex;
+      padding: 10px 21px;
       justify-content: center;
       align-items: center;
-      gap: 10px;
+      align-self: stretch;
       border-radius: 7px;
-      border: 1px solid #464646;
-      background: #333333;
+      background: #384871;
+      border: none;
       color: #FFF;
       font-size: 14px;
       font-style: normal;
       font-weight: 400;
       line-height: normal;
+      gap: 8px;
+
     }
   }
 
@@ -340,57 +340,16 @@
     }
   }
 
-  .paths {
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-    gap: 16px;
-
-    .hrXettt {
-      width: 1px;
-      height: 23px;
-      background: #A8A8A8;
-    }
-
-    .path1 {
-      display: flex;
-      height: 34px;
-      padding: 8px 20px;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      border-radius: 10px;
-      border: 1px solid #A8A8A8;
-      background: #FFF;
-
-      h3 {
-        color: #000;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-        margin-bottom: 0;
-      }
-
-      span {
-        color: #6C6C6C;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-      }
-    }
-  }
-
-  .order-table-wrapper {
+  .admin-borc-e-table-wrapper {
     display: flex;
     background: #fff;
-    width: 50%;
-    max-height: 600px; // Yüksəklik istəyə uyğun dəyişdirilə bilər
-    overflow-y: auto;
-
+    width: 100%;
+    max-height: 200px; // Yüksəklik istəyə uyğun dəyişdirilə bilər
+    overflow: auto;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
+
+
     table {
       border-collapse: collapse;
       width: 100%;
@@ -398,9 +357,9 @@
       thead th:last-child,
       tbody td:last-child {
         position: sticky;
-        right: 0;                 /* sağda yapışdır */
-        background: #fff;         /* üst-üstə gələndə ağ qalsın */
-        z-index: 10;              /* digər hüceyrələrdən yuxarı */
+        right: 0; /* sağda yapışdır */
+        background: #fff; /* üst-üstə gələndə ağ qalsın */
+        z-index: 10; /* digər hüceyrələrdən yuxarı */
       }
 
       /* Soldan yumşaq kölgə */
@@ -414,14 +373,14 @@
         width: 12px;
         pointer-events: none;
         /* soldan içəri fade shadow */
-        background: linear-gradient(270deg, rgba(0, 0, 0, 0.15), rgba(0,0,0,0));
+        background: linear-gradient(270deg, rgba(0, 0, 0, 0.09), rgba(0, 0, 0, 0));
       }
+
       thead {
         background: #f9f9f9;
 
         th {
           padding: 8px 16px;
-
           border: 1px solid #e0e0e0; // border for th
           white-space: nowrap;
           text-align: left;
@@ -429,16 +388,19 @@
           font-size: 14px;
           border-top: none;
           border-right: none;
-
         }
-        th:last-child{
+
+        th:last-child {
           text-align: left;
           border-left: none;
-
+          background: #f9f9f9;
         }
+
+
         th:first-child {
           border-left: none;
         }
+
         .th-label {
           display: flex;
           align-items: center;
@@ -462,22 +424,25 @@
             background-color: #ffffff;
           }
         }
-        td:nth-child(3),td:nth-child(4){
-          width: 100px;
-        }
-        td:last-child{
-          width: 100px;
-          border-left: none;
 
+        td:last-child {
+          width: 50px;
         }
+
+        td:last-child {
+          border-left: none;
+        }
+
         tr:last-child {
-          td{
+          td {
             border-bottom: none;
           }
         }
+
         td:first-child {
           border-left: none;
         }
+
         td {
           padding: 8px 16px;
           font-size: 14px;
@@ -513,13 +478,14 @@
       width: 150px;
       flex-shrink: 0;
       background: #fff;
-      border-left: 1px solid #ccc;
+
       position: sticky;
       right: 0;
       top: 0;
       z-index: 2;
       display: flex;
       flex-direction: column;
+      border-left: none;
 
       .header {
         font-weight: bold;
@@ -558,40 +524,116 @@
     }
   }
 
-  &__pagination {
+  .kecid {
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
+    width: 95%;
     align-items: center;
-    gap: 5px;
     position: absolute;
-    bottom: 26px;
-    right: 16px;
+    bottom: 25px;
+
+    p {
+      color: #272727;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
 
     button {
-      padding: 8px 12px;
-      background: #fff;
-      color: #333;
-      cursor: pointer;
+      border-radius: 8px;
+      background: #333;
+      display: flex;
+      width: 169px;
+      height: 41px;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      color: #FFF;
       font-size: 14px;
-      min-width: 40px;
-      border-radius: 3px;
-      border: 1px solid #e3e3e3;
-
-      &:disabled {
-        background: #f1f1f1;
-        cursor: not-allowed;
-        color: #999;
-      }
-
-      &:hover:not(:disabled):not(.active) {
-        background: #f9f9f9;
-      }
-
-      &.active {
-        color: #fff;
-        font-weight: 500;
-        background: #384871;
-      }
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
     }
   }
+
+  .table-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 12px 0;
+
+    .filters {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+  }
+
+  /* ▼ Görseldeki gibi içte label/placeholder ve gri stil */
+  .select2 {
+    height: 36px;
+    border: 1px solid #E5E5E5;
+    border-radius: 8px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    position: relative;
+    box-sizing: border-box;
+
+    &:hover {
+      border-color: #D9D9D9;
+    }
+
+    &:focus-within {
+      border-color: #D0D6E7;
+      box-shadow: 0 0 0 3px rgba(56, 72, 113, 0.12);
+    }
+
+    select {
+      flex: 1;
+      height: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+      color: #2B2B2B;
+      padding-right: 18px; /* chevron boşluğu */
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+
+    &.is-placeholder select {
+      color: #AFAFAF;
+    }
+
+    /* gri placeholder */
+
+    .chev {
+      position: absolute;
+      right: 10px;
+      pointer-events: none;
+    }
+  }
+
+  /* sağdaki buton */
+  .create-op {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 8px;
+    border: none;
+    background: #333333;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+
 }

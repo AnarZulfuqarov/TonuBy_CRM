@@ -104,7 +104,7 @@ const SuperAdminLeftBar = () => {
                             </li>
                             <li>
                                 <NavLink
-                                    to="/superAdmin/products/categories"
+                                    to="/admin/emeliyyat/borc-e"
                                     className={({isActive}) =>
                                         isActive ? "sidebar__submenu-item active" : "sidebar__submenu-item"
                                     }
@@ -120,7 +120,7 @@ const SuperAdminLeftBar = () => {
                 <li>
                     <div className={`sidebar__menu-item sidebar__dropdown
             ${accounterOpen ? "open" : ""}
-            ${location.pathname.startsWith("/superAdmin/accounter") ? "active" : ""}
+            ${location.pathname.startsWith("/admin/hesabat") ? "active" : ""}
           `}
                          onClick={toggleAccounter}
                          ref={dropdownRef}>
@@ -162,7 +162,7 @@ const SuperAdminLeftBar = () => {
                         <ul className="sidebar__submenu">
                             <li>
                                 <NavLink
-                                    to="/superAdmin/accounter/accounter"
+                                    to="/admin/hesabat/kassa-h"
                                     className={({isActive}) =>
                                         isActive ? "sidebar__submenu-item active" : "sidebar__submenu-item"
                                     }
@@ -172,7 +172,7 @@ const SuperAdminLeftBar = () => {
                             </li>
                             <li>
                                 <NavLink
-                                    to="/superAdmin/accounter/borc"
+                                    to="/admin/hesabat/borc-h"
                                     className={({isActive}) =>
                                         isActive ? "sidebar__submenu-item active" : "sidebar__submenu-item"
                                     }

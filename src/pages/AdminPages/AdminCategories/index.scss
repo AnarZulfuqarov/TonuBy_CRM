@@ -427,6 +427,7 @@
 
         th:last-child {
           text-align: left;
+          border-left: none;
         }
 
         th:first-child {
@@ -459,6 +460,8 @@
 
         td:last-child {
           width: 150px;
+          border-left: none;
+
         }
 
         tr:last-child {
@@ -551,40 +554,4 @@
     }
   }
 
-  &__pagination {
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    gap: 5px;
-    position: absolute;
-    bottom: 26px;
-    right: 16px;
-
-    button {
-      padding: 8px 12px;
-      background: #fff;
-      color: #333;
-      cursor: pointer;
-      font-size: 14px;
-      min-width: 40px;
-      border-radius: 3px;
-      border: 1px solid #e3e3e3;
-
-      &:disabled {
-        background: #f1f1f1;
-        cursor: not-allowed;
-        color: #999;
-      }
-
-      &:hover:not(:disabled):not(.active) {
-        background: #f9f9f9;
-      }
-
-      &.active {
-        color: #fff;
-        font-weight: 500;
-        background: #384871;
-      }
-    }
-  }
 }

@@ -4,109 +4,13 @@
   border-radius: 10px;
 }
 
-.admin-kassa-e-main {
+.admin-kassa-h-main {
   position: relative;
 
-  .delete-modal-box {
-    background: #fff;
-    padding: 32px 32px;
-    border-radius: 12px;
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 
-    .delete-icon-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      .delete-icon-circle-one {
-        width: 120px;
-        height: 120px;
-        background-color: #F68D802B;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-      }
-
-      .delete-icon-circle {
-        width: 72px;
-        height: 72px;
-        background: #FC3A2C36;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
-
-    .delete-message {
-      color: #1D1D1F;
-      font-weight: 500;
-      font-size: 16px;
-      margin: 8px 0 0 0;
-    }
-
-    .delete-sub {
-      font-size: 14px;
-      color: #6c6c6c;
-      margin: 0;
-    }
-
-    .delete-modal-actions {
-      display: flex;
-      gap: 16px;
-      margin-top: 20px;
-      width: 100%;
-
-      button {
-        padding: 10px 24px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        width: 50%;
-      }
-
-      .cancel-btn {
-        background: #fff;
-        border: 1px solid #d0d5dd;
-        color: #1d1d1f;
-      }
-
-      .confirm-btn {
-        background: #f04438;
-        color: white;
-        border: none;
-
-        &:hover {
-          background: #d1372e;
-        }
-      }
-    }
-  }
-
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-  }
 }
 
-.admin-kassa-e {
+.admin-kassa-h {
   padding: 32px;
   max-width: 100%;
   margin: 0 auto;
@@ -180,10 +84,10 @@
     }
   }
 
-  .admin-kassa-e-table-wrapper {
+  .admin-kassa-h-table-wrapper {
     display: flex;
     background: #fff;
-    width: 100%;
+    width: 50%;
     max-height: 200px; // Yüksəklik istəyə uyğun dəyişdirilə bilər
     overflow: auto;
     border: 1px solid #e0e0e0;
@@ -194,27 +98,10 @@
       border-collapse: collapse;
       width: 100%;
       /* === Fəaliyyətlər sütunu: sticky + soldan shadow === */
-      thead th:last-child,
-      tbody td:last-child {
-        position: sticky;
-        right: 0; /* sağda yapışdır */
-        background: #fff; /* üst-üstə gələndə ağ qalsın */
-        z-index: 10; /* digər hüceyrələrdən yuxarı */
-      }
+
 
       /* Soldan yumşaq kölgə */
-      thead th:last-child::before,
-      tbody td:last-child::before {
-        content: "";
-        position: absolute;
-        left: -12px;
-        top: 0;
-        bottom: 0;
-        width: 12px;
-        pointer-events: none;
-        /* soldan içəri fade shadow */
-        background: linear-gradient(270deg, rgba(0, 0, 0, 0.09), rgba(0, 0, 0, 0));
-      }
+
 
       thead {
         background: #f9f9f9;
@@ -232,7 +119,6 @@
 
         th:last-child {
           text-align: left;
-          border-left: none;
           background: #f9f9f9;
         }
 
@@ -268,9 +154,7 @@
         td:last-child {
           width: 50px;
         }
-        td:last-child{
-          border-left: none;
-        }
+
         tr:last-child {
           td {
             border-bottom: none;
@@ -361,39 +245,7 @@
     }
   }
 
-  .kecid {
-    display: flex;
-    justify-content: space-between;
-    width: 95%;
-    align-items: center;
-    position: absolute;
-    bottom: 25px;
 
-    p {
-      color: #272727;
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: normal;
-    }
-
-    button {
-      border-radius: 8px;
-      background: #333;
-      display: flex;
-      width: 169px;
-      height: 41px;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-      color: #FFF;
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: normal;
-    }
-  }
 
   .table-toolbar {
     display: flex;
@@ -404,12 +256,25 @@
 
     .filters {
       display: flex;
-      gap: 12px;
+      gap: 18px;
       flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .field__label {
+        font-size: 14px;
+        color: #2B2B2B;
+        white-space: nowrap;
+      }
     }
   }
 
-  /* ▼ Görseldeki gibi içte label/placeholder ve gri stil */
+  /* Select (səndə vardı) */
   .select2 {
     height: 36px;
     border: 1px solid #E5E5E5;
@@ -420,15 +285,10 @@
     padding: 0 12px;
     position: relative;
     box-sizing: border-box;
+    min-width: 190px;
 
-    &:hover {
-      border-color: #D9D9D9;
-    }
-
-    &:focus-within {
-      border-color: #D0D6E7;
-      box-shadow: 0 0 0 3px rgba(56, 72, 113, 0.12);
-    }
+    &:hover { border-color: #D9D9D9; }
+    &:focus-within { border-color: #D0D6E7; box-shadow: 0 0 0 3px rgba(56,72,113,.12); }
 
     select {
       flex: 1;
@@ -438,24 +298,126 @@
       background: transparent;
       font-size: 14px;
       color: #2B2B2B;
-      padding-right: 18px; /* chevron boşluğu */
+      padding-right: 18px;
       appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
     }
 
-    &.is-placeholder select {
-      color: #AFAFAF;
+    &.is-placeholder select { color: #AFAFAF; }
+    .chev { position: absolute; right: 10px; pointer-events: none; }
+  }
+
+  /* Date input – şəkil stilinə uyğun */
+  .input2 {
+    height: 36px;
+    border: 1px solid #E5E5E5;
+    border-radius: 8px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    position: relative;
+    min-width: 170px;
+
+    &:hover { border-color: #D9D9D9; }
+    &:focus-within { border-color: #D0D6E7; box-shadow: 0 0 0 3px rgba(56,72,113,.12); }
+
+    input {
+      flex: 1;
+      height: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+      color: #2B2B2B;
+      padding-right: 24px;
+
+      /* native date input ikonunu gizlət (Chrome) */
+      &::-webkit-calendar-picker-indicator { opacity: 0; }
+      &::placeholder { color: #AFAFAF; }
     }
 
-    /* gri placeholder */
-
-    .chev {
+    .icon {
       position: absolute;
       right: 10px;
       pointer-events: none;
     }
   }
+  .below-table-filters {
+    margin-top: 18px;
+
+    .dropdown-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      .select22  {
+        height: 36px;
+        border: 1px solid #eed1cc;
+        border-radius: 8px;
+        background: #f8f1ef;
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        position: relative;
+        box-sizing: border-box;
+        min-width: 190px;
+
+        &:hover { border-color: #D9D9D9; }
+        &:focus-within { border-color: #D0D6E7; box-shadow: 0 0 0 3px rgba(56,72,113,.12); }
+
+        select {
+          flex: 1;
+          height: 100%;
+          border: none;
+          outline: none;
+          background: transparent;
+          font-size: 14px;
+          color: #2B2B2B;
+          padding-right: 18px;
+          appearance: none;
+        }
+
+        &.is-placeholder select { color: #AFAFAF; }
+        .chev { position: absolute; right: 10px; pointer-events: none; }
+      }
+    }
+    .mtop { margin-top: 14px; }
+
+    .field__label {
+      font-size: 14px;
+      color: #2B2B2B;
+      white-space: nowrap;
+    }
+
+    .chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 10px 0 6px;
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border-radius: 10px;
+               /* yumşaq açıq ton */
+        border: 1px solid #E5E5E5;  /* incə çərçivə */
+        font-size: 14px;
+        color: #6a6a6a;
+
+        .chip__x {
+          border: none;
+          background: transparent;
+          font-size: 12px;
+          line-height: 1;
+          cursor: pointer;
+          color: #d74a4a; /* qırmızı X */
+        }
+      }
+    }
+  }
+
+  /* Mövcud .select2 stilin səndə var idi — eyni istifadə olunur */
 
   /* sağdaki buton */
   .create-op {
@@ -470,6 +432,49 @@
     color: #fff;
     font-size: 14px;
     cursor: pointer;
+  }
+  .card.chart-card {
+    border: 1px solid #E5E5E5;
+    border-radius: 12px;
+    background: #fff;
+    overflow: hidden;
+    margin-top: 16px;
+
+    .chart-card__head {
+      padding: 10px 14px;
+      font-weight: 600;
+      font-size: 16px;
+      color: #2B2B2B;
+      border-bottom: 1px solid #EFEFEF;
+    }
+
+    .chart-card__body {
+      padding: 12px 16px 4px;
+      height: 260px; // ResponsiveContainer height + padding
+    }
+
+    .chart-card__legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding: 8px 14px 14px;
+
+      .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #5b5b5b;
+
+        .dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 999px;
+          display: inline-block;
+        }
+        .name { line-height: 1; }
+      }
+    }
   }
 
 

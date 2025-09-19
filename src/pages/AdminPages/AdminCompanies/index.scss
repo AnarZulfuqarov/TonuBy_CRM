@@ -384,6 +384,7 @@
 
         th:last-child {
           text-align: left;
+          border-left: none;
         }
 
         .th-label {
@@ -422,6 +423,7 @@
 
         td:last-child {
           width: 150px;
+          border-left: none;
         }
 
         td {
