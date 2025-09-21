@@ -19,7 +19,7 @@
     background: #fff;
 
     border-radius: 12px; /* şəkildəki kimi daha yumru */
-    width: 320px; /* screenshot ölçüsünə yaxın */
+    width: 250px; /* screenshot ölçüsünə yaxın */
     display: flex;
     flex-direction: column;
     box-shadow: 0 8px 24px rgba(0, 0, 0, .1);
@@ -30,7 +30,7 @@
       margin: 0 0 4px 0;
       font-size: 16px; /* başlıq sətir hündürlüyünə uyğun */
       font-weight: 500;
-      color: #1d1d1f;
+      color: #323232;
       text-align: center; /* şəkildə soldan idi */
     }
 
@@ -54,7 +54,7 @@
       label {
         font-size: 14px;
         font-weight: 500;
-        color: #1d1d1f;
+        color: #323232;
       }
 
       input {
@@ -385,6 +385,7 @@
         th:last-child {
           text-align: left;
           border-left: none;
+          background: #f9f9f9;
         }
 
         .th-label {

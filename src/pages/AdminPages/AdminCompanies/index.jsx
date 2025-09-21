@@ -135,7 +135,7 @@ const companies = [
                 <div className="vendor-edit-modal-overlay" onClick={() => setCreateModalVisible(false)}>
                     <div className="create-company-modal" onClick={(e) => e.stopPropagation()}>
                         <div className={"modalHead"}>
-                            <button className="modal-close-btn" onClick={() => setCreateModalVisible(false)}><svg xmlns="http://www.w3.org/2000/svg" width="11" height="10" viewBox="0 0 11 10" fill="none">
+                            <button className="modal-close-btn" onClick={() => setCreateModalVisible(false)}><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
                                 <path d="M9.31884 1L1 9M1 1L9.31884 9" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg></button>
                             <h3>Yeni şirkət əlavə et</h3>

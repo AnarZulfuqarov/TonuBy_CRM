@@ -385,7 +385,7 @@
   .order-table-wrapper {
     display: flex;
     background: #fff;
-    width: 50%;
+    width: 60%;
     max-height: 600px; // Yüksəklik istəyə uyğun dəyişdirilə bilər
     overflow-y: auto;
 
@@ -434,6 +434,7 @@
         th:last-child{
           text-align: left;
           border-left: none;
+          background: #f9f9f9;
 
         }
         th:first-child {

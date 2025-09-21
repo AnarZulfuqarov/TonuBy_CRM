@@ -21,7 +21,6 @@
     user-select: none;
 
     &.active > .sidebar__dropdown-title {
-      color: #CD0E16;
       font-weight: 600;
     }
 
@@ -53,8 +52,6 @@
       background-color: #FCF3F3;
 
       &.active {
-        color: #CD0E16;
-        font-weight: 500;
         border-left: 4px solid #CD0E16;
       }
     }
