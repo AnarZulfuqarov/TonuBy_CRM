@@ -23,6 +23,107 @@ export const api = createApi({
                 headers: { 'Content-Type': 'application/json' },
             }),
         }),
+        getAllCompanies: builder.query({
+            query: () => ({
+                url: `/Companies`,
+            }),
+        }),
+        createCompanies: builder.mutation({
+            query: (company) => ({
+                url: `/Companies`,
+                method: 'POST',
+                body: company,
+                headers: { 'Content-Type': 'application/json' },
+            }),
+        }),
+        editCompanies: builder.mutation({
+            query: (company) => ({
+                url: `/Companies`,
+                method: 'PUT',
+                body: company,
+                headers: { 'Content-Type': 'application/json' },
+            }),
+        }),
+        deleteCompanies: builder.mutation({
+            query: (id) => ({
+                url: `/Companies/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        getByIdCompanies: builder.query({
+            query: (id) => ({
+                url: `/Companies/${id}`,
+            }),
+        }),
+        getAllCategories: builder.query({
+            query: () => ({
+                url: `/Categories`,
+            }),
+        }),
+        createCategories: builder.mutation({
+            query: (company) => ({
+                url: `/Categories`,
+                method: 'POST',
+                body: company,
+                headers: { 'Content-Type': 'application/json' },
+            }),
+        }),
+        editCategories: builder.mutation({
+            query: (company) => ({
+                url: `/Categories`,
+                method: 'PUT',
+                body: company,
+                headers: { 'Content-Type': 'application/json' },
+            }),
+        }),
+        deleteCategories: builder.mutation({
+            query: (id) => ({
+                url: `/Categories/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        getByIdCategories: builder.query({
+            query: (id) => ({
+                url: `/Categories/${id}`,
+            }),
+        }),
+        getAllProducts: builder.query({
+            query: () => ({
+                url: `/Products`,
+            }),
+        }),
+        createProducts: builder.mutation({
+            query: (company) => ({
+                url: `/Products`,
+                method: 'POST',
+                body: company,
+                headers: { 'Content-Type': 'application/json' },
+            }),
+        }),
+        editProducts: builder.mutation({
+            query: (company) => ({
+                url: `/Products`,
+                method: 'PUT',
+                body: company,
+                headers: { 'Content-Type': 'application/json' },
+            }),
+        }),
+        deleteProducts: builder.mutation({
+            query: (id) => ({
+                url: `/Products/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        getByIdProducts: builder.query({
+            query: (id) => ({
+                url: `/Products/${id}`,
+            }),
+        }),
+        getByIdCashOperator: builder.query({
+            query: (companyId) => ({
+                url: `/CashOperations/company/${companyId}/operations`,
+            }),
+        }),
 
     }),
 });
@@ -30,5 +131,25 @@ export const api = createApi({
 // Hookları dışarı açıyoruz:
 export const {
     useLoginSuperAdminMutation,
+
+    useGetAllCompaniesQuery,
+    useCreateCompaniesMutation,
+    useEditCompaniesMutation,
+    useDeleteCompaniesMutation,
+    useGetByIdCompaniesQuery,
+
+    useGetAllCategoriesQuery,
+    useCreateCategoriesMutation,
+    useEditCategoriesMutation,
+    useDeleteCategoriesMutation,
+    useGetByIdCategoriesQuery,
+
+    useGetAllProductsQuery,
+    useCreateProductsMutation,
+    useEditProductsMutation,
+    useDeleteProductsMutation,
+    useGetByIdProductsQuery,
+
+    useGetByIdCashOperatorQuery,
 
 } = api;

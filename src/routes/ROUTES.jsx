@@ -15,6 +15,7 @@ import AdminKassaH from "../pages/AdminPages/AdminKassaH/index.jsx";
 import AdminBorcH from "../pages/AdminPages/AdminBorcH/index.jsx";
 import KassaHesabati from "../pages/AdminPages/KassaHesabati/index.jsx";
 import BorcHesabati from "../pages/AdminPages/BorcHesabati/index.jsx";
+import ProtectedRoute from "../ProtectedRoute.jsx";
 
 const router = createBrowserRouter([
     {
@@ -23,7 +24,11 @@ const router = createBrowserRouter([
     },
     {
         path: '/admin',
-        element: <SuperAdminPage/>,
+        element: (
+            <ProtectedRoute>
+                <SuperAdminPage/>
+            </ProtectedRoute>
+        ),
         children: [
             {
                 path: '/admin/companies',

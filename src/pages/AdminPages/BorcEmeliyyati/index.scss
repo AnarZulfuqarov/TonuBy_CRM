@@ -62,7 +62,7 @@
     .delete-modal-actions {
       display: flex;
       gap: 16px;
-      margin-top: 20px;
+      margin-top: 0;
       width: 100%;
 
       button {
@@ -143,7 +143,7 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      padding: 14px 16px 18px;
+      padding: 14px 24px 24px;
 
       .pm-label {
         font-size: 14px;
@@ -348,6 +348,7 @@
     overflow: auto;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
+    margin-bottom: 200px;
 
 
     table {
@@ -384,12 +385,27 @@
           border: 1px solid #e0e0e0; // border for th
           white-space: nowrap;
           text-align: left;
-          font-weight: 400;
+          font-weight: 500;
           font-size: 14px;
           border-top: none;
           border-right: none;
         }
+        .th-search input {
+          flex: 1;
+          height: 32px;
+          padding: 0 10px;
+          font-size: 14px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          margin-right: 6px;
+          outline: none !important;
+          background: #fff;
+          color: #111;
 
+          &:focus {
+            border-color: #bbb;
+          }
+        }
         th:last-child {
           text-align: left;
           border-left: none;
@@ -529,8 +545,6 @@
     justify-content: space-between;
     width: 95%;
     align-items: center;
-    position: absolute;
-    bottom: 25px;
 
     p {
       color: #272727;

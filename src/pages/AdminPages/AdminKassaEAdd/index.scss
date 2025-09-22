@@ -166,7 +166,7 @@
   }
 
   h2 {
-    font-size: 14px;
+    font-size: 16px;
 
     .link {
       color: #5b5b5b;
@@ -176,7 +176,7 @@
 
   /* ====== TABLE (Görsellə eyni görünüş) ====== */
   .product-table.kasa-add.ux-tight {
-    width: 100%;
+    width: 80%;
     border-collapse: collapse;
     border: 1px solid #e8e8e8;
     border-radius: 12px !important;
@@ -204,6 +204,7 @@
           align-items: center;
           justify-content: space-between;
           position: relative; /* dropdown referansı */
+
         }
 
         .th-label {
@@ -219,7 +220,7 @@
           border: 1px solid #ccc;
           border-radius: 8px;
           margin-right: 6px;
-          outline: none;
+          outline: none !important;
           background: #fff;
           color: #111;
 
@@ -369,7 +370,7 @@
   }
 
   .confirm-btn {
-    width: 100%;
+    width:80%;
     background-color: #333333;
     color: #fff;
     padding: 12px 0;

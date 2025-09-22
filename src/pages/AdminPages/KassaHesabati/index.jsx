@@ -177,7 +177,7 @@ const KassaHesabati = () => {
                                 onChange={(e) => setCustomer(e.target.value)}
                                 options={customers}
                                 placeholder="Müştəri seç"
-                                width={190}
+                                width={120}
                             />
                         </div>
                     </div>
@@ -233,8 +233,7 @@ const KassaHesabati = () => {
                 {/* ===== Cədvəlin altı: Kateqoriya & Məhsul seçimi ===== */}
                 <div className="below-table-filters">
                     <div className="dropdown-row">
-                        <label className="field__label">Kateqoriya seç</label>
-                        <label className={`select22 ${catVal === "__all__" ? "is-placeholder" : ""}`} style={{ width: 190 }}>
+                        <label className={`select22 ${catVal === "__all__" ? "is-placeholder" : ""}`} style={{ width: 150 }}>
                             <select value={catVal} onChange={addCategory}>
                                 <option value="__all__" disabled hidden>Kateqoriya seç</option>
                                 {CATEGORY_LIST.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -256,8 +255,7 @@ const KassaHesabati = () => {
                     </div>
 
                     <div className="dropdown-row mtop">
-                        <label className="field__label">Məhsul seç</label>
-                        <label className={`select22 ${prodVal === "__all__" ? "is-placeholder" : ""}`} style={{ width: 190 }}>
+                        <label className={`select22 ${prodVal === "__all__" ? "is-placeholder" : ""}`} style={{ width: 120 }}>
                             <select value={prodVal} onChange={addProduct} disabled={!selectedCat}>
                                 <option value="__all__" disabled hidden>Məhsul seç</option>
                                 {productOptions.map((p) => <option key={p} value={p}>{p}</option>)}

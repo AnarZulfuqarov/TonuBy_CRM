@@ -75,8 +75,9 @@ const DoughnutChartCard = ({
                         <ul className="legend-list">
                             {labels.map((label, i) => (
                                 <li key={i}>
+
                                     <span className="dot" style={{ background: legendColors[i] }} />
-                                    <strong>{chartValues[i]}%</strong> {label}
+                                    {label} <strong>{chartValues[i]}₼</strong>
                                 </li>
                             ))}
                         </ul>

@@ -4,6 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { FaTimes } from "react-icons/fa";
 
 import {usePopup} from "../../../components/Popup/PopupContext.jsx";
+import {
+    useCreateCompaniesMutation, useDeleteCompaniesMutation,
+    useEditCompaniesMutation,
+    useGetAllCompaniesQuery
+} from "../../../services/adminApi.jsx";
 
 const AdminCompanies = () => {
     const navigate = useNavigate();
@@ -15,7 +20,12 @@ const AdminCompanies = () => {
     const showPopup = usePopup()
     const [createModalVisible, setCreateModalVisible] = useState(false);
     const [createName, setCreateName] = useState('');
+    const {data:getAllCompanies,refetch:companyRefetch} = useGetAllCompaniesQuery()
+    const companies = getAllCompanies?.data
 
+    const [createCompany] = useCreateCompaniesMutation()
+    const [editCompany] = useEditCompaniesMutation()
+    const [deleteCompany] = useDeleteCompaniesMutation()
     useEffect(() => {
         const onEsc = (e) => {
             if (e.key === 'Escape') {
@@ -28,28 +38,18 @@ const AdminCompanies = () => {
         return () => window.removeEventListener('keydown', onEsc);
     }, []);
 
-    // const { data: getAllCompanies,refetch  } = useGetAllCompaniesQuery();
-    // const data = getAllCompanies?.data || [];
-    // const [edit] = useEditCompanyMutation()
-    // const [deleteCompany] = useDeleteCompanyMutation()
-    // useEffect(() => {
-    //     refetch();
-    // }, []);
-    // Şirkət datalarını hazırla
-    // const companies = data
-    //     .filter(company =>
-    //         company.name.toLowerCase().includes(searchName.toLowerCase())
-    //     )
-    //     .map((item) => ({
-    //         id: item.id,
-    //         name: item.name,
-    //         departmentCount: item.departments?.length || 0
-    //     }));
+    useEffect(()=>{
+        companyRefetch();
+    },[])
 
-const companies = [
-    {},
-    {}
-]
+
+// filterlənmiş companies
+    const filteredCompanies = companies?.filter((company) => {
+        if (activeSearch === 'name') {
+            return company.name?.toLowerCase().includes(searchName.toLowerCase());
+        }
+        return true; // heç bir search yoxdursa hamısını göstər
+    });
     return (
         <div className="admin-companies-main">
             <div className="admin-companies">
@@ -97,13 +97,13 @@ const companies = [
                         </tr>
                         </thead>
                         <tbody>
-                        {companies.map((company) => (
+                        {filteredCompanies?.map((company) => (
                             <tr key={company.id}>
                                 <td>{company.name}</td>
-                                <td>{company.departmentCount}</td>
+                                <td>{company.categories?.length}</td>
                                 <td>
                                     <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
-                                        <svg onClick={()=>navigate('/admin/companies/:id')} style={{cursor:"pointer"}} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <svg onClick={()=>navigate(`/admin/companies/${company.id}`)} style={{cursor:"pointer"}} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                             <path d="M12.5 10C12.5 10.663 12.2366 11.2989 11.7678 11.7678C11.2989 12.2366 10.663 12.5 10 12.5C9.33696 12.5 8.70107 12.2366 8.23223 11.7678C7.76339 11.2989 7.5 10.663 7.5 10C7.5 9.33696 7.76339 8.70107 8.23223 8.23223C8.70107 7.76339 9.33696 7.5 10 7.5C10.663 7.5 11.2989 7.76339 11.7678 8.23223C12.2366 8.70107 12.5 9.33696 12.5 10Z" stroke="#606060" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                             <path d="M1.6665 9.99999C2.99984 6.58582 6.11317 4.16666 9.99984 4.16666C13.8865 4.16666 16.9998 6.58582 18.3332 9.99999C16.9998 13.4142 13.8865 15.8333 9.99984 15.8333C6.11317 15.8333 2.99984 13.4142 1.6665 9.99999Z" stroke="#606060" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
@@ -151,16 +151,27 @@ const companies = [
                             />
                             <button
                                 className="save-btn save-btn--dark"
-                                onClick={() => {
-                                    // Burada backend-ə qoşacaqsan: createCompany({ name: createName })
-                                    if (!createName.trim()) return;
-                                    setCreateModalVisible(false);
-                                    setCreateName('');
-                                    if (showPopup) showPopup("Yeni şirkət yaradıldı", "Məlumat uğurla əlavə olundu", "success");
+                                onClick={async () => {
+                                    try {
+                                        if (!createName.trim()) return;
+
+                                        await createCompany({ name: createName }).unwrap(); // backend-ə göndəririk
+                                        await companyRefetch(); // listi yeniləmək üçün
+
+                                        setCreateModalVisible(false);
+                                        setCreateName('');
+
+                                        if (showPopup)
+                                            showPopup("Yeni şirkət yaradıldı", "Məlumat uğurla əlavə olundu", "success");
+                                    } catch (err) {
+                                        if (showPopup)
+                                            showPopup("Sistem xətası", "Əməliyyat tamamlanmadı, təkrar yoxla", "error");
+                                    }
                                 }}
                             >
                                 Yadda saxla
                             </button>
+
                         </div>
 
 
@@ -181,37 +192,51 @@ const companies = [
                         </div>
                         <div className="modal-fields">
                             <label>Şirkət adı</label>
-                            <input
-                                type="text"
-                                placeholder="Məsələn: Şirvanşah"
-                                value={editCompanyData.name}
-                                onChange={(e) =>
-                                    setEditCompanyData((prev) => ({ ...prev, name: e.target.value }))
-                                }
-                            />
+                            <div className={"searchInput"}>
+                                <input
+                                    type="text"
+                                    placeholder="Məsələn: Şirvanşah"
+                                    value={editCompanyData.name}
+                                    onChange={(e) =>
+                                        setEditCompanyData((prev) => ({ ...prev, name: e.target.value }))
+                                    }
+                                />
+                                <svg className={'searchIcon'} xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
+                                    <path d="M16.5 5.93001C16.5006 5.83131 16.4817 5.73346 16.4443 5.64208C16.407 5.5507 16.352 5.46759 16.2825 5.39751L13.1025 2.21751C13.0324 2.148 12.9493 2.09301 12.8579 2.05568C12.7666 2.01836 12.6687 1.99944 12.57 2.00001C12.4713 1.99944 12.3735 2.01836 12.2821 2.05568C12.1907 2.09301 12.1076 2.148 12.0375 2.21751L9.91501 4.34001L1.71751 12.5375C1.648 12.6076 1.59301 12.6907 1.55568 12.7821C1.51836 12.8735 1.49944 12.9713 1.50001 13.07V16.25C1.50001 16.4489 1.57903 16.6397 1.71968 16.7803C1.86033 16.921 2.0511 17 2.25001 17H5.43001C5.53496 17.0057 5.63993 16.9893 5.73813 16.9518C5.83632 16.9144 5.92555 16.8567 6.00001 16.7825L14.1525 8.58501L16.2825 6.50001C16.3509 6.42724 16.4066 6.34359 16.4475 6.25251C16.4547 6.19273 16.4547 6.13229 16.4475 6.07251C16.451 6.0376 16.451 6.00242 16.4475 5.96751L16.5 5.93001ZM5.12251 15.5H3.00001V13.3775L10.4475 5.93001L12.57 8.05251L5.12251 15.5ZM13.6275 6.99501L11.505 4.87251L12.57 3.81501L14.685 5.93001L13.6275 6.99501Z" fill="#3D3D3D"/>
+                                </svg>
+                            </div>
                             <button
                                 className="save-btn"
                                 onClick={async () => {
                                     try {
                                         if (!editCompanyData.name.trim()) return;
 
-                                        await edit({
+                                        await editCompany({
                                             id: editCompanyData.id,
                                             name: editCompanyData.name,
-                                        });
+                                        }).unwrap(); // backend-ə göndəririk
 
+                                        await companyRefetch(); // list yenilənsin
                                         setModalVisible(false);
                                         setEditCompanyData({ id: '', name: '' });
-                                        refetch();
-                                        showPopup("Şirkətə uğurla düzəliş etdiniz","Dəyişikliklər yadda saxlanıldı","success")
-                                    } catch  {
-                                        showPopup("Sistem xətası","Əməliyyat tamamlanmadı. Təkrar cəhd edin və ya dəstəyə müraciət edin.","error")
 
+                                        showPopup(
+                                            "Şirkətə uğurla düzəliş etdiniz",
+                                            "Dəyişikliklər yadda saxlanıldı",
+                                            "success"
+                                        );
+                                    } catch (err) {
+                                        showPopup(
+                                            "Sistem xətası",
+                                            "Əməliyyat tamamlanmadı. Təkrar cəhd edin və ya dəstəyə müraciət edin.",
+                                            "error"
+                                        );
                                     }
                                 }}
                             >
                                 Yadda saxla
                             </button>
+
                         </div>
 
 
@@ -240,17 +265,28 @@ const companies = [
                                 className="confirm-btn"
                                 onClick={async () => {
                                     try {
-                                        await deleteCompany(deleteCompanyId);
+                                        await deleteCompany(deleteCompanyId).unwrap(); // yalnız id göndəririk
+                                        await companyRefetch(); // siyahını yenilə
+
                                         setDeleteCompanyId(null);
-                                        refetch();
-                                        showPopup("Şirkəti uğurla sildiniz","Seçilmiş şirkət sistemdən silindi","success")
-                                    } catch {
-                                        showPopup("Sistem xətası","Əməliyyat tamamlanmadı. Təkrar cəhd edin və ya dəstəyə müraciət edin.","error")
+
+                                        showPopup(
+                                            "Şirkəti uğurla sildiniz",
+                                            "Seçilmiş şirkət sistemdən silindi",
+                                            "success"
+                                        );
+                                    } catch (err) {
+                                        showPopup(
+                                            "Sistem xətası",
+                                            "Əməliyyat tamamlanmadı. Təkrar cəhd edin və ya dəstəyə müraciət edin.",
+                                            "error"
+                                        );
                                     }
                                 }}
                             >
                                 Sil
                             </button>
+
 
                         </div>
                     </div>

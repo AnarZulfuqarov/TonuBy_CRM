@@ -18,8 +18,15 @@
       align-items: center;
       gap: 8px;
       padding: 8px 12px;
-      width: 70%;
+      width: 40%;
 
+      position: relative;
+      .searchIcon{
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
 
       input {
         flex: 1;
@@ -130,8 +137,8 @@
 
     button {
       display: flex;
-      width: 16px;
-      height: 16px;
+      width: 20px;
+      height: 20px;
       padding: 1px;
       justify-content: center;
       align-items: center;

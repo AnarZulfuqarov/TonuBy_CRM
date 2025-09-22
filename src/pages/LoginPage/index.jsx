@@ -25,7 +25,7 @@ function Login() {
             if ('data' in response) {
                 const { token } = response.data.data;
 
-                Cookies.set('superAdminToken', token);
+                Cookies.set('tonyByToken', token);
 
                 showPopup('Giriş uğurludur', 'Sistemə daxil oldunuz', 'success');
                 setEmail('')

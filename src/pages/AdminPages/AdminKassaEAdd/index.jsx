@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./index.scss";
+import {useGetAllCategoriesQuery} from "../../../services/adminApi.jsx";
 
-const customersInit  = ["Mof", "Tonuby", "UV Demo", "Şirvanşah"];
-const categoriesInit = ["tablo", "aksesuar", "poster"];
 const productsInit   = ["ipək tablo", "promo 5", "canvas 40x60"];
 
 export default function AdminKassaEAdd() {
-    const [showSuccessModal, setShowSuccessModal] = useState(true);
-    const [dateOpen, setDateOpen] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
     const refDate = useRef(null);
+    const {data:getAllCategories} = useGetAllCategoriesQuery()
+    const categoriesInit = getAllCategories?.data
 
     const [form, setForm] = useState({
         customer: "",
@@ -20,15 +20,35 @@ export default function AdminKassaEAdd() {
         tarix: "",
         note: "",
     });
+    const productsInit = form.category
+        ? categoriesInit.find((c) => c.id === form.category)?.products || []
+        : []
     const setField = (k, v) => setForm((p) => ({ ...p, [k]: v }));
 
     // listlər (mock)
     const [lists, setLists] = useState({
-        customer: customersInit,
-        category: categoriesInit,
-        product: productsInit,
-    });
+        category: [],
+        product: []
+    })
+    useEffect(() => {
+        if (categoriesInit?.length) {
+            setLists((prev) => ({
+                ...prev,
+                category: categoriesInit?.map((c) => ({ id: c.id, name: c.name }))
+            }))
+        }
+    }, [categoriesInit, form.category])
 
+    useEffect(() => {
+        if (productsInit.length) {
+            setLists((prev) => ({
+                ...prev,
+                product: productsInit.map((p) => ({ id: p.id, name: p.name }))
+            }))
+        } else {
+            setLists((prev) => ({ ...prev, product: [] }))
+        }
+    }, [form.category])
     // TH search state (numunədəki kimi)
     const [activeHeaderSearch, setActiveHeaderSearch] = useState(null); // 'customer'|'category'|'product'|'date'|'company'|null
     const [q, setQ] = useState({ customer: "", category: "", product: "" });
@@ -46,18 +66,22 @@ export default function AdminKassaEAdd() {
         document.addEventListener("mousedown", onDown);
         return () => document.removeEventListener("mousedown", onDown);
     }, []);
-
     const filtered = (key) => {
-        const list = lists[key] || [];
-        const needle = (q[key] || "").toLowerCase();
-        return list.filter((x) => x.toLowerCase().includes(needle)).slice(0, 100);
-    };
+        const list = lists[key] || []
+        const needle = (q[key] || "").toLowerCase()
+        return list
+            .filter((x) => x.name.toLowerCase().includes(needle))
+            .slice(0, 100)
+    }
+
 
     const selectValue = (key, val) => {
-        setField(key, val);
-        setActiveHeaderSearch(null);
-        setHover(-1);
-    };
+        setField(key, val.id)   // form-da id saxlanır
+        setQ((s) => ({ ...s, [key]: val.name }))
+        setActiveHeaderSearch(null)
+        setHover(-1)
+    }
+
 
     const createValue = (key) => {
         const val = (q[key] || "").trim();
@@ -91,7 +115,6 @@ export default function AdminKassaEAdd() {
     };
 
     const headers = [
-        { label: "Müştəri seç", key: "customer" },
         { label: "Kateqoriya seç", key: "category" },
         { label: "Məhsul seç",   key: "product"  }
     ];
@@ -160,26 +183,14 @@ export default function AdminKassaEAdd() {
                                                 <ul className="th-dropdown">
                                                     {filtered(key).map((v, idx) => (
                                                         <li
-                                                            key={v}
+                                                            key={v.id}
                                                             className={idx === hover ? "active" : ""}
                                                             onMouseEnter={() => setHover(idx)}
-                                                            onMouseDown={(e) => { e.preventDefault(); selectValue(key, v); }}
+                                                            onMouseDown={(e) => { e.preventDefault(); selectValue(key, v) }}
                                                         >
-                                                            {v}
+                                                            {v.name}
                                                         </li>
                                                     ))}
-                                                    {q[key].trim() && (
-                                                        <li
-                                                            className={`create ${hover === filtered(key).length ? "active" : ""}`}
-                                                            onMouseEnter={() => setHover(filtered(key).length)}
-                                                            onMouseDown={(e) => { e.preventDefault(); createValue(key); }}
-                                                        >
-                                                            Yeni əlavə et: <b>“{q[key].trim()}”</b>
-                                                        </li>
-                                                    )}
-                                                    {!filtered(key).length && !q[key].trim() && (
-                                                        <li className="muted">Nəticə yoxdur</li>
-                                                    )}
                                                 </ul>
                                             </div>
                                         ) : (
@@ -200,14 +211,7 @@ export default function AdminKassaEAdd() {
 
                             <tbody>
                             <tr>
-                                <td>
-                                    <input
-                                        type="text"
-                                        placeholder="Müştəri daxil et"
-                                        value={form.customer}
-                                        onChange={(e) => setField("customer", e.target.value)}
-                                    />
-                                </td>
+
                                 <td>
                                     <input
                                         type="text"

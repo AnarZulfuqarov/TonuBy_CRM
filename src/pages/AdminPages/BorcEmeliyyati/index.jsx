@@ -90,21 +90,21 @@ const BorcEmeliyyati = () => {
                             onChange={(e)=>setCustomer(e.target.value)}
                             options={customers}
                             placeholder="Müştəri seç"
-                            width={180}
+                            width={120}
                         />
                         <SelectBox
                             value={category}
                             onChange={(e)=>setCategory(e.target.value)}
                             options={categories}
                             placeholder="Kateqoriya seç"
-                            width={190}
+                            width={150}
                         />
                         <SelectBox
                             value={product}
                             onChange={(e)=>setProduct(e.target.value)}
                             options={products}
                             placeholder="Məhsul seç"
-                            width={180}
+                            width={120}
                         />
                     </div>
 
@@ -250,8 +250,7 @@ const BorcEmeliyyati = () => {
                                         onChange={(e)=>setPayAmount(e.target.value)}
                                     />
                                 </div>
-                                {/* sağda kiçik “pill” — dəyəri və valyutanı göstərir */}
-                                <span className="pm-amount-pill">{payAmount ? payAmount : 0} ₼</span>
+
                             </div>
 
                             {/* Tarix */}
