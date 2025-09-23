@@ -4,55 +4,90 @@ import {NavLink, useNavigate, useParams} from "react-router-dom";
 import DoughnutChartCard from "../../../components/Statistika/Chart2/index.jsx";
 import {FaTimes} from "react-icons/fa";
 import {
+    useDeleteCashOperatorMutation,
     useGetAllCategoriesQuery,
-    useGetByIdCashOperatorQuery
+    useGetByIdCashOperatorQuery, useGetByIdCompaniesQuery
 } from "../../../services/adminApi.jsx";
+import SelectBox from "../../../components/SelectBox/index.jsx";
 
 
-const SelectBox = ({ value, onChange, options, placeholder, width = 190 }) => (
-    <label className={`select2 ${value === "__all__" ? "is-placeholder" : ""}`} style={{ width }}>
-        <select value={value} onChange={onChange}>
-            <option value="__all__" disabled hidden>
-                {placeholder}
-            </option>
-            {options?.map((opt) => (
-                <option key={opt.id} value={opt.id}>
-                    {opt.name}
-                </option>
-            ))}
-        </select>
-        <svg className="chev" width="16" height="16" viewBox="0 0 24 24">
-            <path d="M6 9l6 6 6-6" fill="none" stroke="#9A9A9A" strokeWidth="2" />
-        </svg>
-    </label>
-);
+// const SelectBox = ({ value, onChange, options, placeholder, width = 190 }) => (
+//     <label className={`select2 ${value === "__all__" ? "is-placeholder" : ""}`} style={{ width }}>
+//         <select value={value} onChange={onChange}>
+//             <option value="__all__" disabled hidden>
+//                 {placeholder}
+//             </option>
+//             {options?.map((opt) => (
+//                 <option key={opt.id} value={opt.id}>
+//                     {opt.name}
+//                 </option>
+//             ))}
+//         </select>
+//         <svg className="chev" width="16" height="16" viewBox="0 0 24 24">
+//             <path d="M6 9l6 6 6-6" fill="none" stroke="#9A9A9A" strokeWidth="2" />
+//         </svg>
+//     </label>
+// );
 
 
 const KassaEmeliyyati = () => {
     const {id}= useParams()
-    const {data:getByIdCashOperator} = useGetByIdCashOperatorQuery(id)
-    const companies = getByIdCashOperator?.data
+    const { data: getByIdCashOperator,refetch } = useGetByIdCashOperatorQuery(id);
+    const operations = getByIdCashOperator?.data;
 
+    const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
+    const company = getByIdCompanies?.data
     const {data:getAllCategories} = useGetAllCategoriesQuery()
     const categories = getAllCategories?.data
 
 
     const [searchName, setSearchName] = useState('');
     const [activeSearch, setActiveSearch] = useState(null);
-    const [deleteCompanyId, setDeleteCompanyId] = useState(null);
+    const [deleteOperationId, setDeleteOperationId] = useState(null);
     const navigate = useNavigate();
     const [category, setCategory] = useState("__all__");
     const [product, setProduct] = useState("__all__");
     const [selectedCategory, setSelectedCategory] = useState(null);
-
-    const handleCategoryChange = (e) => {
-        const selectedId = e.target.value;
-        setCategory(selectedId);
-        const foundCategory = categories?.find(c => c.id === selectedId);
+    const [deleteOperation] = useDeleteCashOperatorMutation()
+    const handleCategoryChange = (val) => {
+        setCategory(val);
+        const foundCategory = categories?.find((c) => c.id === val);
         setSelectedCategory(foundCategory);
+        setProduct(null); // yeni kateqoriya seçiləndə məhsul sıfırlansın
     };
 
+// Filter olunmuş əməliyyatlar
+    const filteredOperations = operations
+        ?.filter((op) => {
+            // Əgər category seçilibsə (və __all__ deyilsə)
+            if (category !== "__all__") {
+                if (op.categoryId !== category) return false;
 
+                // Əlavə olaraq product seçilibsə (və __all__ deyilsə)
+                if (product !== "__all__" && product !== null) {
+                    return op.productId === product;
+                }
+
+                return true; // yalnız category filtr
+            }
+
+            // Əgər category __all__-dursa amma product seçilibsə
+            if (product !== "__all__" && product !== null) {
+                return op.productId === product;
+            }
+
+            return true; // heç biri seçilməyibsə
+        })
+        .filter((op) => {
+            // Axtarış filteri
+            if (searchName.trim() !== "") {
+                return (
+                    op.categoryName?.toLowerCase().includes(searchName.toLowerCase()) ||
+                    op.productName?.toLowerCase().includes(searchName.toLowerCase())
+                );
+            }
+            return true;
+        });
 
 
 
@@ -67,13 +102,13 @@ const KassaEmeliyyati = () => {
                 <div className={"root"}>
                     <h2 >
                         <NavLink className="link" to="/admin/emeliyyat/kassa-e">— Şirkət seçimi</NavLink>{' '}
-                        — UV Demo
+                        — {company?.name}
                     </h2>
                 </div>
                 <div style={{
                     marginBottom:'32px'
                 }}>
-                    <DoughnutChartCard/>
+                    <DoughnutChartCard companyId={id}/>
                 </div>
                 <div className="table-toolbar">
                     <div className="filters">
@@ -81,17 +116,14 @@ const KassaEmeliyyati = () => {
                         <SelectBox
                             value={category}
                             onChange={handleCategoryChange}
-                            options={categories}
+                            options={categories || []}
                             placeholder="Kateqoriya seç"
-                            width={150}
                         />
-
                         <SelectBox
                             value={product}
-                            onChange={(e)=>setProduct(e.target.value)}
+                            onChange={(val) => setProduct(val)}
                             options={selectedCategory?.products || []}
                             placeholder="Məhsul seç"
-                            width={120}
                         />
 
 
@@ -140,19 +172,18 @@ const KassaEmeliyyati = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {companies?.map((company) => (
-                            <tr key={company.id}>
-                                <td>{company.name}</td>
-                                <td>{company.departmentCount}</td>
-                                <td>{company.departmentCount}</td>
-                                <td>{company.departmentCount}</td>
-                                <td>{company.departmentCount}</td>
-                                <td>{company.departmentCount}</td>
-                                <td>{company.departmentCount}</td>
+                        {filteredOperations?.map((op) => (
+                            <tr key={op.id}>
+                                <td>{op.categoryName}</td>
+                                <td>{op.productName}</td>
+                                <td>{op.incomeAmount}</td>
+                                <td>{op.expenseAmount}</td>
+                                <td>{op.createTime}</td>
+                                <td>{op.description}</td>
                                 <td>
                                     <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
 
-                                        <svg style={{cursor:"pointer"}} onClick={() => setDeleteCompanyId(company.id)} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <svg style={{cursor:"pointer"}} onClick={() => setDeleteOperationId(op.id)} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                             <path fill-rule="evenodd" clip-rule="evenodd" d="M8.59199 1.875H11.4087C11.5895 1.875 11.747 1.875 11.8953 1.89833C12.1843 1.94462 12.4583 2.05788 12.6956 2.22907C12.933 2.40025 13.1269 2.6246 13.262 2.88417C13.332 3.0175 13.3812 3.16667 13.4387 3.3375L13.5312 3.61667L13.5562 3.6875C13.6316 3.89679 13.772 4.07645 13.9569 4.20016C14.1418 4.32387 14.3614 4.38514 14.5837 4.375H17.0837C17.2494 4.375 17.4084 4.44085 17.5256 4.55806C17.6428 4.67527 17.7087 4.83424 17.7087 5C17.7087 5.16576 17.6428 5.32473 17.5256 5.44194C17.4084 5.55915 17.2494 5.625 17.0837 5.625H2.91699C2.75123 5.625 2.59226 5.55915 2.47505 5.44194C2.35784 5.32473 2.29199 5.16576 2.29199 5C2.29199 4.83424 2.35784 4.67527 2.47505 4.55806C2.59226 4.44085 2.75123 4.375 2.91699 4.375H5.49199C5.71458 4.36966 5.9296 4.29314 6.10552 4.15667C6.28143 4.02019 6.409 3.83094 6.46949 3.61667L6.56283 3.3375C6.61949 3.16667 6.66866 3.0175 6.73783 2.88417C6.87299 2.6245 7.06707 2.40009 7.30453 2.2289C7.542 2.05771 7.81625 1.9445 8.10533 1.89833C8.25366 1.875 8.41116 1.875 8.59116 1.875M7.50616 4.375C7.56387 4.26004 7.61263 4.1408 7.65199 4.01833L7.73533 3.76833C7.81116 3.54083 7.82866 3.495 7.84616 3.46167C7.89115 3.37501 7.95581 3.30009 8.03497 3.24293C8.11413 3.18577 8.20558 3.14795 8.30199 3.1325C8.4106 3.12288 8.51972 3.12037 8.62866 3.125H11.3703C11.6103 3.125 11.6603 3.12667 11.697 3.13333C11.7933 3.14869 11.8847 3.18639 11.9639 3.2434C12.043 3.30041 12.1077 3.37516 12.1528 3.46167C12.1703 3.495 12.1878 3.54083 12.2637 3.76917L12.347 4.01917L12.3795 4.1125C12.4123 4.20361 12.45 4.29111 12.4928 4.375H7.50616Z" fill="#ED0303"/>
                                             <path d="M4.92956 7.04148C4.9185 6.87605 4.84219 6.72179 4.7174 6.61263C4.59261 6.50347 4.42957 6.44835 4.26414 6.4594C4.09871 6.47045 3.94445 6.54676 3.83528 6.67155C3.72612 6.79634 3.671 6.95939 3.68206 7.12482L4.06872 12.9181C4.13956 13.9865 4.19706 14.8498 4.33206 15.5281C4.47289 16.2323 4.71122 16.8207 5.20456 17.2815C5.69789 17.7423 6.30039 17.9423 7.01289 18.0348C7.69789 18.1248 8.56289 18.1248 9.63455 18.1248H10.3671C11.4379 18.1248 12.3037 18.1248 12.9887 18.0348C13.7004 17.9423 14.3037 17.7431 14.7971 17.2815C15.2896 16.8207 15.5279 16.2315 15.6687 15.5281C15.8037 14.8506 15.8604 13.9865 15.9321 12.9181L16.3187 7.12482C16.3298 6.95939 16.2747 6.79634 16.1655 6.67155C16.0563 6.54676 15.9021 6.47045 15.7366 6.4594C15.5712 6.44835 15.4082 6.50347 15.2834 6.61263C15.1586 6.72179 15.0823 6.87605 15.0712 7.04148L14.6879 12.7915C14.6129 13.914 14.5596 14.6956 14.4429 15.2831C14.3287 15.854 14.1704 16.1556 13.9429 16.369C13.7146 16.5823 13.4029 16.7206 12.8262 16.7956C12.2321 16.8731 11.4487 16.8748 10.3229 16.8748H9.67789C8.55289 16.8748 7.76956 16.8731 7.17456 16.7956C6.59789 16.7206 6.28622 16.5823 6.05789 16.369C5.83039 16.1556 5.67206 15.854 5.55789 15.284C5.44122 14.6956 5.38789 13.914 5.31289 12.7906L4.92956 7.04148Z" fill="#ED0303"/>
                                             <path d="M7.85428 8.54511C8.01914 8.52859 8.18382 8.57821 8.31211 8.68306C8.44041 8.78792 8.52182 8.93942 8.53844 9.10428L8.95511 13.2709C8.96731 13.4335 8.91551 13.5944 8.81076 13.7193C8.70601 13.8442 8.55659 13.9233 8.39438 13.9396C8.23217 13.9559 8.07001 13.9082 7.94249 13.8066C7.81497 13.7051 7.73218 13.5577 7.71178 13.3959L7.29511 9.22928C7.27859 9.06441 7.32821 8.89973 7.43306 8.77144C7.53792 8.64314 7.68942 8.56174 7.85428 8.54511ZM12.1459 8.54511C12.3106 8.56174 12.462 8.64303 12.5668 8.77114C12.6717 8.89925 12.7214 9.06371 12.7051 9.22844L12.2884 13.3951C12.2678 13.5565 12.185 13.7036 12.0576 13.8049C11.9302 13.9062 11.7683 13.9538 11.6064 13.9377C11.4444 13.9215 11.2952 13.8428 11.1904 13.7183C11.0856 13.5938 11.0334 13.4333 11.0451 13.2709L11.4618 9.10428C11.4784 8.93958 11.5597 8.78821 11.6878 8.68338C11.8159 8.57855 11.9812 8.52882 12.1459 8.54511Z" fill="#ED0303"/>
@@ -168,13 +199,13 @@ const KassaEmeliyyati = () => {
                 </div>
                 <div className={'kecid'}>
                     <p>Əgər istəsəniz bura daxil olaraq kassa hesabatına keçid edə bilərsiniz.</p>
-                    <button onClick={()=>navigate("/admin/hesabat/kassa-h/:id")}>Keçid et</button>
+                    <button onClick={()=>navigate(`/admin/hesabat/kassa-h/${id}`)}>Keçid et</button>
                 </div>
 
 
             </div>
-            {deleteCompanyId  !== null && (
-                <div className="modal-overlay" onClick={() => setDeleteCompanyId(null)}>
+            {deleteOperationId  !== null && (
+                <div className="modal-overlay" onClick={() => setDeleteOperationId(null)}>
 
                     <div className="delete-modal-box" onClick={(e) => e.stopPropagation()}>
                         <div className="delete-icon-wrapper">
@@ -188,17 +219,16 @@ const KassaEmeliyyati = () => {
                         </div>
                         <p className="delete-message">Əməliyyatı silmək istədiyinizə əminsiz?</p>
                         <div className="delete-modal-actions">
-                            <button className="cancel-btn" onClick={() => setDeleteCompanyId(null)}>Ləğv et</button>
+                            <button className="cancel-btn" onClick={() => setDeleteOperationId(null)}>Ləğv et</button>
                             <button
                                 className="confirm-btn"
                                 onClick={async () => {
                                     try {
-                                        await deleteCompany(deleteCompanyId);
-                                        setDeleteCompanyId(null);
+                                        await deleteOperation(deleteOperationId).unwrap();
+                                        setDeleteOperationId(null);
                                         refetch();
-                                        showPopup("Şirkəti uğurla sildiniz","Seçilmiş şirkət sistemdən silindi","success")
                                     } catch {
-                                        showPopup("Sistem xətası","Əməliyyat tamamlanmadı. Təkrar cəhd edin və ya dəstəyə müraciət edin.","error")
+                                        alert("Silmə zamanı xəta baş verdi!");
                                     }
                                 }}
                             >

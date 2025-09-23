@@ -9,12 +9,7 @@ const SuperAdminLeftBar = () => {
     const [productsOpen, setProductsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const [accounterOpen, setAccounterOpen] = useState(false);
-    // Eğer rota /superAdmin/products/... ise dropdown otomatik açık olsun
-    useEffect(() => {
-        if (location.pathname.startsWith("/superAdmin/products")) {
-            setProductsOpen(true);
-        }
-    }, [location.pathname]);
+
     const showPopup = usePopup()
     const toggleProducts = () => setProductsOpen(o => !o);
     const toggleAccounter = () => setAccounterOpen(o => !o);
@@ -27,7 +22,6 @@ const SuperAdminLeftBar = () => {
         });
         localStorage.setItem('auth-change', Date.now());
         showPopup("Sistemdən çıxış edildi", "Hesabdan uğurla çıxış etdiniz.", "success")
-        // Ana səhifəyə yönləndir
         navigate('/');
     };
     return (

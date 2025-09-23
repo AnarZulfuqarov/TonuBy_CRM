@@ -6,8 +6,6 @@
 
 .admin-kassa-h-main {
   position: relative;
-
-
 }
 
 .admin-kassa-h {
@@ -68,7 +66,6 @@
       font-weight: 400;
       line-height: normal;
       gap: 8px;
-
     }
   }
 
@@ -88,27 +85,21 @@
     display: flex;
     background: #fff;
     width: 50%;
-    max-height: 200px; // Yüksəklik istəyə uyğun dəyişdirilə bilər
+    max-height: 200px;
     overflow: auto;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
 
-
     table {
       border-collapse: collapse;
       width: 100%;
-      /* === Fəaliyyətlər sütunu: sticky + soldan shadow === */
-
-
-      /* Soldan yumşaq kölgə */
-
 
       thead {
         background: #f9f9f9;
 
         th {
           padding: 8px 16px;
-          border: 1px solid #e0e0e0; // border for th
+          border: 1px solid #e0e0e0;
           white-space: nowrap;
           text-align: left;
           font-weight: 500;
@@ -136,7 +127,6 @@
           text-align: left;
           background: #f9f9f9;
         }
-
 
         th:first-child {
           border-left: none;
@@ -183,7 +173,7 @@
         td {
           padding: 8px 16px;
           font-size: 14px;
-          border: 1px solid #e0e0e0; // border for td
+          border: 1px solid #e0e0e0;
           white-space: nowrap;
           vertical-align: middle;
           text-align: left;
@@ -210,12 +200,10 @@
       }
     }
 
-
     .fixed-column {
       width: 150px;
       flex-shrink: 0;
       background: #fff;
-
       position: sticky;
       right: 0;
       top: 0;
@@ -223,6 +211,7 @@
       display: flex;
       flex-direction: column;
       border-left: none;
+
       .header {
         font-weight: bold;
         padding: 10px;
@@ -259,8 +248,6 @@
       }
     }
   }
-
-
 
   .table-toolbar {
     display: flex;
@@ -301,8 +288,13 @@
     position: relative;
     box-sizing: border-box;
 
-    &:hover { border-color: #D9D9D9; }
-    &:focus-within { border-color: #D0D6E7; box-shadow: 0 0 0 3px rgba(56,72,113,.12); }
+    &:hover {
+      border-color: #D9D9D9;
+    }
+    &:focus-within {
+      border-color: #D0D6E7;
+      box-shadow: 0 0 0 3px rgba(56, 72, 113, 0.12);
+    }
 
     select {
       flex: 1;
@@ -316,8 +308,14 @@
       appearance: none;
     }
 
-    &.is-placeholder select { color: #AFAFAF; }
-    .chev { position: absolute; right: 10px; pointer-events: none; }
+    &.is-placeholder select {
+      color: #AFAFAF;
+    }
+    .chev {
+      position: absolute;
+      right: 10px;
+      pointer-events: none;
+    }
   }
 
   /* Date input – şəkil stilinə uyğun */
@@ -331,8 +329,13 @@
     padding: 0 12px;
     position: relative;
     width: 150px;
-    &:hover { border-color: #D9D9D9; }
-    &:focus-within { border-color: #D0D6E7; box-shadow: 0 0 0 3px rgba(56,72,113,.12); }
+    &:hover {
+      border-color: #D9D9D9;
+    }
+    &:focus-within {
+      border-color: #D0D6E7;
+      box-shadow: 0 0 0 3px rgba(56, 72, 113, 0.12);
+    }
 
     input {
       flex: 1;
@@ -345,8 +348,12 @@
       padding-right: 24px;
 
       /* native date input ikonunu gizlət (Chrome) */
-      &::-webkit-calendar-picker-indicator { opacity: 0; }
-      &::placeholder { color: #AFAFAF; }
+      &::-webkit-calendar-picker-indicator {
+        opacity: 0;
+      }
+      &::placeholder {
+        color: #AFAFAF;
+      }
     }
 
     .icon {
@@ -355,6 +362,7 @@
       pointer-events: none;
     }
   }
+
   .below-table-filters {
     margin-top: 18px;
 
@@ -362,37 +370,10 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      .select22  {
-        height: 36px;
-        border: 1px solid #eed1cc;
-        border-radius: 8px;
-        background: #f8f1ef;
-        display: flex;
-        align-items: center;
-        padding: 0 12px;
-        position: relative;
-        box-sizing: border-box;
-
-        &:hover { border-color: #D9D9D9; }
-        &:focus-within { border-color: #D0D6E7; box-shadow: 0 0 0 3px rgba(56,72,113,.12); }
-
-        select {
-          flex: 1;
-          height: 100%;
-          border: none;
-          outline: none;
-          background: transparent;
-          font-size: 14px;
-          color: #2B2B2B;
-          padding-right: 18px;
-          appearance: none;
-        }
-
-        &.is-placeholder select { color: #AFAFAF; }
-        .chev { position: absolute; right: 10px; pointer-events: none; }
-      }
     }
-    .mtop { margin-top: 14px; }
+    .mtop {
+      margin-top: 14px;
+    }
 
     .field__label {
       font-size: 14px;
@@ -412,8 +393,7 @@
         gap: 8px;
         padding: 6px 10px;
         border-radius: 10px;
-               /* yumşaq açıq ton */
-        border: 1px solid #E5E5E5;  /* incə çərçivə */
+        border: 1px solid #E5E5E5;
         font-size: 14px;
         color: #6a6a6a;
 
@@ -423,13 +403,93 @@
           font-size: 12px;
           line-height: 1;
           cursor: pointer;
-          color: #d74a4a; /* qırmızı X */
+          color: #d74a4a;
         }
       }
     }
   }
 
-  /* Mövcud .select2 stilin səndə var idi — eyni istifadə olunur */
+  /* Custom Select for below-table-filters */
+  .custom-select {
+    position: relative;
+    width: 150px;
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+
+    .select-trigger {
+      background: #f8f1ef;
+      border: 1px solid #eed1cc;
+      border-radius: 8px;
+      height: 36px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: #D9D9D9;
+      }
+      span {
+        color: #2B2B2B;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .chev {
+      transition: transform 0.2s ease;
+      &.rotate {
+        transform: rotate(180deg);
+      }
+    }
+
+    .options {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+      z-index: 99;
+      padding: 6px 0;
+      animation: fadeIn 0.15s ease-in;
+
+      li {
+        padding: 10px 14px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &:hover {
+          background: #f0f7ff;
+          color: #384871;
+        }
+
+        &.active {
+          background: #384871;
+          color: #fff;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
   /* sağdaki buton */
   .create-op {
@@ -445,6 +505,7 @@
     font-size: 14px;
     cursor: pointer;
   }
+
   .card.chart-card {
     border: 1px solid #E5E5E5;
     border-radius: 12px;
@@ -454,7 +515,7 @@
     padding: 0;
 
     .chart-card__head {
-      padding:16px 24px 12px;
+      padding: 16px 24px 12px;
       font-weight: 600;
       font-size: 16px;
       color: #2B2B2B;
@@ -463,7 +524,7 @@
 
     .chart-card__body {
       padding: 27px 0px 19px;
-      height: 260px; // ResponsiveContainer height + padding
+      height: 260px;
     }
 
     .chart-card__legend {
@@ -485,10 +546,10 @@
           border-radius: 999px;
           display: inline-block;
         }
-        .name { line-height: 1; }
+        .name {
+          line-height: 1;
+        }
       }
     }
   }
-
-
 }

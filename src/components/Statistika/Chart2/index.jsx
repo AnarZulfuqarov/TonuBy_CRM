@@ -1,8 +1,8 @@
-import { Doughnut } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import {Doughnut} from "react-chartjs-2";
+import {Chart as ChartJS, ArcElement, Tooltip, Legend} from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import "./index.scss";
-// API: açık bırakıyorum, useMock=false olunca çalışır
+import {useGetByIdCashBalanceQuery} from "../../../services/adminApi.jsx";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -11,36 +11,21 @@ const DoughnutChartCard = ({
                                labels = ["Ümumi mədaxil", "Ümumi məxaric", "Toplam balans"],
                                colors = ["#45DD42", "#FF2D2D", "#FFD256"],
                                legendColors = ["#45DD42", "#FF2D2D", "#FFD256"],
-                               useMock = true, // 🔶 ŞİMDİLİK MOCK
+                               companyId
                            }) => {
-    // 🔸 MOCK veriler (toplam 100 olacak şekilde)
-    const mock = { completedPercent: 62, deletedPercent: 8, waitingPercent: 30 };
+    const {data:getByIdCashBalance, isLoading, isError} = useGetByIdCashBalanceQuery(companyId);
+    const balance = getByIdCashBalance?.data;
 
-    const companyId = localStorage.getItem("selectedCompanyId");
-    const isValidId = companyId && companyId.length === 36;
-
-
-    // kaynaktan değerleri belirle
-    const dataSrc = useMock
-        ? mock
-        : {
-            completedPercent: api.data?.completedPercent ?? 0,
-            deletedPercent: api.data?.deletedPercent ?? 0,
-            waitingPercent: api.data?.waitingPercent ?? 0,
-        };
-
-    // erken dönüşler (sadece gerçek API modunda)
-    if (!useMock && !isValidId) return <div>Zəhmət olmasa şirkət seçin</div>;
-    if (!useMock && api.isLoading) return <div>Yüklənir...</div>;
-    if (!useMock && api.isError) return <div>Xəta baş verdi</div>;
+    if (!companyId) return <div>Zəhmət olmasa şirkət seçin</div>;
+    if (isLoading) return <div>Yüklənir...</div>;
+    if (isError) return <div>Xəta baş verdi</div>;
 
     const chartValues = [
-        dataSrc.completedPercent,
-        dataSrc.deletedPercent,
-        dataSrc.waitingPercent,
+        balance?.incomeTotal ?? 0,
+        balance?.expenseTotal ?? 0,
+        balance?.balance ?? 0,
     ];
 
-    const centerText = "Balans"
     const doughnutData = {
         labels,
         datasets: [
@@ -54,14 +39,13 @@ const DoughnutChartCard = ({
 
     const doughnutOptions = {
         plugins: {
-            legend: { display: false },
+            legend: {display: false},
             tooltip: {
-                enabled: true,
                 callbacks: {
-                    label: (ctx) => `${ctx.label || ""}: ${ctx.raw || 0}%`,
+                    label: (ctx) => `${ctx.label}: ${ctx.raw} ₼`,
                 },
             },
-            datalabels: { display: false },
+            datalabels: {display: false},
         },
         cutout: "70%",
     };
@@ -75,8 +59,7 @@ const DoughnutChartCard = ({
                         <ul className="legend-list">
                             {labels.map((label, i) => (
                                 <li key={i}>
-
-                                    <span className="dot" style={{ background: legendColors[i] }} />
+                                    <span className="dot" style={{background: legendColors[i]}}/>
                                     {label} <strong>{chartValues[i]}₼</strong>
                                 </li>
                             ))}
@@ -84,9 +67,9 @@ const DoughnutChartCard = ({
                     </div>
                 </div>
                 <div className="chart-right">
-                    <div style={{ width: 160, height: 160, position: "relative" }}>
-                        <Doughnut data={doughnutData} options={doughnutOptions} />
-                        <div className="chart-center-label">{centerText}</div>
+                    <div style={{width: 160, height: 160, position: "relative"}}>
+                        <Doughnut data={doughnutData} options={doughnutOptions}/>
+                        <div className="chart-center-label">Balans</div>
                     </div>
                 </div>
             </div>

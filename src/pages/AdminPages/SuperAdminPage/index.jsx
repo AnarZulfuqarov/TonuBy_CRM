@@ -10,10 +10,10 @@ function SuperAdminPage() {
                 <SuperAdminNavbar/>
             </div>
             <div className={"row"}>
-                <div className={"col-12"}>
+                <div className={"col-10"}>
                         <SuperAdminLeftBar/>
                 </div>
-                <div className={"col-48"} style={{
+                <div className={"col-50"} style={{
                     padding: "16px 16px 16px 0"
                 }}>
                        <Outlet/>

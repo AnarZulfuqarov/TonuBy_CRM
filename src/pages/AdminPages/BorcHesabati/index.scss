@@ -283,6 +283,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  flex: 1;
 }
 
 /* Dropdownlar üstdə, yan-yana */
@@ -518,18 +519,7 @@
       }
 
       /* Soldan yumşaq kölgə */
-      thead th:last-child::before,
-      tbody td:last-child::before {
-        content: "";
-        position: absolute;
-        left: -12px;
-        top: 0;
-        bottom: 0;
-        width: 12px;
-        pointer-events: none;
-        /* soldan içəri fade shadow */
-        background: linear-gradient(270deg, rgba(0, 0, 0, 0.09), rgba(0, 0, 0, 0));
-      }
+
 
       thead {
         background: #f9f9f9;
@@ -547,7 +537,6 @@
 
         th:last-child {
           text-align: left;
-          border-left: none;
           background: #f9f9f9;
         }
 
@@ -595,13 +584,8 @@
           }
         }
 
-        td:last-child {
-          width: 50px;
-        }
 
-        td:last-child {
-          border-left: none;
-        }
+
 
         tr:last-child {
           td {

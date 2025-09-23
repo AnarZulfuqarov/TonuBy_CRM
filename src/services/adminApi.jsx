@@ -124,7 +124,69 @@ export const api = createApi({
                 url: `/CashOperations/company/${companyId}/operations`,
             }),
         }),
-
+        getByIdCashBalance: builder.query({
+            query: (companyId) => ({
+                url: `/CashOperations/company/${companyId}/balance`,
+            }),
+        }),
+        getByIdCashReporte: builder.query({
+            query: ({companyId,startDate,endDate}) => ({
+                url: `/CashOperations/report?companyId=${companyId}&startDate=${startDate}&endDate=${endDate}`,
+            }),
+        }),
+        getByIdCashReporteChart: builder.query({
+            query: (body) => ({
+                url: `/CashOperations/product-totals`,
+                method:'POST',
+                body: body,
+            }),
+        }),
+        deleteCashOperator: builder.mutation({
+            query: (id) => ({
+                url: `/CashOperations/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        createCashOperator: builder.mutation({
+            query: (company) => ({
+                url: `/CashOperations`,
+                method: 'POST',
+                body: company,
+                headers: { 'Content-Type': 'application/json' },
+            }),
+        }),
+        getSummaryChart: builder.query({
+            query: ({companyId}) => ({
+                url: `/DebtOperations/filter?companyId=${companyId}`,
+            }),
+        }),
+        createDebtOperator: builder.mutation({
+            query: (company) => ({
+                url: `/DebtOperations`,
+                method: 'POST',
+                body: company,
+                headers: { 'Content-Type': 'application/json' },
+            }),
+        }),
+        createDebtPay: builder.mutation({
+            query: (company) => ({
+                url: `/DebtOperations/pay`,
+                method: 'POST',
+                body: company,
+                headers: { 'Content-Type': 'application/json' },
+            }),
+        }),
+        deleteDebtOperator: builder.mutation({
+            query: (id) => ({
+                url: `/DebtOperations/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        getSummaryChart2: builder.query({
+            query: ({companyId,categoryId}) => ({
+                url: `/DebtOperations/summary/chart?companyId=${companyId}&categoryId=${categoryId}`,
+            }),
+        }),
     }),
 });
 
@@ -151,5 +213,16 @@ export const {
     useGetByIdProductsQuery,
 
     useGetByIdCashOperatorQuery,
+    useCreateCashOperatorMutation,
+    useGetByIdCashBalanceQuery,
+    useDeleteCashOperatorMutation,
 
+    useGetSummaryChartQuery,
+    useCreateDebtOperatorMutation,
+    useDeleteDebtOperatorMutation,
+    useCreateDebtPayMutation,
+
+    useGetByIdCashReporteQuery,
+    useGetByIdCashReporteChartQuery,
+    useGetSummaryChart2Query,
 } = api;
