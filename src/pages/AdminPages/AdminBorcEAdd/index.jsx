@@ -12,11 +12,11 @@ export default function AdminBorcEAdd() {
     const {id} = useParams();
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const refDate = useRef(null);
-    const { data: getAllCategories } = useGetAllCategoriesQuery();
-    const categoriesInit = getAllCategories?.data || [];
-    const [createOperation] = useCreateDebtOperatorMutation();
     const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
     const company = getByIdCompanies?.data
+    const categoriesInit = getByIdCompanies?.data?.categories || [];
+    const [createOperation] = useCreateDebtOperatorMutation();
+
     const [form, setForm] = useState({
         // customer sahəsini ayrıca qurmaq istəyərsən: customerId/customerName
         categoryId: "",

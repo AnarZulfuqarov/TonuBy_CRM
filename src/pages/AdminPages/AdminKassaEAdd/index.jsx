@@ -3,7 +3,7 @@ import {NavLink, useParams} from "react-router-dom";
 import "./index.scss";
 import {
     useCreateCashOperatorMutation,
-    useGetAllCategoriesQuery,
+
     useGetByIdCompaniesQuery
 } from "../../../services/adminApi.jsx";
 
@@ -11,11 +11,11 @@ export default function AdminKassaEAdd() {
     const {id} = useParams();
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const refDate = useRef(null);
-    const { data: getAllCategories } = useGetAllCategoriesQuery();
-    const categoriesInit = getAllCategories?.data || [];
+
     const [createOperation] = useCreateCashOperatorMutation();
     const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
     const company = getByIdCompanies?.data
+    const categoriesInit = getByIdCompanies?.data?.categories || [];
     const [form, setForm] = useState({
         // customer sahəsini ayrıca qurmaq istəyərsən: customerId/customerName
         categoryId: "",

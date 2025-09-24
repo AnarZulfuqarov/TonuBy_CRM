@@ -187,6 +187,14 @@ export const api = createApi({
                 url: `/DebtOperations/summary/chart?companyId=${companyId}&categoryId=${categoryId}`,
             }),
         }),
+        editDebtAmount: builder.mutation({
+            query: (company) => ({
+                url: `/DebtOperations/update-received`,
+                method: 'PUT',
+                body: company,
+                headers: { 'Content-Type': 'application/json' },
+            }),
+        }),
     }),
 });
 
@@ -225,4 +233,5 @@ export const {
     useGetByIdCashReporteQuery,
     useGetByIdCashReporteChartQuery,
     useGetSummaryChart2Query,
+    useEditDebtAmountMutation,
 } = api;

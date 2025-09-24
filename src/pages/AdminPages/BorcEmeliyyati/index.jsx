@@ -5,7 +5,7 @@ import {FaTimes} from "react-icons/fa";
 import SelectBox from "../../../components/SelectBox/index.jsx";
 import {
     useCreateDebtPayMutation,
-    useDeleteDebtOperatorMutation,
+    useDeleteDebtOperatorMutation, useEditDebtAmountMutation,
     useGetAllCategoriesQuery,
     useGetByIdCompaniesQuery, useGetSummaryChartQuery
 } from "../../../services/adminApi.jsx";
@@ -15,12 +15,14 @@ import {usePopup} from "../../../components/Popup/PopupContext.jsx";
 const BorcEmeliyyati = () => {
     const {id}= useParams()
     console.log(id)
+    const [modalVisible, setModalVisible] = useState(false);
+    const [editCompanyData, setEditCompanyData] = useState({ debtOperationId: '', receivedAmount: '' });
+    console.log(editCompanyData)
     const { data: getByIdCashOperator,refetch } = useGetSummaryChartQuery({companyId:id});
     const operations = getByIdCashOperator?.data;
     const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
     const company = getByIdCompanies?.data
-    const {data:getAllCategories} = useGetAllCategoriesQuery()
-    const categories = getAllCategories?.data
+    const categories = getByIdCompanies?.data?.categories
     const [searchName, setSearchName] = useState('');
     const [activeSearch, setActiveSearch] = useState(null);
     const [deleteCompanyId, setDeleteCompanyId] = useState(null);
@@ -79,7 +81,7 @@ const BorcEmeliyyati = () => {
     }, []);
     const nativeDateRef = React.useRef(null);
 
-
+const [debtEdit] = useEditDebtAmountMutation()
 
     const handlePickDate = (e) => {
         const iso = e.target.value; // yyyy-mm-dd
@@ -179,6 +181,13 @@ const BorcEmeliyyati = () => {
                                 <td>{op.description}</td>
                                 <td>
                                     <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+                                        <svg style={{cursor:"pointer"}} onClick={() => {
+                                            setEditCompanyData({ debtOperationId: op.id, receivedAmount: op.receivedAmount });
+                                            setModalVisible(true);
+                                        }} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                            <path d="M18.3337 6.03367C18.3343 5.924 18.3133 5.81528 18.2718 5.71375C18.2303 5.61222 18.1692 5.51987 18.092 5.44201L14.5587 1.90867C14.4808 1.83144 14.3885 1.77033 14.2869 1.72886C14.1854 1.68739 14.0767 1.66637 13.967 1.66701C13.8573 1.66637 13.7486 1.68739 13.6471 1.72886C13.5456 1.77033 13.4532 1.83144 13.3753 1.90867L11.017 4.26701L1.90867 13.3753C1.83144 13.4532 1.77033 13.5456 1.72886 13.6471C1.68739 13.7486 1.66637 13.8573 1.66701 13.967V17.5003C1.66701 17.7214 1.7548 17.9333 1.91108 18.0896C2.06736 18.2459 2.27933 18.3337 2.50034 18.3337H6.03367C6.15028 18.34 6.26692 18.3218 6.37602 18.2801C6.48513 18.2385 6.58427 18.1744 6.66701 18.092L15.7253 8.98367L18.092 6.66701C18.1679 6.58614 18.2299 6.49321 18.2753 6.39201C18.2834 6.32558 18.2834 6.25843 18.2753 6.19201C18.2792 6.15321 18.2792 6.11413 18.2753 6.07534L18.3337 6.03367ZM5.69201 16.667H3.33367V14.3087L11.6087 6.03367L13.967 8.39201L5.69201 16.667ZM15.142 7.21701L12.7837 4.85867L13.967 3.68367L16.317 6.03367L15.142 7.21701Z" fill="#919191"/>
+                                        </svg>
+                                        <div className={'hrXett'}></div>
                                         <svg onClick={() => {
                                             setShowPayment({ id: op.id }); // company.id yox!
                                             setPayAmount("");
@@ -245,6 +254,70 @@ const BorcEmeliyyati = () => {
                             </button>
 
                         </div>
+                    </div>
+                </div>
+            )}
+            {modalVisible && (
+                <div className="vendor-edit-modal-overlay" onClick={() => setModalVisible(false)}>
+                    <div className="vendor-edit-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className={"modalHead"}>
+                            <button className="modal-close-btn" onClick={() => setModalVisible(false)}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                    <path d="M8.47116 1L0.876953 9M0.876953 1L8.47116 9" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <h3>Düzəliş et</h3>
+                        </div>
+                        <div className="modal-fields">
+                            <label>Alınacaq</label>
+                            <div className={"searchInput"}>
+                                <input
+                                    type="text"
+                                    placeholder="0"
+                                    value={editCompanyData.receivedAmount}
+                                    onChange={(e) =>
+                                        setEditCompanyData((prev) => ({ ...prev, receivedAmount: e.target.value }))
+                                    }
+                                />
+                                <svg className={'searchIcon'} xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
+                                    <path d="M16.5 5.93001C16.5006 5.83131 16.4817 5.73346 16.4443 5.64208C16.407 5.5507 16.352 5.46759 16.2825 5.39751L13.1025 2.21751C13.0324 2.148 12.9493 2.09301 12.8579 2.05568C12.7666 2.01836 12.6687 1.99944 12.57 2.00001C12.4713 1.99944 12.3735 2.01836 12.2821 2.05568C12.1907 2.09301 12.1076 2.148 12.0375 2.21751L9.91501 4.34001L1.71751 12.5375C1.648 12.6076 1.59301 12.6907 1.55568 12.7821C1.51836 12.8735 1.49944 12.9713 1.50001 13.07V16.25C1.50001 16.4489 1.57903 16.6397 1.71968 16.7803C1.86033 16.921 2.0511 17 2.25001 17H5.43001C5.53496 17.0057 5.63993 16.9893 5.73813 16.9518C5.83632 16.9144 5.92555 16.8567 6.00001 16.7825L14.1525 8.58501L16.2825 6.50001C16.3509 6.42724 16.4066 6.34359 16.4475 6.25251C16.4547 6.19273 16.4547 6.13229 16.4475 6.07251C16.451 6.0376 16.451 6.00242 16.4475 5.96751L16.5 5.93001ZM5.12251 15.5H3.00001V13.3775L10.4475 5.93001L12.57 8.05251L5.12251 15.5ZM13.6275 6.99501L11.505 4.87251L12.57 3.81501L14.685 5.93001L13.6275 6.99501Z" fill="#3D3D3D"/>
+                                </svg>
+                            </div>
+                            <button
+                                className="save-btn"
+                                onClick={async () => {
+                                    try {
+                                        if (!editCompanyData.receivedAmount.trim()) return;
+
+                                        await debtEdit({
+                                            debtOperationId: editCompanyData.debtOperationId,
+                                            receivedAmount: editCompanyData.receivedAmount,
+                                        }).unwrap(); // backend-ə göndəririk
+
+                                        await refetch(); // list yenilənsin
+                                        setModalVisible(false);
+                                        setEditCompanyData({ debtOperationId: '', receivedAmount: '' });
+
+                                        showPopup(
+                                            "Şirkətə uğurla düzəliş etdiniz",
+                                            "Dəyişikliklər yadda saxlanıldı",
+                                            "success"
+                                        );
+                                    } catch (err) {
+                                        showPopup(
+                                            "Sistem xətası",
+                                            "Əməliyyat tamamlanmadı. Təkrar cəhd edin və ya dəstəyə müraciət edin.",
+                                            "error"
+                                        );
+                                    }
+                                }}
+                            >
+                                Yadda saxla
+                            </button>
+
+                        </div>
+
+
                     </div>
                 </div>
             )}

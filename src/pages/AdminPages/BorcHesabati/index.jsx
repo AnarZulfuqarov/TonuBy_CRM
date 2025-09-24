@@ -15,7 +15,7 @@ const BorcHesabati = () => {
 const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
     const company = getByIdCompanies?.data
     const {data: getAllCategories} = useGetAllCategoriesQuery();
-    const categories = getAllCategories?.data || [];
+    const categories = getByIdCompanies?.data?.categories || [];
 
     // Seçilmiş filterlər
     const [categorySummary, setCategorySummary] = useState("__all__");

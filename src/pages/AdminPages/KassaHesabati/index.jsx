@@ -87,7 +87,7 @@ const KassaHesabati = () => {
         note: "",
     });
     const { data: getAllCategories } = useGetAllCategoriesQuery();
-    const CATEGORY_LIST = getAllCategories?.data || [];
+    const CATEGORY_LIST = getByIdCompanies?.data?.categories || [];
 
     const PROD_COLORS = ["#6EA8FE", "#9ADBC1", "#E59BB3", "#E9B24C", "#A693F2"];
 

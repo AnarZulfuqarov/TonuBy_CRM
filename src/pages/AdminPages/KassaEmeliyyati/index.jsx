@@ -37,8 +37,8 @@ const KassaEmeliyyati = () => {
 
     const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
     const company = getByIdCompanies?.data
-    const {data:getAllCategories} = useGetAllCategoriesQuery()
-    const categories = getAllCategories?.data
+
+    const categories = getByIdCompanies?.data?.categories
 
 
     const [searchName, setSearchName] = useState('');

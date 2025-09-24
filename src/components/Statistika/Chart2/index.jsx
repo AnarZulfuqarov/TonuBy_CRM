@@ -1,8 +1,8 @@
-import {Doughnut} from "react-chartjs-2";
-import {Chart as ChartJS, ArcElement, Tooltip, Legend} from "chart.js";
+import { Doughnut } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import "./index.scss";
-import {useGetByIdCashBalanceQuery} from "../../../services/adminApi.jsx";
+import { useGetByIdCashBalanceQuery } from "../../../services/adminApi.jsx";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -11,20 +11,24 @@ const DoughnutChartCard = ({
                                labels = ["Ümumi mədaxil", "Ümumi məxaric", "Toplam balans"],
                                colors = ["#45DD42", "#FF2D2D", "#FFD256"],
                                legendColors = ["#45DD42", "#FF2D2D", "#FFD256"],
-                               companyId
+                               companyId,
                            }) => {
-    const {data:getByIdCashBalance, isLoading, isError} = useGetByIdCashBalanceQuery(companyId);
+    const { data: getByIdCashBalance, isLoading, isError } = useGetByIdCashBalanceQuery(companyId);
     const balance = getByIdCashBalance?.data;
 
     if (!companyId) return <div>Zəhmət olmasa şirkət seçin</div>;
     if (isLoading) return <div>Yüklənir...</div>;
     if (isError) return <div>Xəta baş verdi</div>;
 
-    const chartValues = [
+    // Orijinal değerler (sol tarafta gösterilecek)
+    const originalValues = [
         balance?.incomeTotal ?? 0,
         balance?.expenseTotal ?? 0,
         balance?.balance ?? 0,
     ];
+
+    // Grafikte kullanılacak değerler (negatifler sıfırlanır)
+    const chartValues = originalValues.map((value) => (value < 0 ? 0 : value));
 
     const doughnutData = {
         labels,
@@ -39,13 +43,13 @@ const DoughnutChartCard = ({
 
     const doughnutOptions = {
         plugins: {
-            legend: {display: false},
+            legend: { display: false },
             tooltip: {
                 callbacks: {
                     label: (ctx) => `${ctx.label}: ${ctx.raw} ₼`,
                 },
             },
-            datalabels: {display: false},
+            datalabels: { display: false },
         },
         cutout: "70%",
     };
@@ -59,16 +63,16 @@ const DoughnutChartCard = ({
                         <ul className="legend-list">
                             {labels.map((label, i) => (
                                 <li key={i}>
-                                    <span className="dot" style={{background: legendColors[i]}}/>
-                                    {label} <strong>{chartValues[i]}₼</strong>
+                                    <span className="dot" style={{ background: legendColors[i] }} />
+                                    {label} <strong>{originalValues[i]}₼</strong>
                                 </li>
                             ))}
                         </ul>
                     </div>
                 </div>
                 <div className="chart-right">
-                    <div style={{width: 160, height: 160, position: "relative"}}>
-                        <Doughnut data={doughnutData} options={doughnutOptions}/>
+                    <div style={{ width: 160, height: 160, position: "relative" }}>
+                        <Doughnut data={doughnutData} options={doughnutOptions} />
                         <div className="chart-center-label">Balans</div>
                     </div>
                 </div>

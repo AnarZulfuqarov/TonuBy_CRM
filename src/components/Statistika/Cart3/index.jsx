@@ -1,7 +1,5 @@
 import React from "react";
-import {
-    PieChart, Pie, Cell, Tooltip, ResponsiveContainer
-} from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 const COLORS = ["#62B2FD", "#FFB44F"]; // mavi, sarı (şəkildəki tonlara yaxın)
 
@@ -11,19 +9,30 @@ export default function PieWithCallouts({
                                             width = 260,
                                             height = 200,
                                         }) {
-    const data = [
-        { name: labels[0], value: values[0] },
-        { name: labels[1], value: values[1] },
-    ];
+    // Negatif veya sıfır değerleri filtrele ve veri dizisini oluştur
+    const data = values
+        .map((value, index) => ({
+            name: labels[index],
+            value: value > 0 ? value : 0, // Negatif değerleri 0 ile değiştir
+        }))
+        .filter((item) => item.value > 0); // Sadece pozitif değerleri dahil et
 
-    // custom label: faizləri kənarda göstər + leader line
+    // Geçerli veri yoksa hata mesajı göster
+    if (data.length === 0) {
+        return <div>Geçerli veri yok (tüm değerler negatif veya sıfır).</div>;
+    }
+
+    // Toplam değeri hesapla (yüzde için)
+    const totalValue = data.reduce((sum, entry) => sum + entry.value, 0);
+
+    // Özel etiket: yüzdeleri dışarıda göster + bağlantı çizgisi
     const renderLabel = ({ cx, cy, midAngle, outerRadius, percent }) => {
         const RADIAN = Math.PI / 180;
-        const r = outerRadius + 18; // mətni çıxarma məsafəsi
+        const r = outerRadius + 18; // metni çıkarma mesafesi
         const x = cx + r * Math.cos(-midAngle * RADIAN);
         const y = cy + r * Math.sin(-midAngle * RADIAN);
 
-        // kiçik leader line: dilimin kənarından mətinə
+        // küçük bağlantı çizgisi: dilimin kenarından metne
         const lx = cx + (outerRadius + 6) * Math.cos(-midAngle * RADIAN);
         const ly = cy + (outerRadius + 6) * Math.sin(-midAngle * RADIAN);
 
@@ -45,6 +54,16 @@ export default function PieWithCallouts({
         );
     };
 
+    // Tooltip formatter: hover'da yüzde göster
+    const renderTooltip = ({ payload }) => {
+        if (payload && payload.length) {
+            const { value, name } = payload[0];
+            const percent = (value / totalValue) * 100;
+            return `${name}: ${Math.round(percent)}%`;
+        }
+        return null;
+    };
+
     return (
         <div style={{ width, height, margin: "0 auto" }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -54,11 +73,11 @@ export default function PieWithCallouts({
                         dataKey="value"
                         cx="50%"
                         cy="50%"
-                        outerRadius={70}       // ölçünü bura ilə oynaya bilərsən
-                        innerRadius={0}        // donut deyil – tam pie
+                        outerRadius={70} // ölçüyü buradan ayarlayabilirsin
+                        innerRadius={0} // donut değil – tam pie
                         startAngle={90}
-                        endAngle={-270}        // başlama bucağı şəkilə daha yaxın
-                        labelLine={false}      // öz xəttimizi çəkirik
+                        endAngle={-270} // başlangıç açısı şekle daha yakın
+                        labelLine={false} // kendi çizgimizi çiziyoruz
                         label={renderLabel}
                         isAnimationActive={false}
                     >
@@ -66,7 +85,7 @@ export default function PieWithCallouts({
                             <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
                         ))}
                     </Pie>
-                    <Tooltip formatter={(v) => [`${v}%`, "Faiz"]} />
+                    <Tooltip content={renderTooltip} />
                 </PieChart>
             </ResponsiveContainer>
         </div>
