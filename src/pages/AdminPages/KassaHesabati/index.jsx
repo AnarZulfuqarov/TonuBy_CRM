@@ -181,7 +181,7 @@ const KassaHesabati = () => {
                         <tr>
                             <th>
                                 {activeSearch === "name" ? (
-                                    <div className="th-search">
+                                    <div style={{cursor:"pointer"}} className="th-search">
                                         <input
                                             autoFocus
                                             value={searchName}
@@ -199,6 +199,7 @@ const KassaHesabati = () => {
                                     <div className="th-label">
                                         Kateqoriya adı
                                         <svg
+                                            style={{cursor:"pointer"}}
                                             onClick={() => setActiveSearch("name")}
                                             xmlns="http://www.w3.org/2000/svg"
                                             width="24"

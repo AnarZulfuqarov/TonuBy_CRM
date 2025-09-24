@@ -3,13 +3,13 @@ import {NavLink, useParams} from "react-router-dom";
 import "./index.scss";
 import {
     useCreateCashOperatorMutation,
-
     useGetByIdCompaniesQuery
 } from "../../../services/adminApi.jsx";
 
 export default function AdminKassaEAdd() {
     const {id} = useParams();
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // ⬅️ Loading state'i eklendi
     const refDate = useRef(null);
 
     const [createOperation] = useCreateCashOperatorMutation();
@@ -17,25 +17,22 @@ export default function AdminKassaEAdd() {
     const company = getByIdCompanies?.data
     const categoriesInit = getByIdCompanies?.data?.categories || [];
     const [form, setForm] = useState({
-        // customer sahəsini ayrıca qurmaq istəyərsən: customerId/customerName
         categoryId: "",
         categoryName: "",
         productId: "",
         productName: "",
         madaxil: "",
         mexaric: "",
-        tarix: "", // input[type=date] → "YYYY-MM-DD" saxlayırıq, submitdə dd.MM.yyyy edəcəyik
+        tarix: "",
         note: "",
     });
 
-    // Seçilən kateqoriyaya görə məhsullar
     const productsInit = form.categoryId
         ? categoriesInit.find((c) => c.id === form.categoryId)?.products || []
         : [];
 
     const setField = (k, v) => setForm((p) => ({ ...p, [k]: v }));
 
-    // Dropdown list-lər
     const [lists, setLists] = useState({
         category: [],
         product: [],
@@ -61,13 +58,11 @@ export default function AdminKassaEAdd() {
         }
     }, [form.categoryId]);
 
-    // TH search state
-    const [activeHeaderSearch, setActiveHeaderSearch] = useState(null); // 'category'|'product'|null
+    const [activeHeaderSearch, setActiveHeaderSearch] = useState(null);
     const [q, setQ] = useState({ category: "", product: "" });
     const [hover, setHover] = useState(-1);
     const headerRef = useRef(null);
 
-    // Kənara kliklə bağla
     useEffect(() => {
         const onDown = (e) => {
             if (!headerRef.current?.contains(e.target)) {
@@ -113,12 +108,9 @@ export default function AdminKassaEAdd() {
         setHover(-1);
     };
 
-    // dd.MM.yyyy formatına çevirici
     const toDDMMYYYY = (value) => {
         if (!value) return "";
-        // Əgər artıq dd.MM.yyyy-dirsə, elə həmin kimi qaytar
         if (/^\d{2}\.\d{2}\.\d{4}$/.test(value)) return value;
-        // input[type=date] formatı: YYYY-MM-DD
         const parts = value.split("-");
         if (parts.length === 3) {
             const [y, m, d] = parts;
@@ -126,7 +118,6 @@ export default function AdminKassaEAdd() {
             const mm = m.padStart(2, "0");
             return `${dd}.${mm}.${y}`;
         }
-        // fallback: parse edib formatla
         const dt = new Date(value);
         if (!isNaN(dt.getTime())) {
             const dd = String(dt.getDate()).padStart(2, "0");
@@ -137,7 +128,6 @@ export default function AdminKassaEAdd() {
         return value;
     };
 
-    // Validasiya: yalnız biri > 0 (XOR)
     const oneAmountOnly =
         (Number(form.madaxil) > 0) !== (Number(form.mexaric) > 0);
 
@@ -147,22 +137,34 @@ export default function AdminKassaEAdd() {
         (Number(form.madaxil) > 0 || Number(form.mexaric) > 0) &&
         form.tarix;
 
-
     const handleSubmit = async () => {
         if (!isFormValid) return;
+
+        setIsLoading(true); // ⬅️ Loading başlasın
 
         const payload = {
             productId: form.productId,
             incomeAmount: Number(form.madaxil) > 0 ? Number(form.madaxil) : 0,
             expenseAmount: Number(form.mexaric) > 0 ? Number(form.mexaric) : 0,
             description: form.note || "",
-            createTime: toDDMMYYYY(form.tarix), // <-- Backend tələbi: dd.MM.yyyy
+            createTime: toDDMMYYYY(form.tarix),
         };
 
         try {
             const res = await createOperation(payload).unwrap();
             console.log("success:", res);
             setShowSuccessModal(true);
+            // ⬅️ Formu sıfırla
+            setForm({
+                categoryId: "",
+                categoryName: "",
+                productId: "",
+                productName: "",
+                madaxil: "",
+                mexaric: "",
+                tarix: "",
+                note: "",
+            });
         } catch (err) {
             console.error("error:", err);
             alert(
@@ -170,6 +172,8 @@ export default function AdminKassaEAdd() {
                 "\nGöndərilən tarix formatı: " +
                 payload.createTime
             );
+        } finally {
+            setIsLoading(false); // ⬅️ Loading bitsin
         }
     };
 
@@ -345,12 +349,12 @@ export default function AdminKassaEAdd() {
 
                             <tr>
                                 <td colSpan={6}>
-                    <textarea
-                        placeholder="Qeyd.."
-                        rows={3}
-                        value={form.note}
-                        onChange={(e) => setField("note", e.target.value)}
-                    />
+                                    <textarea
+                                        placeholder="Qeyd.."
+                                        rows={3}
+                                        value={form.note}
+                                        onChange={(e) => setField("note", e.target.value)}
+                                    />
                                 </td>
                             </tr>
                             </tbody>
@@ -359,11 +363,11 @@ export default function AdminKassaEAdd() {
                 </div>
 
                 <button
-                    className={`confirm-btn ${!isFormValid ? "disabled" : ""}`}
+                    className={`confirm-btn ${!isFormValid ? "disabled" : ""} ${isLoading ? "loading" : ""}`} // ⬅️ Loading sınıfı eklendi
                     onClick={handleSubmit}
-                    disabled={!isFormValid}
+                    disabled={!isFormValid || isLoading} // ⬅️ Loading sırasında buton devre dışı
                 >
-                    Təsdiqlə
+                    {isLoading ? "Yüklənir..." : "Təsdiqlə"}
                 </button>
             </div>
 

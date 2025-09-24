@@ -2,15 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import {NavLink, useParams} from "react-router-dom";
 import "./index.scss";
 import {
-    useCreateDebtOperatorMutation,  // ⬅️ bunu əlavə et
-    useGetAllCategoriesQuery, useGetByIdCompaniesQuery          // ⬅️ bunu əlavə et
+    useCreateDebtOperatorMutation,
+    useGetAllCategoriesQuery,
+    useGetByIdCompaniesQuery
 } from "/src/services/adminApi.jsx";
-
-
 
 export default function AdminBorcEAdd() {
     const {id} = useParams();
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // ⬅️ Loading state'i eklendi
     const refDate = useRef(null);
     const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
     const company = getByIdCompanies?.data
@@ -18,25 +18,22 @@ export default function AdminBorcEAdd() {
     const [createOperation] = useCreateDebtOperatorMutation();
 
     const [form, setForm] = useState({
-        // customer sahəsini ayrıca qurmaq istəyərsən: customerId/customerName
         categoryId: "",
         categoryName: "",
         productId: "",
         productName: "",
         alinacaq: "",
         verilecek: "",
-        tarix: "", // input[type=date] → "YYYY-MM-DD" saxlayırıq, submitdə dd.MM.yyyy edəcəyik
+        tarix: "",
         note: "",
     });
 
-    // Seçilən kateqoriyaya görə məhsullar
     const productsInit = form.categoryId
         ? categoriesInit.find((c) => c.id === form.categoryId)?.products || []
         : [];
 
     const setField = (k, v) => setForm((p) => ({ ...p, [k]: v }));
 
-    // Dropdown list-lər
     const [lists, setLists] = useState({
         category: [],
         product: [],
@@ -62,13 +59,11 @@ export default function AdminBorcEAdd() {
         }
     }, [form.categoryId]);
 
-    // TH search state
-    const [activeHeaderSearch, setActiveHeaderSearch] = useState(null); // 'category'|'product'|null
+    const [activeHeaderSearch, setActiveHeaderSearch] = useState(null);
     const [q, setQ] = useState({ category: "", product: "" });
     const [hover, setHover] = useState(-1);
     const headerRef = useRef(null);
 
-    // Kənara kliklə bağla
     useEffect(() => {
         const onDown = (e) => {
             if (!headerRef.current?.contains(e.target)) {
@@ -114,12 +109,9 @@ export default function AdminBorcEAdd() {
         setHover(-1);
     };
 
-    // dd.MM.yyyy formatına çevirici
     const toDDMMYYYY = (value) => {
         if (!value) return "";
-        // Əgər artıq dd.MM.yyyy-dirsə, elə həmin kimi qaytar
         if (/^\d{2}\.\d{2}\.\d{4}$/.test(value)) return value;
-        // input[type=date] formatı: YYYY-MM-DD
         const parts = value.split("-");
         if (parts.length === 3) {
             const [y, m, d] = parts;
@@ -127,7 +119,6 @@ export default function AdminBorcEAdd() {
             const mm = m.padStart(2, "0");
             return `${dd}.${mm}.${y}`;
         }
-        // fallback: parse edib formatla
         const dt = new Date(value);
         if (!isNaN(dt.getTime())) {
             const dd = String(dt.getDate()).padStart(2, "0");
@@ -138,30 +129,40 @@ export default function AdminBorcEAdd() {
         return value;
     };
 
-    // Validasiya: yalnız biri > 0 (XOR)
-
     const isFormValid =
         form.categoryId &&
         form.productId &&
         (Number(form.alinacaq) > 0 || Number(form.verilecek) > 0) &&
         form.tarix;
 
-
     const handleSubmit = async () => {
         if (!isFormValid) return;
+
+        setIsLoading(true); // ⬅️ Loading başlasın
 
         const payload = {
             productId: form.productId,
             receivedAmount: Number(form.alinacaq) > 0 ? Number(form.alinacaq) : 0,
             paidAmount: Number(form.verilecek) > 0 ? Number(form.verilecek) : 0,
             description: form.note || "",
-            createTime: toDDMMYYYY(form.tarix), // <-- Backend tələbi: dd.MM.yyyy
+            createTime: toDDMMYYYY(form.tarix),
         };
 
         try {
             const res = await createOperation(payload).unwrap();
             console.log("success:", res);
             setShowSuccessModal(true);
+            // ⬅️ Formu sıfırla
+            setForm({
+                categoryId: "",
+                categoryName: "",
+                productId: "",
+                productName: "",
+                alinacaq: "",
+                verilecek: "",
+                tarix: "",
+                note: "",
+            });
         } catch (err) {
             console.error("error:", err);
             alert(
@@ -169,6 +170,8 @@ export default function AdminBorcEAdd() {
                 "\nGöndərilən tarix formatı: " +
                 payload.createTime
             );
+        } finally {
+            setIsLoading(false); // ⬅️ Loading bitsin
         }
     };
 
@@ -176,7 +179,6 @@ export default function AdminBorcEAdd() {
         { label: "Kateqoriya seç", key: "category" },
         { label: "Məhsul seç", key: "product" },
     ];
-
 
     return (
         <div className="admin-borc-e-add-main">
@@ -345,12 +347,12 @@ export default function AdminBorcEAdd() {
 
                             <tr>
                                 <td colSpan={6}>
-                    <textarea
-                        placeholder="Qeyd.."
-                        rows={3}
-                        value={form.note}
-                        onChange={(e) => setField("note", e.target.value)}
-                    />
+                                    <textarea
+                                        placeholder="Qeyd.."
+                                        rows={3}
+                                        value={form.note}
+                                        onChange={(e) => setField("note", e.target.value)}
+                                    />
                                 </td>
                             </tr>
                             </tbody>
@@ -361,25 +363,27 @@ export default function AdminBorcEAdd() {
                 <button
                     className={`confirm-btn ${!isFormValid ? "disabled" : ""}`}
                     onClick={handleSubmit}
-                    disabled={!isFormValid}
+                    disabled={!isFormValid || isLoading} // ⬅️ Loading sırasında butonu devre dışı bırak
                 >
-                    Təsdiqlə
+                    {isLoading ? "Yüklənir..." : "Təsdiqlə"} {/* ⬅️ Loading metni */}
                 </button>
             </div>
             {showSuccessModal && (
                 <div className="modal-overlay" onClick={() => setShowSuccessModal(false)}>
                     <div className="success-modal" onClick={(e) => e.stopPropagation()}>
-                        <div className="close-btn" onClick={() => setShowSuccessModal(false)}><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                            <path d="M14.25 3.74963L3.75 14.2496M3.75 3.74963L14.25 14.2496" stroke="#333333" stroke-width="2.4375" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg></div>
+                        <div className="close-btn" onClick={() => setShowSuccessModal(false)}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M14.25 3.74963L3.75 14.2496M3.75 3.74963L14.25 14.2496" stroke="#333333" stroke-width="2.4375" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
                         <div className="check-icon">
-                                <div className="circle pulse">
-                                    <div className="circle-inner">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="31" viewBox="0 0 30 31" fill="none">
-                                            <path d="M11.7714 19.353L22.1402 8.98422C22.3849 8.73953 22.6704 8.61719 22.9966 8.61719C23.3229 8.61719 23.6083 8.73953 23.853 8.98422C24.0977 9.22891 24.2201 9.51969 24.2201 9.85654C24.2201 10.1934 24.0977 10.4838 23.853 10.7276L12.6279 21.9834C12.3832 22.2281 12.0977 22.3504 11.7714 22.3504C11.4452 22.3504 11.1597 22.2281 10.915 21.9834L5.65419 16.7226C5.4095 16.4779 5.29205 16.1875 5.30183 15.8515C5.31162 15.5154 5.43927 15.2246 5.68477 14.9791C5.93028 14.7336 6.22105 14.6113 6.5571 14.6121C6.89314 14.6129 7.1835 14.7353 7.42819 14.9791L11.7714 19.353Z" fill="white"/>
-                                        </svg>
-                                    </div>
+                            <div className="circle pulse">
+                                <div className="circle-inner">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="31" viewBox="0 0 30 31" fill="none">
+                                        <path d="M11.7714 19.353L22.1402 8.98422C22.3849 8.73953 22.6704 8.61719 22.9966 8.61719C23.3229 8.61719 23.6083 8.73953 23.853 8.98422C24.0977 9.22891 24.2201 9.51969 24.2201 9.85654C24.2201 10.1934 24.0977 10.4838 23.853 10.7276L12.6279 21.9834C12.3832 22.2281 12.0977 22.3504 11.7714 22.3504C11.4452 22.3504 11.1597 22.2281 10.915 21.9834L5.65419 16.7226C5.4095 16.4779 5.29205 16.1875 5.30183 15.8515C5.31162 15.5154 5.43927 15.2246 5.68477 14.9791C5.93028 14.7336 6.22105 14.6113 6.5571 14.6121C6.89314 14.6129 7.1835 14.7353 7.42819 14.9791L11.7714 19.353Z" fill="white"/>
+                                    </svg>
                                 </div>
+                            </div>
                         </div>
                         <h3>Yeni borc əməliyyatı uğurla əlavə edildi !</h3>
                         <button className="back-btn" onClick={() => window.location.href = `/admin/emeliyyat/borc-e/${id}`}>
