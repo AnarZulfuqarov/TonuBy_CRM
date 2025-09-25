@@ -72,9 +72,9 @@ const AdminProducts = () => {
             setCreateMeasure('');
             setCreatePrice('');
 
-            showPopup("Yeni məhsul yaradıldı", "Məlumat uğurla əlavə olundu", "success");
+            showPopup("Məhsul yaradıldı", "Yeni məhsul sistemə əlavə olundu.", "success");
         } catch {
-            showPopup("Sistem xətası", "Əməliyyat tamamlanmadı", "error");
+            showPopup("Xəta baş verdi", "Məhsul yaradıla bilmədi, təkrar cəhd edin.", "error");
         }
     };
 
@@ -97,9 +97,9 @@ const AdminProducts = () => {
             setModalVisible(false);
             setEditData({ id: '', name: '', barcode: '', meausure: '', price: '' });
 
-            showPopup("Məhsul uğurla düzəldildi", "Dəyişikliklər yadda saxlanıldı", "success");
+            showPopup("Düzəliş uğurludur", "Məhsul məlumatları yeniləndi.", "success");
         } catch {
-            showPopup("Sistem xətası", "Əməliyyat tamamlanmadı", "error");
+            showPopup("Xəta baş verdi", "Düzəliş edilə bilmədi, təkrar cəhd edin.", "error");
         }
     };
 
@@ -110,9 +110,9 @@ const AdminProducts = () => {
             await productRefetch();
             setDeleteProductId(null);
 
-            showPopup("Məhsul silindi", "Seçilmiş məhsul sistemdən silindi", "success");
+            showPopup("Məhsul silindi", "Məhsul sistemdən uğurla silindi.", "success");
         } catch {
-            showPopup("Sistem xətası", "Əməliyyat tamamlanmadı", "error");
+            showPopup("Xəta baş verdi", "Məhsul silinə bilmədi, təkrar cəhd edin.", "error");
         }
     };
     const filteredProducts = companies?.filter((product) => {

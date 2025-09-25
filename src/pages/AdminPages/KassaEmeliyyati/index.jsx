@@ -5,10 +5,10 @@ import DoughnutChartCard from "../../../components/Statistika/Chart2/index.jsx";
 import {FaTimes} from "react-icons/fa";
 import {
     useDeleteCashOperatorMutation,
-    useGetAllCategoriesQuery,
     useGetByIdCashOperatorQuery, useGetByIdCompaniesQuery
 } from "../../../services/adminApi.jsx";
 import SelectBox from "../../../components/SelectBox/index.jsx";
+import {usePopup} from "../../../components/Popup/PopupContext.jsx";
 
 
 // const SelectBox = ({ value, onChange, options, placeholder, width = 190 }) => (
@@ -34,7 +34,7 @@ const KassaEmeliyyati = () => {
     const {id}= useParams()
     const { data: getByIdCashOperator,refetch } = useGetByIdCashOperatorQuery(id);
     const operations = getByIdCashOperator?.data;
-
+const showPopup = usePopup()
     const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
     const company = getByIdCompanies?.data
 
@@ -227,8 +227,9 @@ const KassaEmeliyyati = () => {
                                         await deleteOperation(deleteOperationId).unwrap();
                                         setDeleteOperationId(null);
                                         refetch();
+                                        showPopup("Əməliyyat silindi", "Kassa əməliyyatı uğurla silindi.", "success");
                                     } catch {
-                                        alert("Silmə zamanı xəta baş verdi!");
+                                        showPopup("Xəta baş verdi", "Əməliyyat silinə bilmədi.", "error");
                                     }
                                 }}
                             >

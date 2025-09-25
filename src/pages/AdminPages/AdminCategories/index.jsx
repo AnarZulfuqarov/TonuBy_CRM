@@ -177,9 +177,9 @@ const SuperAdminCategories = () => {
                                         setCreateModalVisible(false);
                                         setCreateName('');
 
-                                        showPopup("Yeni kateqoriya yaradıldı", "Məlumat uğurla əlavə olundu", "success");
+                                        showPopup("Kateqoriya yaradıldı", "Yeni kateqoriya sistemə əlavə olundu.", "success");
                                     } catch {
-                                        showPopup("Sistem xətası", "Əməliyyat tamamlanmadı, təkrar yoxla", "error");
+                                        showPopup("Xəta baş verdi", "Kateqoriya yaradıla bilmədi, təkrar cəhd edin.", "error");
                                     }
                                 }}
                             >
@@ -229,9 +229,9 @@ const SuperAdminCategories = () => {
                                         setModalVisible(false);
                                         setEditCategoryData({ id: '', name: '' });
 
-                                        showPopup("Kateqoriya uğurla düzəldildi", "Dəyişikliklər yadda saxlanıldı", "success");
+                                        showPopup("Düzəliş uğurludur", "Kateqoriya məlumatları yeniləndi.", "success");
                                     } catch {
-                                        showPopup("Sistem xətası", "Əməliyyat tamamlanmadı", "error");
+                                        showPopup("Xəta baş verdi", "Düzəliş edilə bilmədi, təkrar cəhd edin.", "error");
                                     }
                                 }}
                             >
@@ -266,9 +266,9 @@ const SuperAdminCategories = () => {
                                         await refetch();
                                         setDeleteCategoryId(null);
 
-                                        showPopup("Kateqoriya silindi", "Seçilmiş kateqoriya sistemdən silindi", "success");
+                                        showPopup("Kateqoriya silindi", "Kateqoriya sistemdən uğurla silindi.", "success");
                                     } catch {
-                                        showPopup("Sistem xətası", "Əməliyyat tamamlanmadı", "error");
+                                        showPopup("Xəta baş verdi", "Kateqoriya silinə bilmədi, təkrar cəhd edin.", "error");
                                     }
                                 }}
                             >

@@ -401,6 +401,7 @@
 
     border: 1px solid #e0e0e0;
     border-radius: 12px;
+    position: relative;
     table {
       border-collapse: collapse;
       width: 100%;
@@ -428,6 +429,9 @@
       }
       thead {
         background: #f9f9f9;
+        z-index: 20;
+        position: sticky; // Başlığı sabitle
+        top: 0;
 
         th {
           padding: 8px 16px;

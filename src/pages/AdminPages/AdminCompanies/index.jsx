@@ -64,12 +64,11 @@ const AdminCompanies = () => {
             setCreateModalVisible(false);
             setCreateName('');
 
-            if (showPopup)
-                showPopup("Yeni şirkət yaradıldı", "Məlumat uğurla əlavə olundu", "success");
+            showPopup('Şirkət yaradıldı', 'Yeni şirkət sistemə əlavə olundu.', 'success');
         } catch (err) {
-            if (showPopup)
-                showPopup("Sistem xətası", "Əməliyyat tamamlanmadı, təkrar yoxla", "error");
-        }}
+            showPopup('Xəta baş verdi', 'Şirkət yaradıla bilmədi, təkrar cəhd edin.', 'error');
+        }
+    };
             return (
         <div className="admin-companies-main">
             <div className="admin-companies">

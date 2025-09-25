@@ -3,6 +3,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import "./index.scss";
 import { useGetByIdCashBalanceQuery } from "../../../services/adminApi.jsx";
+import {useEffect} from "react";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -13,9 +14,11 @@ const DoughnutChartCard = ({
                                legendColors = ["#45DD42", "#FF2D2D", "#FFD256"],
                                companyId,
                            }) => {
-    const { data: getByIdCashBalance, isLoading, isError } = useGetByIdCashBalanceQuery(companyId);
+    const { data: getByIdCashBalance, isLoading, isError,refetch } = useGetByIdCashBalanceQuery(companyId);
     const balance = getByIdCashBalance?.data;
-
+    useEffect(() => {
+        refetch()
+    }, []);
     if (!companyId) return <div>Zəhmət olmasa şirkət seçin</div>;
     if (isLoading) return <div>Yüklənir...</div>;
     if (isError) return <div>Xəta baş verdi</div>;

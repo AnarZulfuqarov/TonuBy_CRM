@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import "./index.scss";
 import {NavLink, useParams} from "react-router-dom";
 import {FaTimes} from "react-icons/fa";
@@ -29,13 +29,15 @@ const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
             : categories.flatMap((c) => c.products || []);
 
 // Summary chart
-    const {data: getSummaryChart} = useGetSummaryChart2Query({
+    const {data: getSummaryChart,refetch:summaryrefetch} = useGetSummaryChart2Query({
         companyId: id,
         categoryId: categorySummary === "__all__" ? "" : categorySummary,
         productId: product === "__all__" ? "" : product
     });
 
-
+    useEffect(() => {
+        summaryrefetch()
+    }, []);
     // Table search
     const [searchName, setSearchName] = useState('');
     const [activeSearch, setActiveSearch] = useState(null);

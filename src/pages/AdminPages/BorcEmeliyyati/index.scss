@@ -6,6 +6,7 @@
 
 .admin-borc-e-main {
   position: relative;
+
   .vendor-edit-modal-overlay {
     position: fixed;
     top: 0;
@@ -62,9 +63,12 @@
       flex-direction: column;
       gap: 8px;
       padding: 20px 28px 32px;
-      .searchInput{
-        width: 100%;position: relative;
-        .searchIcon{
+
+      .searchInput {
+        width: 100%;
+        position: relative;
+
+        .searchIcon {
           position: absolute;
           right: 10px;
           top: 50%;
@@ -72,6 +76,7 @@
         }
 
       }
+
       label {
         font-size: 14px;
         font-weight: 500;
@@ -104,6 +109,7 @@
 
     }
   }
+
   .delete-modal-box {
     background: #fff;
     padding: 32px 32px;
@@ -290,10 +296,12 @@
         color: #2B2B2B;
         background: #fff;
       }
+
       .pm-date-visible input {
         width: 140px;
         text-align: left;
       }
+
       /* Tarix üçün ayrıca ikon düyməsi */
       .pm-icon-btn {
         width: 34px;
@@ -309,12 +317,15 @@
         &:hover {
           background: #fafafa;
         }
-      }.pm-native-date {
-         position: absolute;
-         opacity: 0;
-         pointer-events: none;
-         width: 0; height: 0;
-       }
+      }
+
+      .pm-native-date {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+        width: 0;
+        height: 0;
+      }
 
       .pm-textarea textarea {
         width: 100%;
@@ -446,6 +457,7 @@
     border: 1px solid #e0e0e0;
     border-radius: 12px;
     margin-bottom: 200px;
+    position: relative;
 
 
     table {
@@ -476,6 +488,9 @@
 
       thead {
         background: #f9f9f9;
+        position: sticky; // Başlığı sabitle
+        top: 0;
+        z-index: 20;
 
         th {
           padding: 8px 16px;
@@ -487,6 +502,7 @@
           border-top: none;
           border-right: none;
         }
+
         .th-search input {
           flex: 1;
           height: 32px;
@@ -503,6 +519,7 @@
             border-color: #bbb;
           }
         }
+
         th:last-child {
           text-align: left;
           border-left: none;

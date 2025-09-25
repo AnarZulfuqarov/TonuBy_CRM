@@ -247,8 +247,9 @@ useEffect(()=>{
                                         await deleteDebt(deleteCompanyId).unwrap();
                                         setDeleteCompanyId(null);
                                         refetch();
+                                        showPopup('Əməliyyat silindi', 'Seçilmiş borc əməliyyatı sistemdən silindi.', 'success');
                                     } catch {
-                                        alert("Silmə zamanı xəta baş verdi!");
+                                        showPopup('Xəta baş verdi', 'Əməliyyat silinə bilmədi, təkrar cəhd edin.', 'error');
                                     }
                                 }}
                             >
@@ -301,14 +302,14 @@ useEffect(()=>{
                                         setEditCompanyData({ debtOperationId: '', receivedAmount: '' });
 
                                         showPopup(
-                                            "Şirkətə uğurla düzəliş etdiniz",
-                                            "Dəyişikliklər yadda saxlanıldı",
+                                            "Düzəliş uğurludur",
+                                            "Borc məbləği yeniləndi.",
                                             "success"
                                         );
                                     } catch (err) {
                                         showPopup(
-                                            "Sistem xətası",
-                                            "Əməliyyat tamamlanmadı. Təkrar cəhd edin və ya dəstəyə müraciət edin.",
+                                            "Xəta baş verdi",
+                                            "Düzəliş edilə bilmədi, təkrar cəhd edin.",
                                             "error"
                                         );
                                     }
@@ -406,10 +407,10 @@ useEffect(()=>{
                                             setPayDate("");
                                             setPayNote("");
                                             refetch();             // table-ni yenilə
-                                            showPopup("Ödəniş uğurla əlavə olundu ✅");
+                                            showPopup('Ödəniş uğurludur', 'Ödəniş sistemə əlavə olundu.', 'success');
                                         } catch (err) {
                                             console.error("Ödəniş xətası:", err);
-                                            showPopup("Ödəniş göndərilərkən xəta baş verdi ❌");
+                                            showPopup('Xəta baş verdi', 'Ödəniş əlavə edilə bilmədi, təkrar cəhd edin.', 'error');
                                         }
                                     }}
                                 >
