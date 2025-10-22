@@ -130,8 +130,8 @@ export const api = createApi({
             }),
         }),
         getByIdCashReporte: builder.query({
-            query: ({companyId,startDate,endDate}) => ({
-                url: `/CashOperations/report?companyId=${companyId}&startDate=${startDate}&endDate=${endDate}`,
+            query: ({companyId,start,end}) => ({
+                url: `/CashOperations/report?companyId=${companyId}&start=${start}&end=${end}`,
             }),
         }),
         getByIdCashReporteChart: builder.query({

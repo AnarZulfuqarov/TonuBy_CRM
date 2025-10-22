@@ -74,8 +74,8 @@ const KassaHesabati = () => {
 
     const { data: getByIdCashReporte } = useGetByIdCashReporteQuery({
         companyId: id,
-        startDate: formatDateForBackend(startDate),
-        endDate: formatDateForBackend(endDate),
+        start: formatDateForBackend(startDate),
+        end: formatDateForBackend(endDate),
     });
     const reporte = getByIdCashReporte?.data?.rows;
     const { data: getByIdCompanies } = useGetByIdCompaniesQuery(id);
