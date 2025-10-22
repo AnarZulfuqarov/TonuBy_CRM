@@ -398,6 +398,7 @@ export default function AdminKassaEAdd() {
                                         rows={3}
                                         value={form.note}
                                         onChange={(e) => setField("note", e.target.value)}
+                                        maxLength={500}
                                     />
                                 </td>
                             </tr>

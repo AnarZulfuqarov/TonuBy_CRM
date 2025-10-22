@@ -22,6 +22,8 @@ const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
     const [clientSummary, setClientSummary] = useState("__all__");
     const [categoryTable, setCategoryTable] = useState("__all__");
     const [product, setProduct] = useState("__all__");
+    const [showNote, setShowNote] = useState({ open: false, text: "" });
+
     const { data: getByIdCashOperator,refetch } = useGetSummaryChartQuery({companyId:id});
     const operations = getByIdCashOperator?.data;
 // Məhsullar (table filter üçün category-yə görə)
@@ -247,7 +249,22 @@ const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
                                     <td>{op.receivedAmount} ₼</td>
                                     <td>{op.paidAmount} ₼</td>
                                     <td>{op.createTime}</td>
-                                    <td>{op.description}</td>
+                                    <td
+                                        style={{
+                                            width: "100px",
+                                            whiteSpace: "nowrap",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            cursor: op.description ? "pointer" : "default",
+                                            color: op.description ? "#333" : "#888",
+                                        }}
+                                        onClick={() =>
+                                            op.description && setShowNote({ open: true, text: op.description })
+                                        }
+                                        title={op.description} // hover tooltip
+                                    >
+                                        {op.description || "—"}
+                                    </td>
                                 </tr>
                             ))
                         ) : (
@@ -260,7 +277,20 @@ const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
                         </tbody>
                     </table>
                 </div>
+                {showNote.open && (
+                    <div className="modal-overlay" onClick={() => setShowNote({ open: false, text: "" })}>
+                        <div className="note-modal" onClick={(e) => e.stopPropagation()}>
+                            <div className="close-btn" onClick={() => setShowNote({ open: false, text: "" })}>
+                                ×
+                            </div>
+                            <h3>Qeyd</h3>
+                            <p>{showNote.text}</p>
+                        </div>
+                    </div>
+                )}
+
             </div>
+
         </div>
     );
 };

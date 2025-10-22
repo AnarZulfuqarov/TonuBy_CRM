@@ -396,6 +396,7 @@ export default function AdminBorcEAdd() {
                                         rows={3}
                                         value={form.note}
                                         onChange={(e) => setField("note", e.target.value)}
+                                        maxLength={500}
                                     />
                                 </td>
                             </tr>

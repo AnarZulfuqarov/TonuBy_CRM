@@ -62,11 +62,20 @@ const KassaHesabati = () => {
     const [activeSearch, setActiveSearch] = useState(null);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
+    const formatDateForBackend = (value) => {
+        if (!value) return "";
+        const parts = value.split("-");
+        if (parts.length === 3) {
+            const [y, m, d] = parts;
+            return `${d.padStart(2, "0")}.${m.padStart(2, "0")}.${y}`;
+        }
+        return value;
+    };
 
     const { data: getByIdCashReporte } = useGetByIdCashReporteQuery({
         companyId: id,
-        startDate: startDate || "",
-        endDate: endDate || "",
+        startDate: formatDateForBackend(startDate),
+        endDate: formatDateForBackend(endDate),
     });
     const reporte = getByIdCashReporte?.data?.rows;
     const { data: getByIdCompanies } = useGetByIdCompaniesQuery(id);
@@ -375,7 +384,10 @@ const KassaHesabati = () => {
                                 >
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="productName" tickLine={false} />
-                                    <YAxis tickLine={false} />
+                                    <YAxis
+                                        tickLine={false}
+                                        tickFormatter={(value) => (value % 1 === 0 ? value : "")}
+                                    />
                                     <Tooltip cursor={{ fillOpacity: 0.08 }} />
                                     <Bar
                                         dataKey="operationCount"

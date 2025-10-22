@@ -106,9 +106,9 @@ const AdminMusteriler = () => {
             await productRefetch();
             setDeleteProductId(null);
 
-            showPopup("Məhsul silindi", "Məhsul sistemdən uğurla silindi.", "success");
+            showPopup("Müştəri silindi", "Müştəri sistemdən uğurla silindi.", "success");
         } catch {
-            showPopup("Xəta baş verdi", "Məhsul silinə bilmədi, təkrar cəhd edin.", "error");
+            showPopup("Xəta baş verdi", "Müştəri silinə bilmədi, təkrar cəhd edin.", "error");
         }
     };
     const filteredProducts = companies?.filter((product) => {
@@ -237,10 +237,11 @@ const AdminMusteriler = () => {
                             />
                             <label>Əlaqə nömrəsi</label>
                             <input
-                                type="text"
+                                type="number"
                                 placeholder="Əlaqə nömrəsi daxil et"
                                 value={createPhoneNumber}
                                 onChange={(e) => setCreatePhoneNumber(e.target.value)}
+                                min={0}
                             />
                             <label>Ünvan</label>
                             <input
@@ -288,10 +289,11 @@ const AdminMusteriler = () => {
                             <label>Əlaqə nömrəsi</label>
                            <div className={"searchInput"}>
                                <input
-                                   type="text"
+                                   type="number"
                                    placeholder="Əlaqə nömrəsi daxil et"
                                    value={editData.phoneNumber}
                                    onChange={(e) => setEditData((prev) => ({ ...prev, phoneNumber: e.target.value }))}
+                                   min={0}
                                /><svg className={'searchIcon'} xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                                <path d="M16.5 5.93001C16.5006 5.83131 16.4817 5.73346 16.4443 5.64208C16.407 5.5507 16.352 5.46759 16.2825 5.39751L13.1025 2.21751C13.0324 2.148 12.9493 2.09301 12.8579 2.05568C12.7666 2.01836 12.6687 1.99944 12.57 2.00001C12.4713 1.99944 12.3735 2.01836 12.2821 2.05568C12.1907 2.09301 12.1076 2.148 12.0375 2.21751L9.91501 4.34001L1.71751 12.5375C1.648 12.6076 1.59301 12.6907 1.55568 12.7821C1.51836 12.8735 1.49944 12.9713 1.50001 13.07V16.25C1.50001 16.4489 1.57903 16.6397 1.71968 16.7803C1.86033 16.921 2.0511 17 2.25001 17H5.43001C5.53496 17.0057 5.63993 16.9893 5.73813 16.9518C5.83632 16.9144 5.92555 16.8567 6.00001 16.7825L14.1525 8.58501L16.2825 6.50001C16.3509 6.42724 16.4066 6.34359 16.4475 6.25251C16.4547 6.19273 16.4547 6.13229 16.4475 6.07251C16.451 6.0376 16.451 6.00242 16.4475 5.96751L16.5 5.93001ZM5.12251 15.5H3.00001V13.3775L10.4475 5.93001L12.57 8.05251L5.12251 15.5ZM13.6275 6.99501L11.505 4.87251L12.57 3.81501L14.685 5.93001L13.6275 6.99501Z" fill="#3D3D3D"/>
                            </svg>

@@ -27,6 +27,8 @@ const BorcEmeliyyati = () => {
     const { data: getByCompanyClients } = useGetByCompanyClientsQuery(id);
     const clientsInit = getByCompanyClients?.data || [];
     const [searchName, setSearchName] = useState('');
+    const [showNote, setShowNote] = useState({ open: false, text: "" });
+
     const [activeSearch, setActiveSearch] = useState(null);
     const [deleteCompanyId, setDeleteCompanyId] = useState(null);
     const navigate = useNavigate();
@@ -197,7 +199,22 @@ useEffect(()=>{
                                 <td>{op.receivedAmount}</td>
                                 <td>{op.paidAmount}</td>
                                 <td>{op.createTime}</td>
-                                <td>{op.description}</td>
+                                <td
+                                    style={{
+                                        width: "100px",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        cursor: op.description ? "pointer" : "default",
+                                        color: op.description ? "#333" : "#888",
+                                    }}
+                                    onClick={() =>
+                                        op.description && setShowNote({ open: true, text: op.description })
+                                    }
+                                    title={op.description} // hover tooltip
+                                >
+                                    {op.description || "—"}
+                                </td>
                                 <td>
                                     <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
                                         <svg style={{cursor:"pointer"}} onClick={() => {
@@ -441,6 +458,18 @@ useEffect(()=>{
                     </div>
                 </div>
             )}
+            {showNote.open && (
+                <div className="modal-overlay" onClick={() => setShowNote({ open: false, text: "" })}>
+                    <div className="note-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="close-btn" onClick={() => setShowNote({ open: false, text: "" })}>
+                            ×
+                        </div>
+                        <h3>Qeyd</h3>
+                        <p>{showNote.text}</p>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };
