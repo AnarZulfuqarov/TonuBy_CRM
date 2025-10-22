@@ -1,5 +1,5 @@
 import './index.scss';
-import {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {NavLink, useNavigate, useParams} from 'react-router-dom';
 import { FaTimes } from "react-icons/fa";
 
@@ -23,7 +23,7 @@ const AdminMusteriler = () => {
     const [createPhoneNumber, setCreatePhoneNumber] = useState('');
     const [createAdress, setCreateAdress] = useState('');
     const [createDesc, setCreateDesc] = useState('');
-
+    const [showNote, setShowNote] = useState({ open: false, text: "" });
     // edit states
     const [editData, setEditData] = useState({
         id: '',
@@ -184,7 +184,20 @@ const AdminMusteriler = () => {
                                 <td>{company.name}</td>
                                 <td>{company.phoneNumber}</td>
                                 <td>{company.adress}</td>
-                                <td>{company.description}</td>
+                                <td
+                                    style={{
+                                        width: "100px",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        cursor: company.description ? "pointer" : "default",
+                                        color: company.description ? "#333" : "#888",
+                                    }}
+                                    onClick={() =>
+                                        company.description && setShowNote({ open: true, text: company.description })
+                                    }
+                                    title={company.description}
+                                >{company.description}</td>
                                 <td>
                                     <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
 
@@ -350,7 +363,17 @@ const AdminMusteriler = () => {
                     </div>
                 </div>
             )}
-
+            {showNote.open && (
+                <div className="modal-overlay" onClick={() => setShowNote({ open: false, text: "" })}>
+                    <div className="note-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="close-btn" onClick={() => setShowNote({ open: false, text: "" })}>
+                            ×
+                        </div>
+                        <h3>Qeyd</h3>
+                        <p>{showNote.text}</p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
