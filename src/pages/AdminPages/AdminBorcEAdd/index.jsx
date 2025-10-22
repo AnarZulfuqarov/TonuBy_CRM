@@ -391,13 +391,18 @@ export default function AdminBorcEAdd() {
 
                             <tr>
                                 <td colSpan={6}>
-                                    <textarea
-                                        placeholder="Qeyd.."
-                                        rows={3}
-                                        value={form.note}
-                                        onChange={(e) => setField("note", e.target.value)}
-                                        maxLength={500}
-                                    />
+                                    <div className="textarea-wrapper">
+      <textarea
+          placeholder="Qeyd.. (maksimum 500 simvol)"
+          rows={3}
+          value={form.note}
+          onChange={(e) => setField("note", e.target.value)}
+          maxLength={500}
+      />
+                                        <span className="char-count">
+        {form.note.length}/500
+      </span>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>

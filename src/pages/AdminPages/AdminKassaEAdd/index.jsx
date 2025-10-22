@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import {NavLink, useParams} from "react-router-dom";
 import "./index.scss";
 import {
@@ -11,11 +11,11 @@ export default function AdminKassaEAdd() {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false); // ⬅️ Loading state'i eklendi
     const refDate = useRef(null);
-    const { data: getByCompanyClients } = useGetByCompanyClientsQuery(id);
+    const {data: getByCompanyClients} = useGetByCompanyClientsQuery(id);
     const clientsInit = getByCompanyClients?.data || [];
     const [createProduct] = useCreateProductsMutation()
     const [createOperation] = useCreateCashOperatorMutation();
-    const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
+    const {data: getByIdCompanies} = useGetByIdCompaniesQuery(id)
     const company = getByIdCompanies?.data
     const categoriesInit = getByIdCompanies?.data?.categories || [];
     const [form, setForm] = useState({
@@ -33,7 +33,7 @@ export default function AdminKassaEAdd() {
         ? categoriesInit.find((c) => c.id === form.categoryId)?.products || []
         : [];
 
-    const setField = (k, v) => setForm((p) => ({ ...p, [k]: v }));
+    const setField = (k, v) => setForm((p) => ({...p, [k]: v}));
 
     const [lists, setLists] = useState({
         client: [],
@@ -44,7 +44,7 @@ export default function AdminKassaEAdd() {
         if (clientsInit?.length) {
             setLists((prev) => ({
                 ...prev,
-                client: clientsInit.map((c) => ({ id: c.id, name: c.name })),
+                client: clientsInit.map((c) => ({id: c.id, name: c.name})),
             }));
         }
     }, [clientsInit]);
@@ -54,7 +54,7 @@ export default function AdminKassaEAdd() {
         if (categoriesInit?.length) {
             setLists((prev) => ({
                 ...prev,
-                category: categoriesInit.map((c) => ({ id: c.id, name: c.name })),
+                category: categoriesInit.map((c) => ({id: c.id, name: c.name})),
             }));
         }
     }, [categoriesInit]);
@@ -63,15 +63,15 @@ export default function AdminKassaEAdd() {
         if (productsInit.length) {
             setLists((prev) => ({
                 ...prev,
-                product: productsInit.map((p) => ({ id: p.id, name: p.name })),
+                product: productsInit.map((p) => ({id: p.id, name: p.name})),
             }));
         } else {
-            setLists((prev) => ({ ...prev, product: [] }));
+            setLists((prev) => ({...prev, product: []}));
         }
     }, [form.categoryId]);
 
     const [activeHeaderSearch, setActiveHeaderSearch] = useState(null);
-    const [q, setQ] = useState({ category: "", product: "" });
+    const [q, setQ] = useState({category: "", product: ""});
     const [hover, setHover] = useState(-1);
     const headerRef = useRef(null);
 
@@ -99,7 +99,7 @@ export default function AdminKassaEAdd() {
                 clientId: val.id,
                 clientName: val.name,
             }));
-            setQ((s) => ({ ...s, client: val.name }));
+            setQ((s) => ({...s, client: val.name}));
         }
 
         if (key === "category") {
@@ -110,7 +110,7 @@ export default function AdminKassaEAdd() {
                 productId: "",
                 productName: "",
             }));
-            setQ((s) => ({ ...s, category: val.name }));
+            setQ((s) => ({...s, category: val.name}));
         }
         if (key === "product") {
             setForm((p) => ({
@@ -118,7 +118,7 @@ export default function AdminKassaEAdd() {
                 productId: val.id,
                 productName: val.name,
             }));
-            setQ((s) => ({ ...s, product: val.name }));
+            setQ((s) => ({...s, product: val.name}));
         }
         setActiveHeaderSearch(null);
         setHover(-1);
@@ -148,7 +148,6 @@ export default function AdminKassaEAdd() {
         }
         return value;
     };
-
 
 
     const isFormValid =
@@ -212,9 +211,9 @@ export default function AdminKassaEAdd() {
     };
 
     const headers = [
-        { label: "Müştəri seç", key: "client" },
-        { label: "Kateqoriya seç", key: "category" },
-        { label: "Məhsul seç", key: "product" },
+        {label: "Müştəri seç", key: "client"},
+        {label: "Kateqoriya seç", key: "category"},
+        {label: "Məhsul seç", key: "product"},
     ];
 
 
@@ -241,7 +240,7 @@ export default function AdminKassaEAdd() {
                         <table ref={headerRef}>
                             <thead>
                             <tr>
-                                {headers.map(({ label, key }) => (
+                                {headers.map(({label, key}) => (
                                     <th key={label}>
                                         {key && activeHeaderSearch === key ? (
                                             <div className="th-search th-search--with-dropdown">
@@ -249,7 +248,7 @@ export default function AdminKassaEAdd() {
                                                     autoFocus
                                                     value={q[key]}
                                                     onChange={(e) => {
-                                                        setQ((s) => ({ ...s, [key]: e.target.value }));
+                                                        setQ((s) => ({...s, [key]: e.target.value}));
                                                         setHover(0);
                                                     }}
                                                     onKeyDown={(e) => {
@@ -275,7 +274,7 @@ export default function AdminKassaEAdd() {
                                                     className="th-clear"
                                                     onClick={() => {
                                                         setActiveHeaderSearch(null);
-                                                        setQ((s) => ({ ...s, [key]: "" }));
+                                                        setQ((s) => ({...s, [key]: ""}));
                                                         setHover(-1);
                                                     }}
                                                     aria-label="Bağla"
@@ -356,7 +355,7 @@ export default function AdminKassaEAdd() {
                                         inputMode="decimal"
                                         placeholder="Mədaxil daxil et"
                                         value={form.madaxil}
-                                        onChange={(e) => setForm((p) => ({ ...p, madaxil: e.target.value }))}
+                                        onChange={(e) => setForm((p) => ({...p, madaxil: e.target.value}))}
                                     />
                                 </td>
                                 <td>
@@ -365,7 +364,7 @@ export default function AdminKassaEAdd() {
                                         inputMode="decimal"
                                         placeholder="Məxaric daxil et"
                                         value={form.mexaric}
-                                        onChange={(e) => setForm((p) => ({ ...p, mexaric: e.target.value }))}
+                                        onChange={(e) => setForm((p) => ({...p, mexaric: e.target.value}))}
                                     />
                                 </td>
                                 <td
@@ -373,7 +372,7 @@ export default function AdminKassaEAdd() {
                                         if (refDate.current?.showPicker) refDate.current.showPicker();
                                         else refDate.current?.focus();
                                     }}
-                                    style={{ cursor: "pointer" }}
+                                    style={{cursor: "pointer"}}
                                 >
                                     <input
                                         ref={refDate}
@@ -393,13 +392,18 @@ export default function AdminKassaEAdd() {
 
                             <tr>
                                 <td colSpan={6}>
-                                    <textarea
-                                        placeholder="Qeyd.."
-                                        rows={3}
-                                        value={form.note}
-                                        onChange={(e) => setField("note", e.target.value)}
-                                        maxLength={500}
-                                    />
+                                    <div className="textarea-wrapper">
+      <textarea
+          placeholder="Qeyd.. (maksimum 500 simvol)"
+          rows={3}
+          value={form.note}
+          onChange={(e) => setField("note", e.target.value)}
+          maxLength={500}
+      />
+                                        <span className="char-count">
+        {form.note.length}/500
+      </span>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>
@@ -420,7 +424,8 @@ export default function AdminKassaEAdd() {
                 <div className="modal-overlay" onClick={() => setShowSuccessModal(false)}>
                     <div className="success-modal" onClick={(e) => e.stopPropagation()}>
                         <div className="close-btn" onClick={() => setShowSuccessModal(false)}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"
+                                 fill="none">
                                 <path
                                     d="M14.25 3.74963L3.75 14.2496M3.75 3.74963L14.25 14.2496"
                                     stroke="#333333"
@@ -433,7 +438,8 @@ export default function AdminKassaEAdd() {
                         <div className="check-icon">
                             <div className="circle pulse">
                                 <div className="circle-inner">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="31" viewBox="0 0 30 31" fill="none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="31" viewBox="0 0 30 31"
+                                         fill="none">
                                         <path
                                             d="M11.7714 19.353L22.1402 8.98422C22.3849 8.73953 22.6704 8.61719 22.9966 8.61719C23.3229 8.61719 23.6083 8.73953 23.853 8.98422C24.0977 9.22891 24.2201 9.51969 24.2201 9.85654C24.2201 10.1934 24.0977 10.4838 23.853 10.7276L12.6279 21.9834C12.3832 22.2281 12.0977 22.3504 11.7714 22.3504C11.4452 22.3504 11.1597 22.2281 10.915 21.9834L5.65419 16.7226C5.4095 16.4779 5.29205 16.1875 5.30183 15.8515C5.31162 15.5154 5.43927 15.2246 5.68477 14.9791C5.93028 14.7336 6.22105 14.6113 6.5571 14.6121C6.89314 14.6129 7.1835 14.7353 7.42819 14.9791L11.7714 19.353Z"
                                             fill="white"
@@ -443,7 +449,8 @@ export default function AdminKassaEAdd() {
                             </div>
                         </div>
                         <h3>Yeni kassa əməliyyatı uğurla əlavə edildi !</h3>
-                        <button className="back-btn" onClick={() => (window.location.href = `/admin/emeliyyat/kassa-e/${id}`)}>
+                        <button className="back-btn"
+                                onClick={() => (window.location.href = `/admin/emeliyyat/kassa-e/${id}`)}>
                             Əsas səhifəyə qayıt
                         </button>
                     </div>
