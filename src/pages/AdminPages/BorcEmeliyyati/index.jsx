@@ -20,6 +20,7 @@ const BorcEmeliyyati = () => {
     console.log(editCompanyData)
     const { data: getByIdCashOperator,refetch } = useGetSummaryChartQuery({companyId:id});
     const operations = getByIdCashOperator?.data;
+    console.log("getByIdCashOperator", getByIdCashOperator);
     const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
     const company = getByIdCompanies?.data
     const categories = getByIdCompanies?.data?.categories
@@ -59,7 +60,7 @@ const BorcEmeliyyati = () => {
 
             return true; // heç biri seçilməyibsə
         })
-        .filter((op) => {
+        ?.filter((op) => {
             // Axtarış filteri
             if (searchName.trim() !== "") {
                 return (

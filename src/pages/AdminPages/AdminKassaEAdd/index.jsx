@@ -153,6 +153,7 @@ export default function AdminKassaEAdd() {
 
     const isFormValid =
         form.clientId &&
+        form.categoryId &&
         (form.productId || form.productName) &&
         (Number(form.madaxil) > 0 || Number(form.mexaric) > 0) &&
         form.tarix
