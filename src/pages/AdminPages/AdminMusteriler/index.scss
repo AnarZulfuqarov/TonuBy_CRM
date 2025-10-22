@@ -1,4 +1,4 @@
-.admin-products-main {
+.admin-musteriler-main {
   position: relative;
 
   .xett {
@@ -295,7 +295,7 @@
 
 }
 
-.admin-products {
+.admin-musteriler {
   padding: 32px;
   max-width: 100%;
   margin: 0 auto;
@@ -306,17 +306,28 @@
   .headerr {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 24px;
 
     .head {
       h2 {
         font-size: 24px;
         font-weight: 500;
         color: #333;
+        margin-bottom: 16px;
       }
 
       p {
         margin-bottom: 0;
+      }
+      .root {
+        h2 {
+          font-size: 14px;
+          margin-bottom: 24px;
+
+          .link {
+            color: #5b5b5b;
+            text-decoration: none;
+          }
+        }
       }
     }
 
@@ -338,17 +349,7 @@
     }
   }
 
-  .root {
-    h2 {
-      font-size: 14px;
-      margin-bottom: 24px;
 
-      .link {
-        color: #5b5b5b;
-        text-decoration: none;
-      }
-    }
-  }
 
   .paths {
     display: flex;
@@ -395,7 +396,7 @@
   .order-table-wrapper {
     display: flex;
     background: #fff;
-    width: 60%;
+    width: 100%;
     max-height: 600px; // Yüksəklik istəyə uyğun dəyişdirilə bilər
     overflow-y: auto;
 
@@ -411,7 +412,8 @@
         position: sticky;
         right: 0;                 /* sağda yapışdır */
         background: #fff;         /* üst-üstə gələndə ağ qalsın */
-        z-index: 10;              /* digər hüceyrələrdən yuxarı */
+        z-index: 10;
+        width: 100px;/* digər hüceyrələrdən yuxarı */
       }
 
       /* Soldan yumşaq kölgə */

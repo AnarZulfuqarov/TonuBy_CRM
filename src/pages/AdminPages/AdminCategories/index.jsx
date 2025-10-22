@@ -110,7 +110,6 @@ const SuperAdminCategories = () => {
                                     </div>
                                 )}
                             </th>
-                            <th>Məhsul sayı</th>
                             <th>Fəaliyyətlər</th>
                         </tr>
                         </thead>
@@ -118,14 +117,8 @@ const SuperAdminCategories = () => {
                         {filteredCategories?.map((category) => (
                             <tr key={category.id}>
                                 <td>{category.name}</td>
-                                <td>{category.products?.length}</td>
                                 <td>
                                     <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
-                                        <svg onClick={() => navigate(`/admin/companies/category/${category.id}`)} style={{ cursor: "pointer" }} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                            <path d="M12.5 10C12.5 10.663 12.2366 11.2989 11.7678 11.7678C11.2989 12.2366 10.663 12.5 10 12.5C9.33696 12.5 8.70107 12.2366 8.23223 11.7678C7.76339 11.2989 7.5 10.663 7.5 10C7.5 9.33696 7.76339 8.70107 8.23223 8.23223C8.70107 7.76339 9.33696 7.5 10 7.5C10.663 7.5 11.2989 7.76339 11.7678 8.23223C12.2366 8.70107 12.5 9.33696 12.5 10Z" stroke="#606060" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                            <path d="M1.6665 9.99999C2.99984 6.58582 6.11317 4.16666 9.99984 4.16666C13.8865 4.16666 16.9998 6.58582 18.3332 9.99999C16.9998 13.4142 13.8865 15.8333 9.99984 15.8333C6.11317 15.8333 2.99984 13.4142 1.6665 9.99999Z" stroke="#606060" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                        <div className={'hrXett'}></div>
                                         <svg style={{ cursor: "pointer" }} onClick={() => {
                                             setEditCategoryData({ id: category.id, name: category.name });
                                             setModalVisible(true);

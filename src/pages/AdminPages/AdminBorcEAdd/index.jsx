@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import {NavLink, useParams} from "react-router-dom";
 import "./index.scss";
 import {
-    useCreateDebtOperatorMutation,
-    useGetAllCategoriesQuery,
+    useCreateDebtOperatorMutation, useCreateProductsMutation,
+    useGetAllCategoriesQuery, useGetByCompanyClientsQuery,
     useGetByIdCompaniesQuery
 } from "/src/services/adminApi.jsx";
 
@@ -16,7 +16,9 @@ export default function AdminBorcEAdd() {
     const company = getByIdCompanies?.data
     const categoriesInit = getByIdCompanies?.data?.categories || [];
     const [createOperation] = useCreateDebtOperatorMutation();
-
+    const { data: getByCompanyClients } = useGetByCompanyClientsQuery(id);
+    const clientsInit = getByCompanyClients?.data || [];
+    const [createProduct] = useCreateProductsMutation();
     const [form, setForm] = useState({
         categoryId: "",
         categoryName: "",
@@ -35,9 +37,19 @@ export default function AdminBorcEAdd() {
     const setField = (k, v) => setForm((p) => ({ ...p, [k]: v }));
 
     const [lists, setLists] = useState({
+        client: [],
         category: [],
         product: [],
     });
+    useEffect(() => {
+        if (clientsInit?.length) {
+            setLists((prev) => ({
+                ...prev,
+                client: clientsInit.map((c) => ({ id: c.id, name: c.name })),
+            }));
+        }
+    }, [clientsInit]);
+
 
     useEffect(() => {
         if (categoriesInit?.length) {
@@ -82,6 +94,14 @@ export default function AdminBorcEAdd() {
     };
 
     const selectValue = (key, val) => {
+        if (key === "client") {
+            setForm((p) => ({
+                ...p,
+                clientId: val.id,
+                clientName: val.name,
+            }));
+            setQ((s) => ({ ...s, client: val.name }));
+        }
         if (key === "category") {
             setForm((p) => ({
                 ...p,
@@ -130,18 +150,31 @@ export default function AdminBorcEAdd() {
     };
 
     const isFormValid =
+        form.clientId &&
         form.categoryId &&
-        form.productId &&
+        (form.productId || form.productName) &&
         (Number(form.alinacaq) > 0 || Number(form.verilecek) > 0) &&
         form.tarix;
+
 
     const handleSubmit = async () => {
         if (!isFormValid) return;
 
         setIsLoading(true); // ⬅️ Loading başlasın
+        let productIdToUse = form.productId;
+
+        if (!form.productId && form.productName.trim() !== "") {
+            const newProduct = await createProduct({
+                categoryId:form.categoryId,
+                name: form.productName.trim(),
+            }).unwrap();
+
+            productIdToUse = newProduct?.data?.id;
+        }
 
         const payload = {
-            productId: form.productId,
+            clientId: form.clientId,
+            productId: productIdToUse,
             receivedAmount: Number(form.alinacaq) > 0 ? Number(form.alinacaq) : 0,
             paidAmount: Number(form.verilecek) > 0 ? Number(form.verilecek) : 0,
             description: form.note || "",
@@ -176,9 +209,11 @@ export default function AdminBorcEAdd() {
     };
 
     const headers = [
+        { label: "Müştəri seç", key: "client" },
         { label: "Kateqoriya seç", key: "category" },
         { label: "Məhsul seç", key: "product" },
     ];
+
 
     return (
         <div className="admin-borc-e-add-main">
@@ -288,6 +323,15 @@ export default function AdminBorcEAdd() {
 
                             <tbody>
                             <tr>
+                                <td>
+                                    <input
+                                        type="text"
+                                        placeholder="Müştəri daxil et"
+                                        value={form.clientName}
+                                        onChange={(e) => setField("clientName", e.target.value)}
+                                    />
+                                </td>
+
                                 <td>
                                     <input
                                         type="text"

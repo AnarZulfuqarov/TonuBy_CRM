@@ -4,7 +4,7 @@ import Login from "../pages/LoginPage/index.jsx";
 import SuperAdminPage from "../pages/AdminPages/SuperAdminPage/index.jsx";
 import AdminCompanies from "../pages/AdminPages/AdminCompanies/index.jsx";
 import AdminCategories from "../pages/AdminPages/AdminCategories/index.jsx";
-import AdminProducts from "../pages/AdminPages/AdminProducts/index.jsx";
+import AdminProducts from "../pages/AdminPages/AdminMusteriler/index.jsx";
 import AdminKassaE from "../pages/AdminPages/AdminKassaE/index.jsx";
 import KassaEmeliyyati from "../pages/AdminPages/KassaEmeliyyati/index.jsx";
 import AdminKassaEAdd from "../pages/AdminPages/AdminKassaEAdd/index.jsx";
@@ -16,6 +16,8 @@ import AdminBorcH from "../pages/AdminPages/AdminBorcH/index.jsx";
 import KassaHesabati from "../pages/AdminPages/KassaHesabati/index.jsx";
 import BorcHesabati from "../pages/AdminPages/BorcHesabati/index.jsx";
 import ProtectedRoute from "../ProtectedRoute.jsx";
+import AdminMusteriE from "../pages/AdminPages/AdminMusteriE/index.jsx";
+import AdminMusteriler from "../pages/AdminPages/AdminMusteriler/index.jsx";
 
 const router = createBrowserRouter([
     {
@@ -38,10 +40,7 @@ const router = createBrowserRouter([
                 path:'/admin/companies/:id',
                 element:<AdminCategories/>
             },
-            {
-                path:'/admin/companies/category/:id',
-                element:<AdminProducts/>
-            },
+
             {
                 path:'/admin/emeliyyat/kassa-e',
                 element:<AdminKassaE/>
@@ -81,6 +80,14 @@ const router = createBrowserRouter([
             {
                 path:'/admin/hesabat/borc-h/:id',
                 element:<BorcHesabati/>
+            },
+            {
+                path:'/admin/musteri',
+                element:<AdminMusteriE/>
+            },
+            {
+                path:'/admin/musteri/:id',
+                element:<AdminMusteriler/>
             },
         ]
     }

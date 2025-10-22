@@ -5,42 +5,38 @@ import { FaTimes } from "react-icons/fa";
 
 import {usePopup} from "../../../components/Popup/PopupContext.jsx";
 import {
-    useCreateProductsMutation, useDeleteProductsMutation,
-    useEditProductsMutation,
+    useCreateClientsMutation,
+    useCreateProductsMutation, useDeleteClientsMutation, useDeleteProductsMutation, useEditClientsMutation,
+    useEditProductsMutation, useGetByCompanyClientsQuery,
     useGetByIdCategoriesQuery, useGetByIdCompaniesQuery
 } from "../../../services/adminApi.jsx";
 
-const AdminProducts = () => {
+const AdminMusteriler = () => {
     const {id} = useParams();
-    const navigate = useNavigate();
     const [modalVisible, setModalVisible] = useState(false);
     const [deleteProductId, setDeleteProductId] = useState(null);
     const [searchName, setSearchName] = useState('');
     const [activeSearch, setActiveSearch] = useState(null);
-    const [editCompanyData, setEditCompanyData] = useState({ id: '', name: '' });
     const showPopup = usePopup()
     const [createModalVisible, setCreateModalVisible] = useState(false);
     const [createName, setCreateName] = useState('');
-    const [createBarcode, setCreateBarcode] = useState('');
-    const [createMeasure, setCreateMeasure] = useState('');
-    const [createPrice, setCreatePrice] = useState('');
+    const [createPhoneNumber, setCreatePhoneNumber] = useState('');
+    const [createAdress, setCreateAdress] = useState('');
+    const [createDesc, setCreateDesc] = useState('');
 
     // edit states
     const [editData, setEditData] = useState({
         id: '',
         name: '',
-        barcode: '',
-        measure: '',
-        price: ''
+        phoneNumber: '',
+        adress: '',
+        desc: ''
     });
-    const {data:getByIdCategories,refetch:productRefetch} = useGetByIdCategoriesQuery(id)
-    const companiess = getByIdCategories?.data
-    const companies = companiess?.products
-    const {data:getByIdCompanies} = useGetByIdCompaniesQuery(companiess?.companyId)
-    const company = getByIdCompanies?.data
-    const [createProduct] = useCreateProductsMutation()
-    const [editProduct] = useEditProductsMutation()
-    const [deleteProduct] =useDeleteProductsMutation()
+    const {data:getByIdCategories,refetch:productRefetch} = useGetByCompanyClientsQuery(id)
+    const companies = getByIdCategories?.data
+    const [createProduct] = useCreateClientsMutation()
+    const [editProduct] = useEditClientsMutation()
+    const [deleteProduct] =useDeleteClientsMutation()
     useEffect(() => {
         const onEsc = (e) => {
             if (e.key === 'Escape') {
@@ -54,54 +50,54 @@ const AdminProducts = () => {
     }, []);
     const handleCreate = async () => {
         try {
-            if (!createName.trim() || !createBarcode.trim()) return;
+            if (!createName.trim() || !createPhoneNumber.trim()) return;
 
             await createProduct({
-                categoryId:id,
+                companyId: id,
                 name: createName,
-                barcode: createBarcode,
-                meausure: createMeasure,
-                price: Number(createPrice)
+                phoneNumber: createPhoneNumber,
+                adress: createAdress,
+                description: createDesc
             }).unwrap();
 
             await productRefetch();
 
             setCreateModalVisible(false);
             setCreateName('');
-            setCreateBarcode('');
-            setCreateMeasure('');
-            setCreatePrice('');
+            setCreatePhoneNumber('');
+            setCreateAdress('');
+            setCreateDesc('');
 
-            showPopup("Məhsul yaradıldı", "Yeni məhsul sistemə əlavə olundu.", "success");
+            showPopup("Müştəri yaradıldı", "Yeni müştəri sistemə əlavə olundu.", "success");
         } catch {
-            showPopup("Xəta baş verdi", "Məhsul yaradıla bilmədi, təkrar cəhd edin.", "error");
+            showPopup("Xəta baş verdi", "Müştəri yaradıla bilmədi, təkrar cəhd edin.", "error");
         }
     };
 
     // EDIT handler
     const handleEdit = async () => {
         try {
-            if (!editData.name.trim() || !editData.barcode.trim()) return;
+            if (!editData.name.trim() || !editData.phoneNumber.trim()) return;
 
             await editProduct({
                 id: editData.id,
-                categoryId:id,
+                companyId: id,
                 name: editData.name,
-                barcode: editData.barcode,
-                meausure: editData.meausure,
-                price: Number(editData.price)
+                phoneNumber: editData.phoneNumber,
+                adress: editData.adress,
+                description: editData.desc
             }).unwrap();
 
             await productRefetch();
-
             setModalVisible(false);
-            setEditData({ id: '', name: '', barcode: '', meausure: '', price: '' });
+            setEditData({ id: '', name: '', phoneNumber: '', adress: '', desc: '' });
 
-            showPopup("Düzəliş uğurludur", "Məhsul məlumatları yeniləndi.", "success");
+            showPopup("Düzəliş uğurludur", "Müştəri məlumatları yeniləndi.", "success");
         } catch {
             showPopup("Xəta baş verdi", "Düzəliş edilə bilmədi, təkrar cəhd edin.", "error");
         }
     };
+
 
     // DELETE handler
     const handleDelete = async () => {
@@ -116,9 +112,6 @@ const AdminProducts = () => {
         }
     };
     const filteredProducts = companies?.filter((product) => {
-        if (activeSearch === 'barcode') {
-            return product.barcode?.toLowerCase().includes(searchName.toLowerCase());
-        }
         if (activeSearch === 'name') {
             return product.name?.toLowerCase().includes(searchName.toLowerCase());
         }
@@ -131,12 +124,17 @@ const AdminProducts = () => {
         }
     }, [createModalVisible]);
     return (
-        <div className="admin-products-main">
-            <div className="admin-products">
+        <div className="admin-musteriler-main">
+            <div className="admin-musteriler">
                 <div className="headerr">
                     <div className="head">
-                        <h2>Məhsullar</h2>
-                        <p>Mövcud məhsulları yoxlayın, redaktə edin və yeni məhsullar əlavə edin.</p>
+                        <h2>Müştərilər</h2>
+                        <div className={"root"}>
+                            <h2 >
+                                <NavLink className="link" to="/admin/musteri">— Şirkətlər</NavLink>
+                                — Müştərilər
+                            </h2>
+                        </div>
                     </div>
                     <button onClick={() => setCreateModalVisible(true)}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
@@ -144,32 +142,18 @@ const AdminProducts = () => {
                             <path d="M12 17.75C11.58 17.75 11.25 17.42 11.25 17V8C11.25 7.58 11.58 7.25 12 7.25C12.42 7.25 12.75 7.58 12.75 8V17C12.75 17.42 12.42 17.75 12 17.75Z" fill="white" />
                             <path d="M16.5 13.25H7.5C7.08 13.25 6.75 12.92 6.75 12.5C6.75 12.08 7.08 11.75 7.5 11.75H16.5C16.92 11.75 17.25 12.08 17.25 12.5C17.25 12.92 16.92 13.25 16.5 13.25Z" fill="white" />
                         </svg>
-                        Məhsul yarat
+                        Yeni müştəri yarat
                     </button>
                 </div>
-                <div className={"root"}>
-                    <h2 >
-                        <NavLink className="link" to="/admin/companies">— Şirkətlər</NavLink>
-                        <NavLink className="link" to={`/admin/companies/${companiess?.companyId}`}>— Kateqoriya</NavLink>{' '}
-                        — Məhsul
-                    </h2>
-                </div>
-                <div className={"paths"}>
-                    <div className="path1">
-                        <h3>Şirkətin adı:</h3> <span>{company?.name} </span>
-                    </div>
-                    <div className={'hrXettt'}></div>
-                    <div className="path1">
-                        <h3>Kateqoriya adı:</h3> <span>{companiess?.name} </span>
-                    </div>
-                </div>
+
+
 
                 <div className="order-table-wrapper">
                     <table>
                         <thead>
                         <tr>
                             <th>
-                                {activeSearch === 'barcode' ? (
+                                {activeSearch === 'name' ? (
                                     <div style={{cursor:"pointer"}} className="th-search">
                                         <input
                                             autoFocus
@@ -181,45 +165,26 @@ const AdminProducts = () => {
                                     </div>
                                 ) : (
                                     <div className="th-label">
-                                        Məhsul barkodu
-                                        <svg style={{cursor:"pointer"}} onClick={() => setActiveSearch('barcode')} xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+                                        Müştəri
+                                        <svg style={{cursor:"pointer"}} onClick={() => setActiveSearch('name')} xmlns="http://www.w3.org/2000/svg" width="24" height="24">
                                             <path d="M20.71 19.29L17.31 15.9C18.407 14.5025 19.0022 12.7767 19 11C19 9.41775 18.5308 7.87103 17.6518 6.55544C16.7727 5.23985 15.5233 4.21447 14.0615 3.60897C12.5997 3.00347 10.9911 2.84504 9.43928 3.15372C7.88743 3.4624 6.46197 4.22433 5.34315 5.34315C4.22433 6.46197 3.4624 7.88743 3.15372 9.43928C2.84504 10.9911 3.00347 12.5997 3.60897 14.0615C4.21447 15.5233 5.23985 16.7727 6.55544 17.6518C7.87103 18.5308 9.41775 19 11 19C12.7767 19.0022 14.5025 18.407 15.9 17.31L19.29 20.71C19.383 20.8037 19.4936 20.8781 19.6154 20.9289C19.7373 20.9797 19.868 21.0058 20 21.0058C20.132 21.0058 20.2627 20.9797 20.3846 20.9289C20.5064 20.8781 20.617 20.8037 20.71 20.71C20.8037 20.617 20.8781 20.5064 20.9289 20.3846C20.9797 20.2627 21.0058 20.132 21.0058 20C21.0058 19.868 20.9797 19.7373 20.9289 19.6154C20.8781 19.4936 20.8037 19.383 20.71 19.29ZM5 11C5 9.81332 5.3519 8.65328 6.01119 7.66658C6.67047 6.67989 7.60755 5.91085 8.7039 5.45673C9.80026 5.0026 11.0067 4.88378 12.1705 5.11529C13.3344 5.3468 14.4035 5.91825 15.2426 6.75736C16.0818 7.59648 16.6532 8.66558 16.8847 9.82946C17.1162 10.9933 16.9974 12.1997 16.5433 13.2961C16.0892 14.3925 15.3201 15.3295 14.3334 15.9888C13.3467 16.6481 12.1867 17 11 17C9.4087 17 7.88258 16.3679 6.75736 15.2426C5.63214 14.1174 5 12.5913 5 11Z" fill="#7A7A7A"/>
                                         </svg>
                                     </div>
                                 )}
                             </th>
-                            <th>
-                                {activeSearch === 'name' ? (
-                                    <div className="th-search">
-                                        <input
-                                            autoFocus
-                                            value={searchName}
-                                            onChange={(e) => setSearchName(e.target.value)}
-                                            placeholder="Axtar..."
-                                        />
-                                        <FaTimes onClick={() => { setActiveSearch(null); setSearchName(''); }} />
-                                    </div>
-                                ) : (
-                                    <div className="th-label">
-                                        Məhsul adı
-                                        <svg onClick={() => setActiveSearch('name')} xmlns="http://www.w3.org/2000/svg" width="24" height="24">
-                                            <path d="M20.71 19.29L17.31 15.9C18.407 14.5025 19.0022 12.7767 19 11C19 9.41775 18.5308 7.87103 17.6518 6.55544C16.7727 5.23985 15.5233 4.21447 14.0615 3.60897C12.5997 3.00347 10.9911 2.84504 9.43928 3.15372C7.88743 3.4624 6.46197 4.22433 5.34315 5.34315C4.22433 6.46197 3.4624 7.88743 3.15372 9.43928C2.84504 10.9911 3.00347 12.5997 3.60897 14.0615C4.21447 15.5233 5.23985 16.7727 6.55544 17.6518C7.87103 18.5308 9.41775 19 11 19C12.7767 19.0022 14.5025 18.407 15.9 17.31L19.29 20.71C19.383 20.8037 19.4936 20.8781 19.6154 20.9289C19.7373 20.9797 19.868 21.0058 20 21.0058C20.132 21.0058 20.2627 20.9797 20.3846 20.9289C20.5064 20.8781 20.617 20.8037 20.71 20.71C20.8037 20.617 20.8781 20.5064 20.9289 20.3846C20.9797 20.2627 21.0058 20.132 21.0058 20C21.0058 19.868 20.9797 19.7373 20.9289 19.6154C20.8781 19.4936 20.8037 19.383 20.71 19.29ZM5 11C5 9.81332 5.3519 8.65328 6.01119 7.66658C6.67047 6.67989 7.60755 5.91085 8.7039 5.45673C9.80026 5.0026 11.0067 4.88378 12.1705 5.11529C13.3344 5.3468 14.4035 5.91825 15.2426 6.75736C16.0818 7.59648 16.6532 8.66558 16.8847 9.82946C17.1162 10.9933 16.9974 12.1997 16.5433 13.2961C16.0892 14.3925 15.3201 15.3295 14.3334 15.9888C13.3467 16.6481 12.1867 17 11 17C9.4087 17 7.88258 16.3679 6.75736 15.2426C5.63214 14.1174 5 12.5913 5 11Z" fill="#7A7A7A"/>
-                                        </svg>
-                                    </div>
-                                )}
-                            </th>
-                            <th>Ölçü vahidi</th>
-                            <th>Xalis dəyər</th>
+                            <th>Əlaqə nömrəsi</th>
+                            <th>Ünvanı</th>
+                            <th>Təsvir</th>
                             <th>Fəaliyyətlər</th>
                         </tr>
                         </thead>
                         <tbody>
                         {filteredProducts ?.map((company) => (
                             <tr key={company.id}>
-                                <td>{company.barcode}</td>
                                 <td>{company.name}</td>
-                                <td>{company.meausure}</td>
-                                <td>{company.price}</td>
+                                <td>{company.phoneNumber}</td>
+                                <td>{company.adress}</td>
+                                <td>{company.description}</td>
                                 <td>
                                     <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
 
@@ -227,9 +192,9 @@ const AdminProducts = () => {
                                             setEditData({
                                                 id: company.id,
                                                 name: company.name,
-                                                barcode: company.barcode,
-                                                meausure: company.meausure,
-                                                price: company.price,
+                                                phoneNumber: company.phoneNumber,
+                                                adress: company.adress,
+                                                desc: company.description,
                                             });
                                             setModalVisible(true);
                                         }} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -257,39 +222,39 @@ const AdminProducts = () => {
                     <div className="create-company-modal" onClick={(e) => e.stopPropagation()}>
                         <div className="modalHead">
                             <button className="modal-close-btn" onClick={() => setCreateModalVisible(false)}>✖</button>
-                            <h3>Yeni məhsul əlavə et</h3>
+                            <h3>Yeni müştəri yarat</h3>
                         </div>
 
                         <div className="modal-fields">
-                            <label>Məhsul barkodu</label>
+                            <label>Müştəri adı</label>
                             <input
                                 type="text"
-                                placeholder="Barkod daxil et"
-                                value={createBarcode}
-                                onChange={(e) => setCreateBarcode(e.target.value)}
+                                placeholder="Ad daxil et"
+                                value={createName}
+                                onChange={(e) => setCreateName(e.target.value)}
                                 ref={createInputRef}
 
                             />
-                            <label>Məhsul adı</label>
+                            <label>Əlaqə nömrəsi</label>
                             <input
                                 type="text"
-                                placeholder="Məhsul adı daxil et"
-                                value={createName}
-                                onChange={(e) => setCreateName(e.target.value)}
+                                placeholder="Əlaqə nömrəsi daxil et"
+                                value={createPhoneNumber}
+                                onChange={(e) => setCreatePhoneNumber(e.target.value)}
                             />
-                            <label>Ölçü vahidi</label>
+                            <label>Ünvan</label>
                             <input
                                 type="text"
-                                placeholder="Məsələn: ədəd"
-                                value={createMeasure}
-                                onChange={(e) => setCreateMeasure(e.target.value)}
+                                placeholder="Ünvan daxil et"
+                                value={createAdress}
+                                onChange={(e) => setCreateAdress(e.target.value)}
                             />
-                            <label>Xalis dəyər</label>
+                            <label>Təsvir</label>
                             <input
-                                type="number"
-                                placeholder="0 ₼"
-                                value={createPrice}
-                                onChange={(e) => setCreatePrice(e.target.value)}
+                                type="text"
+                                placeholder="Təsvir daxil et"
+                                value={createDesc}
+                                onChange={(e) => setCreateDesc(e.target.value)}
                             />
                             <button className="save-btn save-btn--dark" onClick={handleCreate}>
                                 Yadda saxla
@@ -309,45 +274,45 @@ const AdminProducts = () => {
                         </div>
 
                         <div className="modal-fields">
-                            <label>Məhsul barkodu</label>
+                            <label>Müştəri adı</label>
                             <div className={"searchInput"}>
                                 <input
                                     type="text"
-                                    placeholder="Məsələn: #908765432"
-                                    value={editData.barcode}
-                                    onChange={(e) => setEditData((prev) => ({ ...prev, barcode: e.target.value }))}
+                                    placeholder="Ad daxil et"
+                                    value={editData.name}
+                                    onChange={(e) => setEditData((prev) => ({ ...prev, name: e.target.value }))}
                                 /><svg className={'searchIcon'} xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                                 <path d="M16.5 5.93001C16.5006 5.83131 16.4817 5.73346 16.4443 5.64208C16.407 5.5507 16.352 5.46759 16.2825 5.39751L13.1025 2.21751C13.0324 2.148 12.9493 2.09301 12.8579 2.05568C12.7666 2.01836 12.6687 1.99944 12.57 2.00001C12.4713 1.99944 12.3735 2.01836 12.2821 2.05568C12.1907 2.09301 12.1076 2.148 12.0375 2.21751L9.91501 4.34001L1.71751 12.5375C1.648 12.6076 1.59301 12.6907 1.55568 12.7821C1.51836 12.8735 1.49944 12.9713 1.50001 13.07V16.25C1.50001 16.4489 1.57903 16.6397 1.71968 16.7803C1.86033 16.921 2.0511 17 2.25001 17H5.43001C5.53496 17.0057 5.63993 16.9893 5.73813 16.9518C5.83632 16.9144 5.92555 16.8567 6.00001 16.7825L14.1525 8.58501L16.2825 6.50001C16.3509 6.42724 16.4066 6.34359 16.4475 6.25251C16.4547 6.19273 16.4547 6.13229 16.4475 6.07251C16.451 6.0376 16.451 6.00242 16.4475 5.96751L16.5 5.93001ZM5.12251 15.5H3.00001V13.3775L10.4475 5.93001L12.57 8.05251L5.12251 15.5ZM13.6275 6.99501L11.505 4.87251L12.57 3.81501L14.685 5.93001L13.6275 6.99501Z" fill="#3D3D3D"/>
                             </svg>
                             </div>
-                            <label>Məhsul adı</label>
+                            <label>Əlaqə nömrəsi</label>
                            <div className={"searchInput"}>
                                <input
                                    type="text"
-                                   placeholder="Məsələn: Tablo"
-                                   value={editData.name}
-                                   onChange={(e) => setEditData((prev) => ({ ...prev, name: e.target.value }))}
+                                   placeholder="Əlaqə nömrəsi daxil et"
+                                   value={editData.phoneNumber}
+                                   onChange={(e) => setEditData((prev) => ({ ...prev, phoneNumber: e.target.value }))}
                                /><svg className={'searchIcon'} xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                                <path d="M16.5 5.93001C16.5006 5.83131 16.4817 5.73346 16.4443 5.64208C16.407 5.5507 16.352 5.46759 16.2825 5.39751L13.1025 2.21751C13.0324 2.148 12.9493 2.09301 12.8579 2.05568C12.7666 2.01836 12.6687 1.99944 12.57 2.00001C12.4713 1.99944 12.3735 2.01836 12.2821 2.05568C12.1907 2.09301 12.1076 2.148 12.0375 2.21751L9.91501 4.34001L1.71751 12.5375C1.648 12.6076 1.59301 12.6907 1.55568 12.7821C1.51836 12.8735 1.49944 12.9713 1.50001 13.07V16.25C1.50001 16.4489 1.57903 16.6397 1.71968 16.7803C1.86033 16.921 2.0511 17 2.25001 17H5.43001C5.53496 17.0057 5.63993 16.9893 5.73813 16.9518C5.83632 16.9144 5.92555 16.8567 6.00001 16.7825L14.1525 8.58501L16.2825 6.50001C16.3509 6.42724 16.4066 6.34359 16.4475 6.25251C16.4547 6.19273 16.4547 6.13229 16.4475 6.07251C16.451 6.0376 16.451 6.00242 16.4475 5.96751L16.5 5.93001ZM5.12251 15.5H3.00001V13.3775L10.4475 5.93001L12.57 8.05251L5.12251 15.5ZM13.6275 6.99501L11.505 4.87251L12.57 3.81501L14.685 5.93001L13.6275 6.99501Z" fill="#3D3D3D"/>
                            </svg>
                            </div>
-                            <label>Ölçü vahidi</label>
+                            <label>Ünvan</label>
                             <div className={"searchInput"}>
                                 <input
                                     type="text"
-                                    placeholder="Məsələn: ədəd"
-                                    value={editData.meausure}
-                                    onChange={(e) => setEditData((prev) => ({ ...prev, meausure: e.target.value }))}
+                                    placeholder="Ünvan daxil et"
+                                    value={editData.adress}
+                                    onChange={(e) => setEditData((prev) => ({ ...prev, adress: e.target.value }))}
                                 /><svg className={'searchIcon'} xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                                 <path d="M16.5 5.93001C16.5006 5.83131 16.4817 5.73346 16.4443 5.64208C16.407 5.5507 16.352 5.46759 16.2825 5.39751L13.1025 2.21751C13.0324 2.148 12.9493 2.09301 12.8579 2.05568C12.7666 2.01836 12.6687 1.99944 12.57 2.00001C12.4713 1.99944 12.3735 2.01836 12.2821 2.05568C12.1907 2.09301 12.1076 2.148 12.0375 2.21751L9.91501 4.34001L1.71751 12.5375C1.648 12.6076 1.59301 12.6907 1.55568 12.7821C1.51836 12.8735 1.49944 12.9713 1.50001 13.07V16.25C1.50001 16.4489 1.57903 16.6397 1.71968 16.7803C1.86033 16.921 2.0511 17 2.25001 17H5.43001C5.53496 17.0057 5.63993 16.9893 5.73813 16.9518C5.83632 16.9144 5.92555 16.8567 6.00001 16.7825L14.1525 8.58501L16.2825 6.50001C16.3509 6.42724 16.4066 6.34359 16.4475 6.25251C16.4547 6.19273 16.4547 6.13229 16.4475 6.07251C16.451 6.0376 16.451 6.00242 16.4475 5.96751L16.5 5.93001ZM5.12251 15.5H3.00001V13.3775L10.4475 5.93001L12.57 8.05251L5.12251 15.5ZM13.6275 6.99501L11.505 4.87251L12.57 3.81501L14.685 5.93001L13.6275 6.99501Z" fill="#3D3D3D"/>
                             </svg>
                             </div>
-                            <label>Xalis dəyər</label>
+                            <label>Təsvir</label>
                             <div className={"searchInput"}><input
-                                type="number"
-                                placeholder="Məsələn: 325 ₼"
-                                value={editData.price}
-                                onChange={(e) => setEditData((prev) => ({ ...prev, price: e.target.value }))}
+                                type="text"
+                                placeholder="Təsvir daxil et"
+                                value={editData.desc}
+                                onChange={(e) => setEditData((prev) => ({ ...prev, desc: e.target.value }))}
                             /><svg className={'searchIcon'} xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                                 <path d="M16.5 5.93001C16.5006 5.83131 16.4817 5.73346 16.4443 5.64208C16.407 5.5507 16.352 5.46759 16.2825 5.39751L13.1025 2.21751C13.0324 2.148 12.9493 2.09301 12.8579 2.05568C12.7666 2.01836 12.6687 1.99944 12.57 2.00001C12.4713 1.99944 12.3735 2.01836 12.2821 2.05568C12.1907 2.09301 12.1076 2.148 12.0375 2.21751L9.91501 4.34001L1.71751 12.5375C1.648 12.6076 1.59301 12.6907 1.55568 12.7821C1.51836 12.8735 1.49944 12.9713 1.50001 13.07V16.25C1.50001 16.4489 1.57903 16.6397 1.71968 16.7803C1.86033 16.921 2.0511 17 2.25001 17H5.43001C5.53496 17.0057 5.63993 16.9893 5.73813 16.9518C5.83632 16.9144 5.92555 16.8567 6.00001 16.7825L14.1525 8.58501L16.2825 6.50001C16.3509 6.42724 16.4066 6.34359 16.4475 6.25251C16.4547 6.19273 16.4547 6.13229 16.4475 6.07251C16.451 6.0376 16.451 6.00242 16.4475 5.96751L16.5 5.93001ZM5.12251 15.5H3.00001V13.3775L10.4475 5.93001L12.57 8.05251L5.12251 15.5ZM13.6275 6.99501L11.505 4.87251L12.57 3.81501L14.685 5.93001L13.6275 6.99501Z" fill="#3D3D3D"/>
                             </svg></div>
@@ -373,7 +338,7 @@ const AdminProducts = () => {
                                 </div>
                             </div>
                         </div>
-                        <p className="delete-message">Məhsulu silmək istədiyinizə əminsiniz?</p>
+                        <p className="delete-message">Müştərini silmək istədiyinizə əminsiz?</p>
                         <div className="delete-modal-actions">
                             <button className="cancel-btn" onClick={() => setDeleteProductId(null)}>Ləğv et</button>
                             <button className="confirm-btn" onClick={handleDelete}>
@@ -388,4 +353,4 @@ const AdminProducts = () => {
     );
 };
 
-export default AdminProducts;
+export default AdminMusteriler;

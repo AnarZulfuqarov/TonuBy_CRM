@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import {NavLink, useParams} from "react-router-dom";
 import "./index.scss";
 import {
-    useCreateCashOperatorMutation,
+    useCreateCashOperatorMutation, useCreateProductsMutation, useGetByCompanyClientsQuery,
     useGetByIdCompaniesQuery
 } from "../../../services/adminApi.jsx";
 
@@ -11,7 +11,9 @@ export default function AdminKassaEAdd() {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false); // ⬅️ Loading state'i eklendi
     const refDate = useRef(null);
-
+    const { data: getByCompanyClients } = useGetByCompanyClientsQuery(id);
+    const clientsInit = getByCompanyClients?.data || [];
+    const [createProduct] = useCreateProductsMutation()
     const [createOperation] = useCreateCashOperatorMutation();
     const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
     const company = getByIdCompanies?.data
@@ -34,9 +36,19 @@ export default function AdminKassaEAdd() {
     const setField = (k, v) => setForm((p) => ({ ...p, [k]: v }));
 
     const [lists, setLists] = useState({
+        client: [],
         category: [],
         product: [],
     });
+    useEffect(() => {
+        if (clientsInit?.length) {
+            setLists((prev) => ({
+                ...prev,
+                client: clientsInit.map((c) => ({ id: c.id, name: c.name })),
+            }));
+        }
+    }, [clientsInit]);
+
 
     useEffect(() => {
         if (categoriesInit?.length) {
@@ -81,6 +93,15 @@ export default function AdminKassaEAdd() {
     };
 
     const selectValue = (key, val) => {
+        if (key === "client") {
+            setForm((p) => ({
+                ...p,
+                clientId: val.id,
+                clientName: val.name,
+            }));
+            setQ((s) => ({ ...s, client: val.name }));
+        }
+
         if (key === "category") {
             setForm((p) => ({
                 ...p,
@@ -128,22 +149,34 @@ export default function AdminKassaEAdd() {
         return value;
     };
 
-    const oneAmountOnly =
-        (Number(form.madaxil) > 0) !== (Number(form.mexaric) > 0);
+
 
     const isFormValid =
-        form.categoryId &&
-        form.productId &&
+        form.clientId &&
+        (form.productId || form.productName) &&
         (Number(form.madaxil) > 0 || Number(form.mexaric) > 0) &&
-        form.tarix;
+        form.tarix
+
 
     const handleSubmit = async () => {
         if (!isFormValid) return;
 
         setIsLoading(true); // ⬅️ Loading başlasın
+        let productIdToUse = form.productId;
+        console.log(form.categoryId)
+        if (!form.productId && form.productName.trim() !== "") {
+            const newProduct = await createProduct({
+                categoryId: form.categoryId,
+                name: form.productName.trim(),
+            }).unwrap();
+
+            productIdToUse = newProduct?.data?.id;
+        }
+
 
         const payload = {
-            productId: form.productId,
+            clientId: form.clientId,
+            productId: productIdToUse,
             incomeAmount: Number(form.madaxil) > 0 ? Number(form.madaxil) : 0,
             expenseAmount: Number(form.mexaric) > 0 ? Number(form.mexaric) : 0,
             description: form.note || "",
@@ -178,9 +211,11 @@ export default function AdminKassaEAdd() {
     };
 
     const headers = [
+        { label: "Müştəri seç", key: "client" },
         { label: "Kateqoriya seç", key: "category" },
         { label: "Məhsul seç", key: "product" },
     ];
+
 
     return (
         <div className="admin-kassa-e-add-main">
@@ -290,6 +325,14 @@ export default function AdminKassaEAdd() {
 
                             <tbody>
                             <tr>
+                                <td>
+                                    <input
+                                        type="text"
+                                        placeholder="Müştəri daxil et"
+                                        value={form.clientName}
+                                        onChange={(e) => setField("clientName", e.target.value)}
+                                    />
+                                </td>
                                 <td>
                                     <input
                                         type="text"

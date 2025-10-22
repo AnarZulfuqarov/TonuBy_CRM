@@ -5,7 +5,7 @@ import {FaTimes} from "react-icons/fa";
 import PieWithCallouts from "../../../components/Statistika/Cart3/index.jsx";
 import SelectBox from "../../../components/SelectBox/index.jsx";
 import {
-    useGetAllCategoriesQuery, useGetByIdCompaniesQuery,
+    useGetAllCategoriesQuery, useGetByCompanyClientsQuery, useGetByIdCompaniesQuery,
     useGetSummaryChart2Query, useGetSummaryChartQuery,
 } from "../../../services/adminApi.jsx";
 
@@ -15,9 +15,11 @@ const BorcHesabati = () => {
 const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
     const company = getByIdCompanies?.data
     const categories = getByIdCompanies?.data?.categories || [];
-
+    const { data: getByCompanyClients } = useGetByCompanyClientsQuery(id);
+    const clientsInit = getByCompanyClients?.data || [];
     // Seçilmiş filterlər
     const [categorySummary, setCategorySummary] = useState("__all__");
+    const [clientSummary, setClientSummary] = useState("__all__");
     const [categoryTable, setCategoryTable] = useState("__all__");
     const [product, setProduct] = useState("__all__");
     const { data: getByIdCashOperator,refetch } = useGetSummaryChartQuery({companyId:id});
@@ -29,15 +31,21 @@ const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
             : categories.flatMap((c) => c.products || []);
 
 // Summary chart
-    const {data: getSummaryChart,refetch:summaryrefetch} = useGetSummaryChart2Query({
+    const {
+        data: getSummaryChart,
+        refetch: summaryrefetch
+    } = useGetSummaryChart2Query({
         companyId: id,
         categoryId: categorySummary === "__all__" ? "" : categorySummary,
-        productId: product === "__all__" ? "" : product
+        productId: product === "__all__" ? "" : product,
+        clientId: clientSummary === "__all__" ? "" : clientSummary,
     });
 
+// bu useEffect-i düzəldirik ki, filter dəyişəndə yenidən fetch etsin:
     useEffect(() => {
-        summaryrefetch()
-    }, []);
+        summaryrefetch();
+    }, [categorySummary, clientSummary, product, id]);
+
     // Table search
     const [searchName, setSearchName] = useState('');
     const [activeSearch, setActiveSearch] = useState(null);
@@ -52,13 +60,15 @@ const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
             categoryTable === "__all__" || op.categoryId === categoryTable;
         const matchProduct =
             product === "__all__" || op.productId === product;
+        const matchClient =
+            clientSummary === "__all__" || op.clientId === clientSummary;
         const matchSearch =
             !searchName ||
-            op.categoryName?.toLowerCase().includes(searchName.toLowerCase()) ||
-            op.productName?.toLowerCase().includes(searchName.toLowerCase());
+            op.clientName?.toLowerCase().includes(searchName.toLowerCase());
 
-        return matchCategory && matchProduct && matchSearch;
+        return matchCategory && matchProduct && matchClient && matchSearch;
     }) || [];
+
 
     return (
         <div className="admin-borc-h-main">
@@ -83,6 +93,16 @@ const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
                     <div className="summary-left">
                         <div className="summary-top">
                             <div className="filter-group">
+                                {/*<span className="filter-label">Müştəri :</span>*/}
+                                {/*<SelectBox*/}
+                                {/*    value={clientSummary}*/}
+                                {/*    onChange={(id) => {*/}
+                                {/*        setClientSummary(id);*/}
+                                {/*    }}*/}
+                                {/*    options={[{id: "__all__", name: "Hamısı"}, ...clientsInit]}*/}
+                                {/*    placeholder="Müştəri seç"*/}
+                                {/*    width={140}*/}
+                                {/*/>*/}
                                 <span className="filter-label">Kateqori :</span>
                                 <SelectBox
                                     value={categorySummary}
@@ -152,6 +172,13 @@ const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
                 <div className="table-toolbar">
                     <div className="filters">
                         <SelectBox
+                            value={clientSummary}
+                            onChange={(id) => setClientSummary(id)}
+                            options={[{ id: "__all__", name: "Hamısı" }, ...clientsInit]}
+                            placeholder="Müştəri seç"
+                            width={150}
+                        />
+                        <SelectBox
                             value={categoryTable}
                             onChange={(id) => {
                                 setCategoryTable(id);
@@ -192,7 +219,7 @@ const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
                                     </div>
                                 ) : (
                                     <div className="th-label">
-                                        Kateqoriya
+                                        Müştəri
                                         <svg style={{cursor:"pointer"}} onClick={() => setActiveSearch('name')} xmlns="http://www.w3.org/2000/svg"
                                              width="24" height="24">
                                             <path
@@ -202,6 +229,7 @@ const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
                                     </div>
                                 )}
                             </th>
+                            <th>Kateqoriya</th>
                             <th>Məhsul adı</th>
                             <th>Alınacaq</th>
                             <th>Veriləcək</th>
@@ -213,6 +241,7 @@ const {data:getByIdCompanies} = useGetByIdCompaniesQuery(id)
                         {filteredOperations.length > 0 ? (
                             filteredOperations.map((op) => (
                                 <tr key={op.id}>
+                                    <td>{op.clientName}</td>
                                     <td>{op.categoryName}</td>
                                     <td>{op.productName}</td>
                                     <td>{op.receivedAmount} ₼</td>

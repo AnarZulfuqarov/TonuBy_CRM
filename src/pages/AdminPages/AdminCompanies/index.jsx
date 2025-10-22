@@ -5,6 +5,7 @@ import { FaTimes } from "react-icons/fa";
 
 import {usePopup} from "../../../components/Popup/PopupContext.jsx";
 import {
+    useCreateCategoriesMutation,
     useCreateCompaniesMutation, useDeleteCompaniesMutation,
     useEditCompaniesMutation,
     useGetAllCompaniesQuery
@@ -17,12 +18,13 @@ const AdminCompanies = () => {
     const [searchName, setSearchName] = useState('');
     const [activeSearch, setActiveSearch] = useState(null);
     const [editCompanyData, setEditCompanyData] = useState({ id: '', name: '' });
+    const [categoryInputs, setCategoryInputs] = useState(['']);
     const showPopup = usePopup()
     const [createModalVisible, setCreateModalVisible] = useState(false);
     const [createName, setCreateName] = useState('');
     const {data:getAllCompanies,refetch:companyRefetch} = useGetAllCompaniesQuery()
     const companies = getAllCompanies?.data
-
+    const [createCategory] = useCreateCategoriesMutation()
     const [createCompany] = useCreateCompaniesMutation()
     const [editCompany] = useEditCompaniesMutation()
     const [deleteCompany] = useDeleteCompaniesMutation()
@@ -48,6 +50,15 @@ const AdminCompanies = () => {
         }
     }, [createModalVisible]);
 // filterlənmiş companies
+    const handleAddCategoryField = () => {
+        setCategoryInputs([...categoryInputs, '']);
+    };
+
+    const handleCategoryChange = (index, value) => {
+        const updated = [...categoryInputs];
+        updated[index] = value;
+        setCategoryInputs(updated);
+    };
     const filteredCompanies = companies?.filter((company) => {
         if (activeSearch === 'name') {
             return company.name?.toLowerCase().includes(searchName.toLowerCase());
@@ -58,15 +69,41 @@ const AdminCompanies = () => {
         try {
             if (!createName.trim()) return;
 
-            await createCompany({ name: createName }).unwrap();
+            // 1️⃣ Şirkət yaradılır
+            const companyRes = await createCompany({ name: createName }).unwrap();
+
+            // 2️⃣ Şirkət ID-si alınır
+            const companyId = companyRes?.data?.id || companyRes?.id;
+
+            // 3️⃣ Kateqoriyalar yaradılır (ayrı ayrı sorğular kimi)
+            for (const catName of categoryInputs) {
+                const trimmed = catName.trim();
+                if (trimmed) {
+                    await createCategory({
+                        name: trimmed,
+                        companyId
+                    }).unwrap();
+                }
+            }
+
             await companyRefetch();
 
+            // 4️⃣ Modal bağla və sıfırla
             setCreateModalVisible(false);
             setCreateName('');
+            setCategoryInputs(['']);
 
-            showPopup('Şirkət yaradıldı', 'Yeni şirkət sistemə əlavə olundu.', 'success');
+            showPopup(
+                "Uğurlu əməliyyat",
+                "Yeni şirkət və kateqoriyalar əlavə olundu.",
+                "success"
+            );
         } catch (err) {
-            showPopup('Xəta baş verdi', 'Şirkət yaradıla bilmədi, təkrar cəhd edin.', 'error');
+            showPopup(
+                "Xəta baş verdi",
+                "Əməliyyat uğursuz oldu, təkrar cəhd edin.",
+                "error"
+            );
         }
     };
             return (
@@ -153,40 +190,56 @@ const AdminCompanies = () => {
             {createModalVisible && (
                 <div className="vendor-edit-modal-overlay" onClick={() => setCreateModalVisible(false)}>
                     <div className="create-company-modal" onClick={(e) => e.stopPropagation()}>
-                        <div className={"modalHead"}>
-                            <button className="modal-close-btn" onClick={() => {
-                                setCreateModalVisible(false);
-                                setCreateName('');
-                            }}><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
-                                <path d="M9.31884 1L1 9M1 1L9.31884 9" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg></button>
+                        <div className="modalHead">
+                            <button className="modal-close-btn" onClick={() => setCreateModalVisible(false)}>✖</button>
                             <h3>Yeni şirkət əlavə et</h3>
                         </div>
 
                         <div className="modal-fields">
-                            <label>Yeni şirkət adı</label>
+                            <label>Şirkət adı</label>
                             <input
                                 type="text"
                                 placeholder="Şirkət adı daxil et"
                                 value={createName}
                                 onChange={(e) => setCreateName(e.target.value)}
                                 ref={createInputRef}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        handleCreateSubmit(); // ⬅️ Enter tuşuna basıldığında submit
-                                    }
-                                }}
                             />
+
+                            <label>Kateqoriya(lar)</label>
+                            {categoryInputs.map((value, index) => (
+                                <div key={index} className="category-input">
+                                    <input
+                                        type="text"
+                                        placeholder="Kateqoriya adı daxil et"
+                                        value={value}
+                                        onChange={(e) => handleCategoryChange(index, e.target.value)}
+                                    />
+                                </div>
+                            ))}
+
+                            <button
+                                type="button"
+                                className="add-category-btn"
+                                onClick={handleAddCategoryField}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+                                    <path
+                                        d="M8 1v14M1 8h14"
+                                        stroke="#444"
+                                        strokeWidth="1.5"
+                                        strokeLinecap="round"
+                                    />
+                                </svg>
+                                Yeni kateqoriya daxil et
+                            </button>
+
                             <button
                                 className="save-btn save-btn--dark"
                                 onClick={handleCreateSubmit}
                             >
                                 Yadda saxla
                             </button>
-
                         </div>
-
-
                     </div>
                 </div>
             )}

@@ -18,7 +18,7 @@
       align-items: center;
       gap: 8px;
       padding: 8px 12px;
-      width: 40%;
+      width: 100%;
       position: relative;
       .searchIcon{
         position: absolute;
@@ -97,7 +97,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
-    width: 60%;
+    width: 100%;
   }
 
   .company-card {

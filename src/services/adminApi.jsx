@@ -195,6 +195,43 @@ export const api = createApi({
                 headers: { 'Content-Type': 'application/json' },
             }),
         }),
+        getAllClients: builder.query({
+            query: () => ({
+                url: `/Clients`,
+            }),
+        }),
+        createClients: builder.mutation({
+            query: (client) => ({
+                url: `/Clients`,
+                method: 'POST',
+                body: client,
+                headers: { 'Content-Type': 'application/json' },
+            }),
+        }),
+        editClients: builder.mutation({
+            query: (client) => ({
+                url: `/Clients`,
+                method: 'PUT',
+                body: client,
+                headers: { 'Content-Type': 'application/json' },
+            }),
+        }),
+        deleteClients: builder.mutation({
+            query: (id) => ({
+                url: `/Clients/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        getByIdClients: builder.query({
+            query: (id) => ({
+                url: `/Clients/${id}`,
+            }),
+        }),
+        getByCompanyClients: builder.query({
+            query: (companyId) => ({
+                url: `/Clients/${companyId}/getall`,
+            }),
+        })
     }),
 });
 
@@ -234,4 +271,11 @@ export const {
     useGetByIdCashReporteChartQuery,
     useGetSummaryChart2Query,
     useEditDebtAmountMutation,
+
+    useGetAllClientsQuery,
+    useGetByCompanyClientsQuery,
+    useCreateClientsMutation,
+    useEditClientsMutation,
+    useDeleteClientsMutation,
+    useGetByIdClientsQuery,
 } = api;

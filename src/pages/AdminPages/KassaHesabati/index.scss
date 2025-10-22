@@ -84,7 +84,7 @@
   .admin-kassa-h-table-wrapper {
     display: flex;
     background: #fff;
-    width: 50%;
+    width: 100%;
     max-height: 200px;
     overflow: auto;
     border: 1px solid #e0e0e0;
@@ -516,6 +516,7 @@
     overflow: hidden;
     margin-top: 16px;
     padding: 0;
+    width: 100%;
 
     .chart-card__head {
       padding: 16px 24px 12px;
